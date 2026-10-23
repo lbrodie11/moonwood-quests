@@ -10,7 +10,7 @@ export type StandardsEdition =
   | "NC-ELA-2026 (effective 2027-28)"
   | "NGSS-NC-SCI-2023";
 
-export type CoverageLevel = "full" | "partial" | "enrichment";
+export type CoverageLevel = "full" | "partial" | "enrichment" | "planned";
 
 export type ReviewStatus = "requires-educator-review" | "requires-bilingual-review";
 
@@ -256,7 +256,6 @@ export const STANDARDS_REGISTRY: readonly StandardMapping[] = [
       "bundle-ten-ones",
       "compose-two-digit-tens-ones",
       "decompose-two-digit-number",
-      "compare-two-digit-numbers",
     ],
     evidenceRequirements:
       "Composing two-digit numbers (10–99) from tens bags and loose ones while rejecting swapped-digit (34 vs 43) and additive (3 + 4 = 7) distractors.",
@@ -272,10 +271,10 @@ export const STANDARDS_REGISTRY: readonly StandardMapping[] = [
     description:
       "Compare two two-digit numbers based on meanings of the tens and ones digits, recording the results of comparisons with the symbols >, =, and <.",
     skillsAddressed: ["tens-and-ones"],
-    supportedTaskTypes: ["compare-two-digit-numbers"],
+    supportedTaskTypes: [],
     evidenceRequirements:
-      "Partial coverage: swapped-digit distractors test tens-vs-ones value, but explicit >, =, < symbol recording is not yet a separate task.",
-    coverageLevel: "partial",
+      "Planned: swapped-digit distractors test tens-vs-ones value under 1.NBT.B.2, but explicit >, =, < symbol comparison tasks are not yet implemented.",
+    coverageLevel: "planned",
     sourceUrl: "https://www.thecorestandards.org/Math/Content/1/NBT/",
     reviewStatus: "requires-educator-review",
   },
@@ -318,10 +317,10 @@ export const STANDARDS_REGISTRY: readonly StandardMapping[] = [
     description:
       "Order three objects by length; compare the lengths of two objects indirectly by using a third object.",
     skillsAddressed: ["compare-lengths"],
-    supportedTaskTypes: ["missing-plank-span-within-16", "missing-plank-span-within-20"],
+    supportedTaskTypes: [],
     evidenceRequirements:
-      "Partial coverage: compares a plank against a reference ravine span; direct 3-object ordering is only scaffolded.",
-    coverageLevel: "partial",
+      "Planned: 3-object length ordering and indirect comparison via a third reference object are not yet implemented as distinct tasks.",
+    coverageLevel: "planned",
     sourceUrl: "https://www.thecorestandards.org/Math/Content/1/MD/",
     reviewStatus: "requires-educator-review",
   },
@@ -333,7 +332,12 @@ export const STANDARDS_REGISTRY: readonly StandardMapping[] = [
     description:
       "Express the length of an object as a whole number of length units, by laying multiple copies of a shorter object (the length unit) end to end; understand that the length measurement of an object is the number of same-size length units that span it with no gaps or overlaps.",
     skillsAddressed: ["compare-lengths"],
-    supportedTaskTypes: ["join-unit-planks-within-8", "join-unit-planks-within-12"],
+    supportedTaskTypes: [
+      "join-unit-planks-within-8",
+      "join-unit-planks-within-12",
+      "missing-plank-span-within-16",
+      "missing-plank-span-within-20",
+    ],
     evidenceRequirements:
       "Partial coverage: visual bridge planks show equal-size moon-tiles laid end-to-end with no gaps.",
     coverageLevel: "partial",
@@ -348,7 +352,12 @@ export const STANDARDS_REGISTRY: readonly StandardMapping[] = [
     description:
       "Measure lengths with non-standard units by laying multiple copies of a shorter object end to end with no gaps or overlaps.",
     skillsAddressed: ["compare-lengths"],
-    supportedTaskTypes: ["join-unit-planks-within-8", "join-unit-planks-within-12"],
+    supportedTaskTypes: [
+      "join-unit-planks-within-8",
+      "join-unit-planks-within-12",
+      "missing-plank-span-within-16",
+      "missing-plank-span-within-20",
+    ],
     evidenceRequirements: "Partial coverage via end-to-end moon-tile bridge measurement.",
     coverageLevel: "partial",
     sourceUrl:
@@ -365,10 +374,10 @@ export const STANDARDS_REGISTRY: readonly StandardMapping[] = [
     description:
       "Distinguish between defining attributes (e.g., triangles are closed and three-sided) versus non-defining attributes (e.g., color, orientation, overall size); build and draw shapes to possess defining attributes.",
     skillsAddressed: ["compose-shapes"],
-    supportedTaskTypes: ["compose-triangles-and-rhombuses", "compose-triangles-and-squares"],
+    supportedTaskTypes: [],
     evidenceRequirements:
-      "Partial coverage: prompts highlight defining side/corner attributes while counting sigil pieces.",
-    coverageLevel: "partial",
+      "Planned: prompts mention side/corner attributes, but dedicated attribute-sorting and shape-drawing tasks are not yet implemented.",
+    coverageLevel: "planned",
     sourceUrl: "https://www.thecorestandards.org/Math/Content/1/G/",
     reviewStatus: "requires-educator-review",
   },
@@ -591,14 +600,14 @@ export const STANDARDS_REGISTRY: readonly StandardMapping[] = [
     reviewStatus: "requires-educator-review",
   },
 
-  // --- Science & Nature (NGSS K-LS1-1, 1-ESS1-2 & NC Science LS.1.1) ---
+  // --- Science & Nature (NGSS K-LS1-1, 1-ESS1-2) ---
   {
     id: "NGSS.K.LS1.1",
     code: "K-LS1-1",
     jurisdiction: "NGSS",
     edition: "NGSS-NC-SCI-2023",
     description:
-      "Use observations to describe patterns of what plants and animals (including humans) need to survive, and distinguish living things from nonliving things (NC Science LS.1.1).",
+      "Use observations to describe patterns of what plants and animals (including humans) need to survive, and distinguish living things from nonliving things.",
     skillsAddressed: ["science-nature"],
     supportedTaskTypes: [
       "living-vs-nonliving",
@@ -650,8 +659,12 @@ export function validateStandardsRegistry(): { valid: boolean; errors: string[] 
     if (s.skillsAddressed.length === 0) {
       errors.push(`Standard ${s.id} addresses no skills`);
     }
-    if (s.supportedTaskTypes.length === 0) {
-      errors.push(`Standard ${s.id} lists no supportedTaskTypes`);
+    if (s.coverageLevel === "planned") {
+      if (s.supportedTaskTypes.length !== 0) {
+        errors.push(`Planned standard ${s.id} must have supportedTaskTypes: []`);
+      }
+    } else if (s.supportedTaskTypes.length === 0) {
+      errors.push(`Standard ${s.id} (${s.coverageLevel}) lists no supportedTaskTypes`);
     }
     if (s.code === "1.OA.D.8" || s.code === "NC.1.OA.8") {
       if (s.skillsAddressed.includes("star-patterns")) {

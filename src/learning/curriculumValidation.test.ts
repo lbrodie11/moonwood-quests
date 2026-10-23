@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { loadQuests } from "../content";
 import en from "../i18n/locales/en-US.json";
 import es from "../i18n/locales/es-US.json";
-import { completeQuest, pruneEvidenceLogBySkill } from "../storage/progress";
+import { completeQuest, pruneEvidenceLogBySkill, updateMastery } from "../storage/progress";
 import { emptyProgress } from "../storage/ProgressRepository";
 import {
   advanceReviewSchedule,
@@ -223,7 +223,7 @@ describe("Phase 3 — Evidence Engine, Mastery Honesty, and Spaced Review", () =
     expect(summary.classification).not.toBe("retained-mastery");
   });
 
-  it("reaches provisional-mastery and retained-mastery when unseen, family, representation, transfer, and retention criteria are met", () => {
+  it("reaches provisional-mastery and retained-mastery when unseen, family, representation, transfer, and delayed-retention criteria are met", () => {
     const records: EvidenceRecord[] = [
       makeRecord({ itemId: "1", itemFamily: "fam-1", representation: "objects" }),
       makeRecord({ itemId: "2", itemFamily: "fam-2", representation: "number-line" }),
@@ -234,6 +234,7 @@ describe("Phase 3 — Evidence Engine, Mastery Honesty, and Spaced Review", () =
         itemFamily: "fam-2",
         representation: "symbols",
         isRetention: true,
+        timestamp: "2026-10-25T12:00:00.000Z",
       }),
     ];
     const summary = evaluateSkillEvidence("add-within-20", records);
@@ -463,5 +464,237 @@ describe("Phase 3 — Evidence Engine, Mastery Honesty, and Spaced Review", () =
     // Advances without revealing the answer via Hint 3
     expect(res1).toMatchObject({ kind: "incorrect", assessmentTransitioned: true });
     expect(runner.recordedEvidence.some((r) => !r.correct && r.completed)).toBe(true);
+  });
+
+  it("does not grant retained-mastery in 12 minutes, grants it across >= 2 days, and preserves guided/transfer stages for due skills (A1 regression)", () => {
+    const forestGate = loadQuests().find((q) => q.id === "forest-gate")!;
+
+    function playForestGateSession(
+      progress: ReturnType<typeof emptyProgress>,
+      now: Date,
+      seed: number,
+      hintOnLastItem: boolean,
+    ) {
+      const dueReviewSkills = getDueReviewSkills(progress.reviewSchedule ?? {}, now);
+      const runner = new QuestRunner(
+        {
+          ...forestGate,
+          locale: "en-US",
+          seenItemSignatures: progress.seenItemSignatures,
+          dueReviewSkills,
+        },
+        progress.objectives,
+        mulberry32(seed),
+        () => now.getTime(),
+      );
+
+      let updated = progress;
+      while (runner.current) {
+        const isLast = runner.solved === runner.total - 1;
+        if (isLast && hintOnLastItem) {
+          runner.requestHint();
+        }
+        const res = runner.submit(runner.current.correctAnswer);
+        if (res.kind === "correct" && res.questComplete) {
+          updated = completeQuest(
+            updated,
+            forestGate,
+            runner.masterySnapshot(),
+            now,
+            runner.recordedEvidence,
+            runner.knownItemSignatures,
+          );
+        } else {
+          updated = updateMastery(
+            updated,
+            runner.masterySnapshot(),
+            now,
+            runner.recordedEvidence,
+            runner.knownItemSignatures,
+          );
+        }
+      }
+      return { progress: updated, runner, dueReviewSkills };
+    }
+
+    // 1. 12-minute reproduction (T0, T0+6m with hint on last item, T0+12m) must NOT yield retained-mastery
+    const t0 = new Date("2026-10-01T12:00:00.000Z");
+    const t6m = new Date("2026-10-01T12:06:00.000Z");
+    const t12m = new Date("2026-10-01T12:12:00.000Z");
+
+    let prog12m = emptyProgress("forest-gate", t0);
+    prog12m = playForestGateSession(prog12m, t0, 11, false).progress;
+    prog12m = playForestGateSession(prog12m, t6m, 22, true).progress;
+
+    // Stage 0 requires MIN_SESSION_GAP_HOURS (4h), so it is not due at T0+12m
+    expect(getDueReviewSkills(prog12m.reviewSchedule ?? {}, t12m)).toEqual([]);
+
+    prog12m = playForestGateSession(prog12m, t12m, 33, false).progress;
+    const summary12m = evaluateSkillEvidence("add-within-20", prog12m.evidenceLog ?? []);
+    expect(summary12m.hasDelayedRetentionEvidence).toBe(false);
+    expect(summary12m.classification).not.toBe("retained-mastery");
+
+    // Even if dueReviewSkills is manually forced at T0+12m, evaluateSkillEvidence rejects <20h retention
+    const forcedRunner = new QuestRunner(
+      {
+        ...forestGate,
+        seenItemSignatures: prog12m.seenItemSignatures,
+        dueReviewSkills: ["add-within-20"],
+      },
+      prog12m.objectives,
+      mulberry32(44),
+      () => t12m.getTime(),
+    );
+    while (forcedRunner.current) {
+      forcedRunner.submit(forcedRunner.current.correctAnswer);
+    }
+    const forcedSummary = evaluateSkillEvidence("add-within-20", [
+      ...(prog12m.evidenceLog ?? []),
+      ...forcedRunner.recordedEvidence,
+    ]);
+    expect(forcedSummary.hasDelayedRetentionEvidence).toBe(false);
+    expect(forcedSummary.classification).not.toBe("retained-mastery");
+
+    // 2. Same sequence spread over >= 2 days (T0, T0+24h with hint on last item, T0+48h) CAN yield retained-mastery
+    const day0 = new Date("2026-10-01T12:00:00.000Z");
+    const day1 = new Date("2026-10-02T12:00:00.000Z");
+    const day2 = new Date("2026-10-03T12:00:00.000Z");
+
+    let prog2d = emptyProgress("forest-gate", day0);
+    prog2d = playForestGateSession(prog2d, day0, 11, false).progress;
+    prog2d = playForestGateSession(prog2d, day1, 22, true).progress;
+    const play3 = playForestGateSession(prog2d, day2, 33, false);
+    prog2d = play3.progress;
+
+    expect(play3.dueReviewSkills).toContain("add-within-20");
+
+    // 3. A due skill's guided and mini-boss items keep their stages; only the dedicated review slot is "retention"
+    const stages = play3.runner.recordedEvidence.map((r) => r.stage);
+    expect(stages).toEqual([
+      "modeling",
+      "guided",
+      "retention",
+      "independent",
+      "independent",
+      "transfer",
+    ]);
+    expect(play3.runner.recordedEvidence[2]?.isRetention).toBe(true);
+    expect(play3.runner.recordedEvidence[5]?.isTransfer).toBe(true);
+
+    const summary2d = evaluateSkillEvidence("add-within-20", prog2d.evidenceLog ?? []);
+    expect(summary2d.hasDelayedRetentionEvidence).toBe(true);
+    expect(summary2d.hasTransferEvidence).toBe(true);
+    expect(summary2d.classification).toBe("retained-mastery");
+  });
+
+  it("pins unambiguous sentence-order choices for spelling items 5 and 6 in en-US and es-US (A3 regression)", () => {
+    expect(lookupKey(en, "challenge.spelling.item.5.choice.1.label")).toBe("Pip sees the moon.");
+    expect(lookupKey(en, "challenge.spelling.item.5.choice.2.label")).toBe("Pip the moon sees.");
+    expect(lookupKey(en, "challenge.spelling.item.5.choice.3.label")).toBe("Sees Pip moon the.");
+
+    expect(lookupKey(en, "challenge.spelling.item.6.choice.1.label")).toBe("Moss lights a lantern.");
+    expect(lookupKey(en, "challenge.spelling.item.6.choice.2.label")).toBe("Lights Moss lantern a.");
+    expect(lookupKey(en, "challenge.spelling.item.6.choice.3.label")).toBe("A Moss lantern lights.");
+
+    expect(lookupKey(es, "challenge.spelling.item.5.choice.1.label")).toBe("Pip ve la luna.");
+    expect(lookupKey(es, "challenge.spelling.item.5.choice.2.label")).toBe("La Pip luna ve.");
+    expect(lookupKey(es, "challenge.spelling.item.5.choice.3.label")).toBe("Ve Pip luna la.");
+
+    expect(lookupKey(es, "challenge.spelling.item.6.choice.1.label")).toBe("Musgo enciende un farol.");
+    expect(lookupKey(es, "challenge.spelling.item.6.choice.2.label")).toBe("Enciende Musgo farol un.");
+    expect(lookupKey(es, "challenge.spelling.item.6.choice.3.label")).toBe("Un Musgo farol enciende.");
+  });
+
+  it("ensures every standard code mentioned in docs/*.md exists in STANDARDS_REGISTRY and no standard with zero generating tasks is marked full or partial (A4 regression)", () => {
+    const knownCodes = new Set(STANDARDS_REGISTRY.map((s) => s.code));
+    const docModules = import.meta.glob<string>("../../docs/*.md", {
+      query: "?raw",
+      import: "default",
+      eager: true,
+    });
+    const docEntries = Object.entries(docModules);
+    expect(docEntries.length).toBeGreaterThanOrEqual(4);
+
+    // Match CCSS/NC/NGSS standard code tokens in docs/*.md
+    const standardTokenRegex =
+      /\b(?:NC\.1\.(?:OA|NBT|MD|G)\.\d+|1\.(?:OA|NBT|MD|G)\.[A-D]\.\d+|RF\.1\.\d+|RL\.1\.\d+|L\.1\.\d+|SL\.1\.\d+|1\.F\.[A-Z]+|1\.RC\.[A-Z]+|1\.W\.[A-Z]+|1\.V|MP\.\d+|NC\.MP\.\d+|[K12]-(?:LS|ESS|PS|ETS)\d+-\d+|LS\.1\.\d+)\b/g;
+
+    for (const [file, content] of docEntries) {
+      const matches = content.match(standardTokenRegex) ?? [];
+      for (const code of matches) {
+        expect(knownCodes.has(code), `Unmapped standard code "${code}" found in ${file}`).toBe(
+          true,
+        );
+      }
+    }
+
+    // Collect all generated itemFamily values per skill across all 14 generators
+    const generatedFamiliesBySkill = new Map<string, Set<string>>();
+    for (const id of OBJECTIVE_IDS) {
+      const families = new Set<string>();
+      const gen = GENERATORS[id];
+      for (const d of DIFFICULTIES) {
+        for (const seed of SEEDS) {
+          const spec = gen(mulberry32(seed), d);
+          if (spec.meta?.itemFamily) {
+            families.add(spec.meta.itemFamily);
+          }
+        }
+      }
+      generatedFamiliesBySkill.set(id, families);
+    }
+
+    // 1.MD.A.1, 1.G.A.1, and 1.NBT.B.3 have zero generating tasks and must be marked "planned"
+    for (const plannedCode of ["1.MD.A.1", "1.G.A.1", "1.NBT.B.3"]) {
+      const entry = STANDARDS_REGISTRY.find((s) => s.code === plannedCode);
+      expect(entry?.coverageLevel).toBe("planned");
+      expect(entry?.supportedTaskTypes).toEqual([]);
+    }
+
+    for (const s of STANDARDS_REGISTRY) {
+      const generatedForStandard = s.supportedTaskTypes.filter((taskType) =>
+        s.skillsAddressed.some((skillId) => generatedFamiliesBySkill.get(skillId)?.has(taskType)),
+      );
+      if (s.coverageLevel === "full" || s.coverageLevel === "partial") {
+        expect(
+          generatedForStandard.length,
+          `Standard ${s.id} (${s.code}) is marked ${s.coverageLevel} but has zero generated tasks`,
+        ).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("excludes general-calculation-or-decoding-error from detectedMisconceptions and validates science item 6 and spelling item 4 distractors (A5 regression)", () => {
+    const records = [
+      makeRecord({
+        correct: false,
+        completed: false,
+        independent: false,
+        errorClassifications: ["general-calculation-or-decoding-error"],
+      }),
+      makeRecord({
+        correct: false,
+        completed: false,
+        independent: false,
+        errorClassifications: ["general-calculation-or-decoding-error"],
+      }),
+      makeRecord({
+        correct: true,
+        completed: true,
+        independent: false,
+        incorrectSubmissions: 2,
+      }),
+    ];
+    const summary = evaluateSkillEvidence("add-within-20", records);
+    expect(summary.detectedMisconceptions["general-calculation-or-decoding-error"]).toBeUndefined();
+    expect(Object.keys(summary.detectedMisconceptions)).toHaveLength(0);
+    expect(summary.classification).not.toBe("needs-support");
+
+    // Science item 6: all 3 choices are seasons (Summer, Winter, Autumn / El verano, El invierno, El otoño)
+    expect(lookupKey(en, "challenge.science.item.6.choice.3.label")).toBe("Autumn");
+    expect(lookupKey(es, "challenge.science.item.6.choice.3.label")).toBe("El otoño");
+
+    // Spelling item 4: all choices are uppercase ("BELL", "BLE", "BEL")
+    expect(lookupKey(en, "challenge.spelling.item.4.choice.3.label")).toBe("BEL");
   });
 });

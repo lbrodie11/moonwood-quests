@@ -54,6 +54,7 @@ function mergeEvidenceAndSchedule(
   newEvidence: readonly EvidenceRecord[] | undefined,
   newSignatures: readonly string[] | undefined,
   now: Date,
+  advanceSchedule: boolean,
 ): Pick<PlayerProgress, "evidenceLog" | "reviewSchedule" | "seenItemSignatures"> {
   const existingLog = progress.evidenceLog ?? [];
   const existingSchedules = { ...(progress.reviewSchedule ?? {}) } as Partial<
@@ -71,34 +72,35 @@ function mergeEvidenceAndSchedule(
 
   const seenAttemptIds = new Set(existingLog.map((e) => e.attemptId));
   const mergedLog = [...existingLog];
-  const skillOutcomesInBatch = new Map<ObjectiveId, boolean>();
+  const skillOutcomesInQuest = new Map<ObjectiveId, boolean>();
 
   for (const record of newEvidence ?? []) {
-    if (!seenAttemptIds.has(record.attemptId)) {
-      seenAttemptIds.add(record.attemptId);
-      mergedLog.push({
-        ...record,
-        hintTypes: [...record.hintTypes],
-        errorClassifications: [...record.errorClassifications],
-      });
-      if (record.completed) {
-        const prevOutcome = skillOutcomesInBatch.get(record.skillId) ?? true;
-        skillOutcomesInBatch.set(
-          record.skillId,
-          prevOutcome && record.independent && record.correct,
-        );
-      }
+    if (record.completed) {
+      const prevOutcome = skillOutcomesInQuest.get(record.skillId) ?? true;
+      skillOutcomesInQuest.set(
+        record.skillId,
+        prevOutcome && record.independent && record.correct,
+      );
     }
+    if (seenAttemptIds.has(record.attemptId)) continue;
+    seenAttemptIds.add(record.attemptId);
+    mergedLog.push({
+      ...record,
+      hintTypes: [...record.hintTypes],
+      errorClassifications: [...record.errorClassifications],
+    });
   }
 
-  // Advance spaced review schedule at most once per skill per session batch
-  for (const [skillId, allIndependent] of skillOutcomesInBatch.entries()) {
-    existingSchedules[skillId] = advanceReviewSchedule(
-      existingSchedules[skillId],
-      skillId,
-      allIndependent,
-      now,
-    );
+  // Advance spaced review schedule once per skill when the quest session completes
+  if (advanceSchedule) {
+    for (const [skillId, allIndependent] of skillOutcomesInQuest.entries()) {
+      existingSchedules[skillId] = advanceReviewSchedule(
+        existingSchedules[skillId],
+        skillId,
+        allIndependent,
+        now,
+      );
+    }
   }
 
   const mergedSigs = union(existingSigs, newSignatures ?? []).slice(-MAX_SEEN_SIGNATURES);
@@ -126,7 +128,7 @@ export function completeQuest(
     unlockedQuestIds: union(progress.unlockedQuestIds, quest.unlocks),
     rewardIds: union(progress.rewardIds, quest.rewards.map((r) => r.id)),
     objectives: { ...progress.objectives, ...mastery },
-    ...mergeEvidenceAndSchedule(progress, newEvidence, newSignatures, now),
+    ...mergeEvidenceAndSchedule(progress, newEvidence, newSignatures, now, true),
   };
 }
 
@@ -142,7 +144,7 @@ export function updateMastery(
     ...progress,
     lastUpdated: now.toISOString(),
     objectives: { ...progress.objectives, ...mastery },
-    ...mergeEvidenceAndSchedule(progress, newEvidence, newSignatures, now),
+    ...mergeEvidenceAndSchedule(progress, newEvidence, newSignatures, now, false),
   };
 }
 

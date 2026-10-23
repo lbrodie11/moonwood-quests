@@ -99,8 +99,8 @@ export const OBJECTIVES: Readonly<Record<ObjectiveId, ObjectiveInfo>> = {
   },
   "compare-lengths": {
     id: "compare-lengths",
-    standard: "1.MD.A.1",
-    ncStandard: "NC.1.MD.1",
+    standard: "1.MD.A.2",
+    ncStandard: "NC.1.MD.2",
     domain: "mathematics",
     mechanic: "bridge-builder",
     prerequisites: ["add-within-20"],
@@ -164,8 +164,8 @@ export const OBJECTIVES: Readonly<Record<ObjectiveId, ObjectiveInfo>> = {
   },
   "science-nature": {
     id: "science-nature",
-    standard: "K-LS1-1 / 1-ESS1-2",
-    ncStandard: "LS.1.1",
+    standard: "K-LS1-1",
+    ncStandard: "1-ESS1-2",
     domain: "science-knowledge",
     mechanic: "naturekeeper-quests",
     prerequisites: [],

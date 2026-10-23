@@ -51,22 +51,18 @@ export function createPhonicsWords(
   const entry = PHONICS_WORD_BANK[wordId] ?? PHONICS_WORD_BANK[10]!;
   const promptKey = PROMPT_KEY_BY_MECHANIC[mechanic];
 
-  // Choose phonetically plausible distractors from the same or prior units
-  const distractor1 = ((wordId % 12) + 1) as StoryWordId;
-  const distractor2 = (((wordId + 2) % 12) + 1) as StoryWordId;
-
   return {
     objectiveId: "phonics-words",
     difficulty,
     promptKey,
     operator: "phonics",
     operands: [wordId, difficulty],
-    correctAnswer: wordId,
-    choiceKeyPrefix: "challenge.phonics.word",
-    choices: buildChoices(rng, wordId, {
+    correctAnswer: 1,
+    choiceKeyPrefix: `challenge.phonics.word.${wordId}.choice`,
+    choices: buildChoices(rng, 1, {
       min: 1,
-      max: 12,
-      likelyErrors: [distractor1, distractor2],
+      max: 3,
+      likelyErrors: [2, 3],
     }),
     meta: {
       itemFamily: mechanic,
@@ -81,8 +77,8 @@ export function createPhonicsWords(
       targetBlueprint: `${unit.id}:${mechanic}:${languageScope === "es" ? entry.esWord : entry.enWord}`,
       parentGuideKey: "challenge.phonics.parentPronunciationGuide",
       distractorErrors: {
-        [distractor1]: "vowel-or-initial-grapheme-confusion",
-        [distractor2]: "blending-or-pattern-error",
+        2: "vowel-or-initial-grapheme-confusion",
+        3: "blending-or-pattern-error",
       },
     },
   };

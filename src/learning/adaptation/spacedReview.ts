@@ -4,7 +4,7 @@ import { OBJECTIVE_IDS, type ObjectiveId } from "../objectives";
 
 /**
  * Spaced review interval heuristics in days (Phase 3.6):
- * - Stage 0: next relevant session (`0` days)
+ * - Stage 0: next relevant session (`0` days, after `MIN_SESSION_GAP_HOURS`)
  * - Stage 1: ~1 day later
  * - Stage 2: ~3 days later
  * - Stage 3: ~7 days later
@@ -14,27 +14,43 @@ import { OBJECTIVE_IDS, type ObjectiveId } from "../objectives";
  */
 export const REVIEW_INTERVAL_DAYS = [0, 1, 3, 7, 14] as const;
 
-const DAY_MS = 24 * 60 * 60 * 1000;
+/** Minimum hours between sessions before a stage-0 ("next session") review item is due. */
+export const MIN_SESSION_GAP_HOURS = 4;
+
+/** Minimum hours since the skill's most recent prior independent success for a review item to count as delayed retention. */
+export const MIN_RETENTION_DELAY_HOURS = 20;
+
+const HOUR_MS = 60 * 60 * 1000;
+const DAY_MS = 24 * HOUR_MS;
 
 export interface ReviewScheduleEntry {
   skillId: ObjectiveId;
   stageIndex: 0 | 1 | 2 | 3 | 4;
   lastPracticedIso: string;
   nextReviewIso: string;
+  /** Timestamp of the skill's most recent independent success (not overwritten by supported attempts). */
+  lastIndependentSuccessIso?: string | undefined;
+  /** Timestamp of the most recent independent success from a prior session before the latest independent session. */
+  priorIndependentSuccessIso?: string | undefined;
 }
 
 /**
  * Updates a skill's spaced-review schedule after an attempt.
- * Handles local clock drift (if `now` is earlier than `lastPracticedIso`) and
- * long absences (> 30 days) gently without punishment or streak penalties.
+ * Handles local clock drift (if `now` is earlier than `lastPracticedIso`),
+ * enforces a minimum session gap (`MIN_SESSION_GAP_HOURS`) for stage-0 reviews,
+ * and handles long absences (> 30 days) gently without punishment.
  */
 export function advanceReviewSchedule(
   previous: ReviewScheduleEntry | undefined,
   skillId: ObjectiveId,
   independentSuccess: boolean,
   now: Date = new Date(),
+  options: { sessionGapHours?: number | undefined } = {},
 ): ReviewScheduleEntry {
+  const sessionGapHours = options.sessionGapHours ?? MIN_SESSION_GAP_HOURS;
+  const sessionGapMs = sessionGapHours * HOUR_MS;
   const nowMs = now.getTime();
+  const nowIso = new Date(nowMs).toISOString();
   const prevMs = previous ? Date.parse(previous.lastPracticedIso) : nowMs;
   const rawDeltaMs = Number.isFinite(prevMs) ? nowMs - prevMs : 0;
   // Guard against backwards local system clocks or invalid timestamps
@@ -51,8 +67,18 @@ export function advanceReviewSchedule(
     // Gentle step back by 1 interval for extra review — never resets to zero punitively
     nextStageIndex = Math.max(0, nextStageIndex - 1) as 0 | 1 | 2 | 3 | 4;
   } else if (sameDayRepeat) {
-    // Prevent a single sitting or same-day repeat from collapsing the multi-day review ladder
-    nextStageIndex = previous.stageIndex;
+    // Prevent a single sitting or same-day repeat from collapsing the multi-day review ladder.
+    // Preserve lastPracticedIso and nextReviewIso from the sitting start so same-day holds do not shift timestamps.
+    return {
+      skillId,
+      stageIndex: previous.stageIndex,
+      lastPracticedIso: previous.lastPracticedIso,
+      nextReviewIso: previous.nextReviewIso,
+      lastIndependentSuccessIso: previous.lastIndependentSuccessIso ?? nowIso,
+      ...(previous.priorIndependentSuccessIso
+        ? { priorIndependentSuccessIso: previous.priorIndependentSuccessIso }
+        : {}),
+    };
   } else if (longAbsence) {
     // Returning after a long absence refreshes from at most stage 2 (3 days)
     nextStageIndex = Math.min(2, nextStageIndex + 1) as 0 | 1 | 2 | 3 | 4;
@@ -61,24 +87,42 @@ export function advanceReviewSchedule(
   }
 
   const intervalDays = REVIEW_INTERVAL_DAYS[nextStageIndex] ?? 1;
-  const nextReviewMs = nowMs + intervalDays * DAY_MS;
+  const delayMs = intervalDays === 0 ? sessionGapMs : intervalDays * DAY_MS;
+  const nextReviewMs = nowMs + delayMs;
+
+  const prevIndIso = previous?.lastIndependentSuccessIso;
+  const prevIndMs = prevIndIso ? Date.parse(prevIndIso) : NaN;
+  const isNewIndependentSession =
+    independentSuccess &&
+    Number.isFinite(prevIndMs) &&
+    nowMs - prevIndMs >= sessionGapMs;
+
+  const lastIndependentSuccessIso = independentSuccess ? nowIso : prevIndIso;
+  const priorIndependentSuccessIso = isNewIndependentSession
+    ? prevIndIso
+    : previous?.priorIndependentSuccessIso;
 
   return {
     skillId,
     stageIndex: nextStageIndex,
-    lastPracticedIso: new Date(nowMs).toISOString(),
+    lastPracticedIso: nowIso,
     nextReviewIso: new Date(nextReviewMs).toISOString(),
+    ...(lastIndependentSuccessIso ? { lastIndependentSuccessIso } : {}),
+    ...(priorIndependentSuccessIso ? { priorIndependentSuccessIso } : {}),
   };
 }
 
 /**
  * Returns which skills are currently due for spaced review at `now`.
- * Handles corrupt/missing dates and backward clock jumps safely.
+ * A stage-0 ("next session") interval requires at least `sessionGapHours`
+ * (default `MIN_SESSION_GAP_HOURS = 4`) since `lastPracticedIso`.
  */
 export function getDueReviewSkills(
   schedules: Readonly<Partial<Record<ObjectiveId, ReviewScheduleEntry>>>,
   now: Date = new Date(),
+  options: { sessionGapHours?: number | undefined } = {},
 ): ObjectiveId[] {
+  const sessionGapMs = (options.sessionGapHours ?? MIN_SESSION_GAP_HOURS) * HOUR_MS;
   const nowMs = now.getTime();
   const due: ObjectiveId[] = [];
 
@@ -86,7 +130,9 @@ export function getDueReviewSkills(
     const entry = schedules[id];
     if (!entry) continue;
     const dueMs = Date.parse(entry.nextReviewIso);
-    if (!Number.isFinite(dueMs) || nowMs >= dueMs) {
+    const practicedMs = Date.parse(entry.lastPracticedIso);
+    const sessionGapMet = !Number.isFinite(practicedMs) || nowMs - practicedMs >= sessionGapMs;
+    if ((!Number.isFinite(dueMs) || nowMs >= dueMs) && sessionGapMet) {
       due.push(id);
     }
   }

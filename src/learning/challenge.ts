@@ -54,8 +54,6 @@ export interface InteractiveTaskMeta {
     | undefined;
   /** Language scope when phonics/literacy items are generated ("en" | "es"). */
   languageScope?: "en" | "es" | undefined;
-  /** Interactive letter tiles or shape pieces for manipulation/encoding tasks. */
-  interactiveTiles?: readonly string[] | undefined;
   /** Target slots or composite blueprint description for construction/encoding tasks. */
   targetBlueprint?: string | undefined;
   /** Optional story passage i18n key for reading comprehension or connected reading. */

@@ -25,7 +25,7 @@ const FAMILY_BY_ID: Readonly<Record<ScienceItemId, string>> = {
 };
 
 /**
- * Naturekeeper Quests (NGSS 1-LS1-1, 1-ESS1-2; NC Science LS.1.1):
+ * Naturekeeper Quests (NGSS K-LS1-1, 1-ESS1-2):
  * Teaches living vs. nonliving things, animal habitats, plant life cycles and
  * survival needs (water, sunlight, air, soil), seasons/weather, and observable
  * material properties while explicitly distinguishing story magic from real science.

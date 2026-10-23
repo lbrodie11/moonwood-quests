@@ -207,12 +207,12 @@
       "equation": "{{a}} → {{b}} → {{c}} → ?"
     },
     "phonics": {
-      "soundRecognition": "Listen for the first and last sounds in {{icon}} ({{clue}}). Which word matches those sounds?",
-      "soundMatch": "Look at the picture clue {{icon}} ({{clue}}). Blend the sounds and pick the matching word!",
-      "segmentWord": "Count and tap each sound in {{icon}} ({{clue}}). Which word has those sounds in order?",
-      "buildWord": "Build the word that means {{icon}} ({{clue}}) by matching every letter sound!",
-      "storyClue": "Read the story sentence and choose the word that fits the blank: \"{{sentence}}\"",
-      "storySentence": "Connected reading: \"{{sentence}}\" ({{clue}}). Which decoded word completes the sentence?",
+      "soundRecognition": "Check each letter sound ({{elkonin}}, {{soundCount}} sounds) for the word that means: {{clue}}. Which word matches every sound?",
+      "soundMatch": "Blend the {{soundCount}} sounds smoothly ({{elkonin}}) for: {{clue}}. Which word do those sounds make?",
+      "segmentWord": "Tap each Elkonin sound box ({{elkonin}}, {{soundCount}} sounds) for: {{clue}}. Which word has those sounds in order?",
+      "buildWord": "Encode the {{soundCount}}-sound word ({{elkonin}}) that means: {{clue}}. Which spelling puts every grapheme in the right place?",
+      "storyClue": "Decode the three words and choose the one that fits the sentence: \"{{sentence}}\"",
+      "storySentence": "Connected reading: Read \"{{sentence}}\" and choose the decoded word that completes the story.",
       "parentPronunciationGuide": "Grown-up pronunciation tip: Model pure phoneme sounds smoothly without adding 'uh' to consonants.",
       "equation": "{{icon}} = ?",
       "word": {
@@ -222,15 +222,25 @@
           "icon": "🌙",
           "sounds": "M - OO - N",
           "clue": "shines silver in the night sky",
-          "sentence": "The silver ___ glows above the forest."
+          "sentence": "The silver ___ glows above the forest.",
+          "choice": {
+            "1": { "label": "MOON" },
+            "2": { "label": "SOON" },
+            "3": { "label": "NOON" }
+          }
         },
         "2": {
           "label": "STAR",
           "word": "STAR",
           "icon": "⭐",
-          "sounds": "S - T - A - R",
+          "sounds": "S - T - AR",
           "clue": "twinkles high above the tower",
-          "sentence": "Make a wish upon a bright ___."
+          "sentence": "Make a wish upon a bright ___.",
+          "choice": {
+            "1": { "label": "STAR" },
+            "2": { "label": "SCAR" },
+            "3": { "label": "STIR" }
+          }
         },
         "3": {
           "label": "OWL",
@@ -238,7 +248,12 @@
           "icon": "🦉",
           "sounds": "OW - L",
           "clue": "a wise bird who says hoo-hoo",
-          "sentence": "Pip the wise ___ hoots in the tree."
+          "sentence": "Pip the wise ___ hoots in the tree.",
+          "choice": {
+            "1": { "label": "OWL" },
+            "2": { "label": "HOWL" },
+            "3": { "label": "FOWL" }
+          }
         },
         "4": {
           "label": "FROG",
@@ -246,7 +261,12 @@
           "icon": "🐸",
           "sounds": "F - R - O - G",
           "clue": "hops on green lily pads",
-          "sentence": "The happy green ___ jumps in the brook."
+          "sentence": "The happy green ___ jumps in the brook.",
+          "choice": {
+            "1": { "label": "FROG" },
+            "2": { "label": "FOG" },
+            "3": { "label": "FLAG" }
+          }
         },
         "5": {
           "label": "TREE",
@@ -254,7 +274,12 @@
           "icon": "🌲",
           "sounds": "T - R - EE",
           "clue": "tall woodland home with leaves",
-          "sentence": "Moss naps under the tall green ___."
+          "sentence": "Moss naps under the tall green ___.",
+          "choice": {
+            "1": { "label": "TREE" },
+            "2": { "label": "FREE" },
+            "3": { "label": "TRAY" }
+          }
         },
         "6": {
           "label": "BOOK",
@@ -262,7 +287,12 @@
           "icon": "📖",
           "sounds": "B - OO - K",
           "clue": "open its pages to read a tale",
-          "sentence": "Luma opens a magical story ___."
+          "sentence": "Luma opens a magical story ___.",
+          "choice": {
+            "1": { "label": "BOOK" },
+            "2": { "label": "LOOK" },
+            "3": { "label": "BACK" }
+          }
         },
         "7": {
           "label": "CROWN",
@@ -270,7 +300,12 @@
           "icon": "👑",
           "sounds": "C - R - OW - N",
           "clue": "a golden hat for a royal friend",
-          "sentence": "The starlight ___ shines on the tower."
+          "sentence": "The starlight ___ shines on the tower.",
+          "choice": {
+            "1": { "label": "CROWN" },
+            "2": { "label": "CLOWN" },
+            "3": { "label": "BROWN" }
+          }
         },
         "8": {
           "label": "GEM",
@@ -278,7 +313,12 @@
           "icon": "💎",
           "sounds": "G - E - M",
           "clue": "a sparkling crystal in the cave",
-          "sentence": "Bramble found a glowing purple ___."
+          "sentence": "Bramble found a glowing purple ___.",
+          "choice": {
+            "1": { "label": "GEM" },
+            "2": { "label": "GUM" },
+            "3": { "label": "HEM" }
+          }
         },
         "9": {
           "label": "FOX",
@@ -286,7 +326,12 @@
           "icon": "🦊",
           "sounds": "F - O - X",
           "clue": "a clever friend with a fluffy tail",
-          "sentence": "Luma the clever ___ loves to read."
+          "sentence": "Luma the clever ___ loves to read.",
+          "choice": {
+            "1": { "label": "FOX" },
+            "2": { "label": "BOX" },
+            "3": { "label": "FIX" }
+          }
         },
         "10": {
           "label": "CAT",
@@ -294,7 +339,12 @@
           "icon": "🐱",
           "sounds": "C - A - T",
           "clue": "purrs softly by the warm hearth",
-          "sentence": "The cozy little ___ purrs by the lantern."
+          "sentence": "The cozy little ___ purrs by the lantern.",
+          "choice": {
+            "1": { "label": "CAT" },
+            "2": { "label": "COT" },
+            "3": { "label": "CAP" }
+          }
         },
         "11": {
           "label": "SUN",
@@ -302,15 +352,25 @@
           "icon": "☀️",
           "sounds": "S - U - N",
           "clue": "warm golden light of morning",
-          "sentence": "The morning ___ warms the meadow."
+          "sentence": "The morning ___ warms the meadow.",
+          "choice": {
+            "1": { "label": "SUN" },
+            "2": { "label": "RUN" },
+            "3": { "label": "SAP" }
+          }
         },
         "12": {
           "label": "BELL",
           "word": "BELL",
           "icon": "🔔",
-          "sounds": "B - E - L - L",
+          "sounds": "B - E - LL",
           "clue": "rings with a clear silver chime",
-          "sentence": "The silver tower ___ rings out."
+          "sentence": "The silver tower ___ rings out.",
+          "choice": {
+            "1": { "label": "BELL" },
+            "2": { "label": "BALL" },
+            "3": { "label": "BILL" }
+          }
         }
       }
     },
@@ -482,7 +542,7 @@
       "paperCompanionPrompt": "Paper & Pencil Companion: Grab a real pencil and paper to write this word or sentence yourself!",
       "item": {
         "1": {
-          "prompt": "Listen to the three sounds in the word for a purring pet (🐱). Which spelling has the letters in the right order?",
+          "prompt": "Segment the three sounds in the word for a purring pet (🐱). Which spelling has the letters in the right order?",
           "label": "CAT",
           "choice": {
             "1": { "label": "CAT" },
@@ -491,7 +551,7 @@
           }
         },
         "2": {
-          "prompt": "Listen to the three sounds in the word for warm morning daylight (☀️). Which spelling is correct?",
+          "prompt": "Segment the three sounds in the word for warm morning daylight (☀️). Which spelling is correct?",
           "label": "SUN",
           "choice": {
             "1": { "label": "SUN" },
@@ -514,7 +574,7 @@
           "choice": {
             "1": { "label": "BELL" },
             "2": { "label": "BLE" },
-            "3": { "label": "BEl" }
+            "3": { "label": "BEL" }
           }
         },
         "5": {
@@ -522,7 +582,7 @@
           "label": "Pip sees the moon.",
           "choice": {
             "1": { "label": "Pip sees the moon." },
-            "2": { "label": "The moon sees Pip." },
+            "2": { "label": "Pip the moon sees." },
             "3": { "label": "Sees Pip moon the." }
           }
         },
@@ -532,7 +592,7 @@
           "choice": {
             "1": { "label": "Moss lights a lantern." },
             "2": { "label": "Lights Moss lantern a." },
-            "3": { "label": "A lantern lights Moss." }
+            "3": { "label": "A Moss lantern lights." }
           }
         },
         "7": {
@@ -572,7 +632,7 @@
           "label": "The gold triangle gem",
           "choice": {
             "1": { "label": "The gold triangle gem" },
-            "2": { "label": "The gold square gem (4 sides)" },
+            "2": { "label": "The gold square gem" },
             "3": { "label": "The purple triangle gem" }
           }
         },
@@ -605,11 +665,11 @@
         },
         "6": {
           "prompt": "Rule Finder: Blue gems give 2 mana, gold gems give 5 mana. How can you make 7 mana with two gems?",
-          "label": "Use 1 blue gem (2) and 1 gold gem (5)",
+          "label": "Use 1 blue gem and 1 gold gem",
           "choice": {
-            "1": { "label": "Use 1 blue gem (2) and 1 gold gem (5)" },
-            "2": { "label": "Use 2 blue gems (2 + 2 = 4)" },
-            "3": { "label": "Use 2 gold gems (5 + 5 = 10)" }
+            "1": { "label": "Use 1 blue gem and 1 gold gem" },
+            "2": { "label": "Use 2 blue gems" },
+            "3": { "label": "Use 2 gold gems" }
           }
         },
         "7": {
@@ -659,8 +719,8 @@
           "label": "Water, sunlight, air, and soil",
           "choice": {
             "1": { "label": "Water, sunlight, air, and soil" },
-            "2": { "label": "Only darkness and glass marbles" },
-            "3": { "label": "Warm wool cloaks and brass keys" }
+            "2": { "label": "Only soil and shade with no water" },
+            "3": { "label": "Only water inside a dark closed box" }
           }
         },
         "4": {
@@ -687,7 +747,7 @@
           "choice": {
             "1": { "label": "Summer" },
             "2": { "label": "Winter" },
-            "3": { "label": "Midnight" }
+            "3": { "label": "Autumn" }
           }
         },
         "7": {
@@ -715,20 +775,20 @@
       "item": {
         "1": {
           "prompt": "Bridge Builder Workshop: The brook is 8 moon-tiles wide. Which pair of planks spans 8 tiles with no gaps?",
-          "label": "A 5-tile plank + a 3-tile plank (or two 4-tile planks)",
+          "label": "A 5-tile plank + a 3-tile plank",
           "choice": {
-            "1": { "label": "A 5-tile plank + a 3-tile plank (8 tiles)" },
-            "2": { "label": "A 4-tile plank + a 2-tile plank (6 tiles)" },
-            "3": { "label": "A 3-tile plank + a 2-tile plank (5 tiles)" }
+            "1": { "label": "A 5-tile plank + a 3-tile plank" },
+            "2": { "label": "A 4-tile plank + a 2-tile plank" },
+            "3": { "label": "A 3-tile plank + a 2-tile plank" }
           }
         },
         "2": {
           "prompt": "Bridge Builder Workshop: The canyon is 10 moon-tiles wide. Which design spans all 10 tiles?",
-          "label": "A 6-tile plank + a 4-tile plank (or two 5-tile planks)",
+          "label": "A 6-tile plank + a 4-tile plank",
           "choice": {
-            "1": { "label": "A 6-tile plank + a 4-tile plank (10 tiles)" },
-            "2": { "label": "A 5-tile plank + a 3-tile plank (8 tiles)" },
-            "3": { "label": "Two 3-tile planks (6 tiles)" }
+            "1": { "label": "A 6-tile plank + a 4-tile plank" },
+            "2": { "label": "A 5-tile plank + a 3-tile plank" },
+            "3": { "label": "Two 3-tile planks" }
           }
         },
         "3": {
@@ -837,8 +897,8 @@
         "hint3": "Guided magic: {{a}} pieces and {{b}} pieces compose {{answer}} sigil pieces! Tap {{answer}}."
       },
       "phonics-words": {
-        "hint1": "Point to each letter tile and sound out the phonemes slowly: {{sounds}}.",
-        "hint2": "Blend the phonemes smoothly together from left to right: {{sounds}}.",
+        "hint1": "Check each Elkonin sound box ({{elkonin}}, {{soundCount}} sounds) and compare the beginning, middle, and ending letters.",
+        "hint2": "Slide the {{soundCount}} sounds smoothly from left to right ({{elkonin}}) and check the vowel pattern.",
         "hint3": "Guided magic: the sounds {{sounds}} blend into {{answer}}! Tap {{answer}}."
       },
       "star-patterns": {
@@ -852,7 +912,7 @@
         "hint3": "Guided magic: the story shows \"{{answer}}\"! Tap {{answer}}."
       },
       "vocabulary-oral": {
-        "hint1": "Listen to how the Moonwood character uses the word in the sentence.",
+        "hint1": "Read how the Moonwood character uses the word in the sentence.",
         "hint2": "Think about whether the words belong in the same group or have similar meanings.",
         "hint3": "Guided magic: the matching meaning is \"{{answer}}\"! Tap {{answer}}."
       },

@@ -35,11 +35,6 @@ export class AccessibleChallengeUI {
     "data-testid": "story-passage",
     hidden: true,
   });
-  private readonly tileTray = el("div", {
-    className: "interactive-tile-tray",
-    "data-testid": "interactive-tiles",
-    hidden: true,
-  });
   private readonly equation = el("p", { className: "challenge-equation", "data-testid": "equation" });
   private readonly choices = el("div", { className: "choices", role: "group", "aria-labelledby": "challenge-prompt" });
   private readonly reflectionTray = el("div", {
@@ -64,6 +59,7 @@ export class AccessibleChallengeUI {
   private questTitleKey = "";
   private questIntroKey = "";
   private shouldFocusFirstChoice = false;
+  private reflectionEarned = false;
   private currentModality: "independent-reading" | "listening" = "independent-reading";
 
   constructor(
@@ -86,7 +82,6 @@ export class AccessibleChallengeUI {
       this.assessmentBanner,
       this.passageBox,
       this.prompt,
-      this.tileTray,
       this.equation,
       this.choices,
       this.feedback,
@@ -101,11 +96,15 @@ export class AccessibleChallengeUI {
     this.title.textContent = t(titleKey);
     this.intro.textContent = introKey ? t(introKey) : "";
     this.shouldFocusFirstChoice = false;
+    this.reflectionEarned = false;
   }
 
   show(challenge: ChallengePresentation): void {
     const focusWasInside = this.root.contains(document.activeElement) || this.shouldFocusFirstChoice;
     this.current = challenge;
+    if (challenge.isAssessment && challenge.index > 1) {
+      this.reflectionEarned = true;
+    }
     this.currentModality = "independent-reading";
     this.feedback.textContent = "";
     this.feedback.dataset.kind = "";
@@ -120,10 +119,16 @@ export class AccessibleChallengeUI {
   }
 
   handleFeedback(feedback: GameEventMap["feedback"]): void {
-    if (this.current?.meta?.reflectionPromptKey) {
-      this.reflectionTray.hidden = false;
-    }
     if (feedback.kind === "correct") {
+      this.reflectionEarned = true;
+      if (this.current?.meta?.reflectionPromptKey) {
+        this.reflectionTray.hidden = false;
+      }
+      if (this.current?.operator === "phonics" && this.current.meta?.parentGuideKey) {
+        const [wordId = 1] = this.current.operands;
+        const audioEntry = getWordAudioEntry(wordId, currentLanguage());
+        this.parentGuideTip.textContent = `💡 ${t(this.current.meta.parentGuideKey)} (${audioEntry.ipa}: ${audioEntry.parentPronunciationTip})`;
+      }
       const focusWasInChoices = this.choices.contains(document.activeElement);
       this.feedback.dataset.kind = "correct";
       this.feedback.textContent = t("feedback.correct");
@@ -179,15 +184,29 @@ export class AccessibleChallengeUI {
     }
   }
 
+  private elkoninInfo(wordId: number): { elkonin: string; soundCount: number } {
+    const rawSounds = t(`challenge.phonics.word.${wordId}.sounds`);
+    const parts = rawSounds
+      .split("-")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    return {
+      elkonin: parts.map(() => "▢").join(" "),
+      soundCount: parts.length,
+    };
+  }
+
   promptText(): string {
     const c = this.current;
     if (!c) return "";
     if (c.operator === "phonics") {
       const [wordId = 1] = c.operands;
+      const { elkonin, soundCount } = this.elkoninInfo(wordId);
+      const isStoryPhonics = c.promptKey.includes("story");
       return t(c.promptKey, {
-        icon: t(`challenge.phonics.word.${wordId}.icon`),
-        sounds: t(`challenge.phonics.word.${wordId}.sounds`),
-        clue: t(`challenge.phonics.word.${wordId}.clue`),
+        elkonin,
+        soundCount,
+        clue: isStoryPhonics ? "" : t(`challenge.phonics.word.${wordId}.clue`),
         sentence: t(`challenge.phonics.word.${wordId}.sentence`),
       });
     }
@@ -200,21 +219,26 @@ export class AccessibleChallengeUI {
   }
 
   /**
-   * Produces TTS-safe narration text using `PHONEME_AUDIO_REGISTRY` so browser
-   * speech synthesis never reads raw hyphenated phoneme strings like "M - OO - N" aloud.
+   * Produces TTS-safe narration text without uttering the target word before the
+   * child answers or reading raw hyphenated phoneme strings like "M - OO - N" aloud.
    */
   spokenPromptText(): string {
     const c = this.current;
     if (!c) return "";
     if (c.operator === "phonics") {
       const [wordId = 1] = c.operands;
-      const audioEntry = getWordAudioEntry(wordId, currentLanguage());
+      const { soundCount } = this.elkoninInfo(wordId);
+      const isStoryPhonics = c.promptKey.includes("story");
       return t(c.promptKey, {
-        icon: "",
-        sounds: audioEntry.ttsSafeText,
-        clue: t(`challenge.phonics.word.${wordId}.clue`),
+        elkonin: "",
+        soundCount,
+        clue: isStoryPhonics ? "" : t(`challenge.phonics.word.${wordId}.clue`),
         sentence: t(`challenge.phonics.word.${wordId}.sentence`),
-      });
+      })
+        .replace(/\(\s*,?\s*/g, "(")
+        .replace(/\(\s*\)/g, "")
+        .replace(/\s{2,}/g, " ")
+        .trim();
     }
     return this.promptText();
   }
@@ -225,7 +249,11 @@ export class AccessibleChallengeUI {
       return level === 3 ? t("feedback.hint3", { answer: answerLabel }) : t(`feedback.hint${level}`);
     }
     const [a = 0, b = 0, third = 0, step = 1] = c.operands;
-    const sounds = c.operator === "phonics" ? t(`challenge.phonics.word.${a || 1}.sounds`) : "";
+    const isPhonics = c.operator === "phonics";
+    const sounds = isPhonics ? t(`challenge.phonics.word.${a || 1}.sounds`) : "";
+    const { elkonin, soundCount } = isPhonics
+      ? this.elkoninInfo(a || 1)
+      : { elkonin: "", soundCount: 0 };
     return t(`feedback.byObjective.${c.objectiveId}.hint${level}`, {
       a,
       b,
@@ -233,6 +261,8 @@ export class AccessibleChallengeUI {
       step,
       tensValue: a * 10,
       sounds,
+      elkonin,
+      soundCount,
       answer: answerLabel,
     });
   }
@@ -276,9 +306,9 @@ export class AccessibleChallengeUI {
       this.equation.textContent = t("challenge.pattern.equation", { a, b, c: third });
     } else if (c.operator === "phonics") {
       const [wordId = 1] = c.operands;
-      const isStoryPhonics = c.promptKey.includes("story");
+      const { elkonin } = this.elkoninInfo(wordId);
       this.equation.textContent = t("challenge.phonics.equation", {
-        icon: isStoryPhonics ? "📖" : t(`challenge.phonics.word.${wordId}.icon`),
+        icon: elkonin,
       });
     } else if (
       c.operator === "comprehension" ||
@@ -381,31 +411,9 @@ export class AccessibleChallengeUI {
       this.passageBox.hidden = true;
     }
 
-    // 3. Interactive letter/word/workshop tiles
-    clear(this.tileTray);
-    if (c.meta?.interactiveTiles?.length) {
-      this.tileTray.hidden = false;
-      for (const tileLabel of c.meta.interactiveTiles) {
-        const tileBtn = el(
-          "button",
-          {
-            type: "button",
-            className: "tool subtle interactive-tile",
-          },
-          `🔹 ${tileLabel}`,
-        );
-        tileBtn.addEventListener("click", () => {
-          tileBtn.classList.toggle("tile-selected");
-        });
-        this.tileTray.append(tileBtn);
-      }
-    } else {
-      this.tileTray.hidden = true;
-    }
-
-    // 4. Non-graded strategy reflection cards (remain hidden until after an answer is submitted)
+    // 3. Non-graded strategy reflection cards (remain hidden until after a correct answer or completed assessment item)
     clear(this.reflectionTray);
-    this.reflectionTray.hidden = true;
+    this.reflectionTray.hidden = !(this.reflectionEarned && Boolean(c.meta?.reflectionPromptKey));
     if (c.meta?.reflectionPromptKey) {
       const reflectionStatus = el("p", {
         className: "reflection-thanks",
@@ -442,16 +450,10 @@ export class AccessibleChallengeUI {
       );
     }
 
-    // 5. Grown-up / companion guidance tip (enriched with phoneme audio registry tips on phonics items)
+    // 4. Grown-up / companion guidance tip (word-specific IPA/pronunciation is revealed only after answering)
     if (c.meta?.parentGuideKey) {
       this.parentGuideTip.hidden = false;
-      if (c.operator === "phonics") {
-        const [wordId = 1] = c.operands;
-        const audioEntry = getWordAudioEntry(wordId, currentLanguage());
-        this.parentGuideTip.textContent = `💡 ${t(c.meta.parentGuideKey)} (${audioEntry.ipa}: ${audioEntry.parentPronunciationTip})`;
-      } else {
-        this.parentGuideTip.textContent = `💡 ${t(c.meta.parentGuideKey)}`;
-      }
+      this.parentGuideTip.textContent = `💡 ${t(c.meta.parentGuideKey)}`;
     } else {
       this.parentGuideTip.hidden = true;
       this.parentGuideTip.textContent = "";
