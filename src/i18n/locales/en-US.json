@@ -209,7 +209,7 @@
     "phonics": {
       "soundRecognition": "Check each letter sound ({{elkonin}}, {{soundCount}} sounds) for the word that means: {{clue}}. Which word matches every sound?",
       "soundMatch": "Blend the {{soundCount}} sounds smoothly ({{elkonin}}) for: {{clue}}. Which word do those sounds make?",
-      "segmentWord": "Tap each Elkonin sound box ({{elkonin}}, {{soundCount}} sounds) for: {{clue}}. Which word has those sounds in order?",
+      "segmentWord": "Count each Elkonin sound box ({{elkonin}}, {{soundCount}} sounds) for: {{clue}}. Which word has those sounds in order?",
       "buildWord": "Encode the {{soundCount}}-sound word ({{elkonin}}) that means: {{clue}}. Which spelling puts every grapheme in the right place?",
       "storyClue": "Decode the three words and choose the one that fits the sentence: \"{{sentence}}\"",
       "storySentence": "Connected reading: Read \"{{sentence}}\" and choose the decoded word that completes the story.",
@@ -239,7 +239,7 @@
           "choice": {
             "1": { "label": "STAR" },
             "2": { "label": "SCAR" },
-            "3": { "label": "STIR" }
+            "3": { "label": "CART" }
           }
         },
         "3": {
@@ -264,7 +264,7 @@
           "sentence": "The happy green ___ jumps in the brook.",
           "choice": {
             "1": { "label": "FROG" },
-            "2": { "label": "FOG" },
+            "2": { "label": "FROM" },
             "3": { "label": "FLAG" }
           }
         },
@@ -278,7 +278,7 @@
           "choice": {
             "1": { "label": "TREE" },
             "2": { "label": "FREE" },
-            "3": { "label": "TRAY" }
+            "3": { "label": "MEET" }
           }
         },
         "6": {
@@ -592,7 +592,7 @@
           "choice": {
             "1": { "label": "Moss lights a lantern." },
             "2": { "label": "Lights Moss lantern a." },
-            "3": { "label": "A Moss lantern lights." }
+            "3": { "label": "Lantern a lights Moss." }
           }
         },
         "7": {

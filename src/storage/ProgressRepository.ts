@@ -48,8 +48,6 @@ export const ReviewScheduleEntrySchema = z.object({
   stageIndex: z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3), z.literal(4)]),
   lastPracticedIso: z.string(),
   nextReviewIso: z.string(),
-  lastIndependentSuccessIso: z.string().optional(),
-  priorIndependentSuccessIso: z.string().optional(),
 });
 
 /**

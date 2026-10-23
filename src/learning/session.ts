@@ -262,7 +262,7 @@ export class QuestRunner {
       !listeningOnly;
 
     return {
-      attemptId: `${challenge.id}:try${this.tries}:${nowMs}`,
+      attemptId: `${challenge.id}:${challenge.operands.join("-")}:try${this.tries}:${nowMs}`,
       skillId: challenge.objectiveId,
       contentVersion: "2.0.0",
       locale: this.locale,

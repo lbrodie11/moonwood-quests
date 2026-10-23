@@ -28,10 +28,6 @@ export interface ReviewScheduleEntry {
   stageIndex: 0 | 1 | 2 | 3 | 4;
   lastPracticedIso: string;
   nextReviewIso: string;
-  /** Timestamp of the skill's most recent independent success (not overwritten by supported attempts). */
-  lastIndependentSuccessIso?: string | undefined;
-  /** Timestamp of the most recent independent success from a prior session before the latest independent session. */
-  priorIndependentSuccessIso?: string | undefined;
 }
 
 /**
@@ -74,10 +70,6 @@ export function advanceReviewSchedule(
       stageIndex: previous.stageIndex,
       lastPracticedIso: previous.lastPracticedIso,
       nextReviewIso: previous.nextReviewIso,
-      lastIndependentSuccessIso: previous.lastIndependentSuccessIso ?? nowIso,
-      ...(previous.priorIndependentSuccessIso
-        ? { priorIndependentSuccessIso: previous.priorIndependentSuccessIso }
-        : {}),
     };
   } else if (longAbsence) {
     // Returning after a long absence refreshes from at most stage 2 (3 days)
@@ -90,25 +82,11 @@ export function advanceReviewSchedule(
   const delayMs = intervalDays === 0 ? sessionGapMs : intervalDays * DAY_MS;
   const nextReviewMs = nowMs + delayMs;
 
-  const prevIndIso = previous?.lastIndependentSuccessIso;
-  const prevIndMs = prevIndIso ? Date.parse(prevIndIso) : NaN;
-  const isNewIndependentSession =
-    independentSuccess &&
-    Number.isFinite(prevIndMs) &&
-    nowMs - prevIndMs >= sessionGapMs;
-
-  const lastIndependentSuccessIso = independentSuccess ? nowIso : prevIndIso;
-  const priorIndependentSuccessIso = isNewIndependentSession
-    ? prevIndIso
-    : previous?.priorIndependentSuccessIso;
-
   return {
     skillId,
     stageIndex: nextStageIndex,
     lastPracticedIso: nowIso,
     nextReviewIso: new Date(nextReviewMs).toISOString(),
-    ...(lastIndependentSuccessIso ? { lastIndependentSuccessIso } : {}),
-    ...(priorIndependentSuccessIso ? { priorIndependentSuccessIso } : {}),
   };
 }
 

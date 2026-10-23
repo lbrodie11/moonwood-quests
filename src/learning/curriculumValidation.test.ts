@@ -585,6 +585,24 @@ describe("Phase 3 — Evidence Engine, Mastery Honesty, and Spaced Review", () =
     expect(summary2d.hasDelayedRetentionEvidence).toBe(true);
     expect(summary2d.hasTransferEvidence).toBe(true);
     expect(summary2d.classification).toBe("retained-mastery");
+
+    // 4. Mid-quest quit after struggling still steps back and schedules Stage 0 review
+    const quitRunner = new QuestRunner(
+      { ...forestGate, seenItemSignatures: prog2d.seenItemSignatures },
+      prog2d.objectives,
+      mulberry32(55),
+      () => day2.getTime(),
+    );
+    quitRunner.requestHint();
+    quitRunner.submit(quitRunner.current!.correctAnswer);
+    const quitProg = updateMastery(
+      prog2d,
+      quitRunner.masterySnapshot(),
+      day2,
+      quitRunner.recordedEvidence,
+      quitRunner.knownItemSignatures,
+    );
+    expect(quitProg.reviewSchedule?.["add-within-20"]?.stageIndex).toBe(0);
   });
 
   it("pins unambiguous sentence-order choices for spelling items 5 and 6 in en-US and es-US (A3 regression)", () => {
@@ -594,7 +612,7 @@ describe("Phase 3 — Evidence Engine, Mastery Honesty, and Spaced Review", () =
 
     expect(lookupKey(en, "challenge.spelling.item.6.choice.1.label")).toBe("Moss lights a lantern.");
     expect(lookupKey(en, "challenge.spelling.item.6.choice.2.label")).toBe("Lights Moss lantern a.");
-    expect(lookupKey(en, "challenge.spelling.item.6.choice.3.label")).toBe("A Moss lantern lights.");
+    expect(lookupKey(en, "challenge.spelling.item.6.choice.3.label")).toBe("Lantern a lights Moss.");
 
     expect(lookupKey(es, "challenge.spelling.item.5.choice.1.label")).toBe("Pip ve la luna.");
     expect(lookupKey(es, "challenge.spelling.item.5.choice.2.label")).toBe("La Pip luna ve.");
@@ -602,7 +620,7 @@ describe("Phase 3 — Evidence Engine, Mastery Honesty, and Spaced Review", () =
 
     expect(lookupKey(es, "challenge.spelling.item.6.choice.1.label")).toBe("Musgo enciende un farol.");
     expect(lookupKey(es, "challenge.spelling.item.6.choice.2.label")).toBe("Enciende Musgo farol un.");
-    expect(lookupKey(es, "challenge.spelling.item.6.choice.3.label")).toBe("Un Musgo farol enciende.");
+    expect(lookupKey(es, "challenge.spelling.item.6.choice.3.label")).toBe("Farol un enciende Musgo.");
   });
 
   it("ensures every standard code mentioned in docs/*.md exists in STANDARDS_REGISTRY and no standard with zero generating tasks is marked full or partial (A4 regression)", () => {
@@ -660,6 +678,31 @@ describe("Phase 3 — Evidence Engine, Mastery Honesty, and Spaced Review", () =
           generatedForStandard.length,
           `Standard ${s.id} (${s.code}) is marked ${s.coverageLevel} but has zero generated tasks`,
         ).toBeGreaterThan(0);
+      }
+    }
+
+    // Verify every test title cited in docs/EDUCATIONAL_OVERHAUL.md exists in the test files
+    const testSources = import.meta.glob<string>(
+      ["./*.test.ts", "../**/*.test.ts", "../../tests/e2e/*.spec.ts"],
+      {
+        query: "?raw",
+        import: "default",
+        eager: true,
+      },
+    );
+    const allTestSourceText = Object.values(testSources).join("\n");
+    const overhaulDoc =
+      docEntries.find(([f]) => f.endsWith("EDUCATIONAL_OVERHAUL.md"))?.[1] ?? "";
+    const citedTestRegex =
+      /`([^`]+)`\s+(?:and\s+`([^`]+)`\s+)?in\s+`(src\/[^`]+\.test\.ts|tests\/e2e\/[^`]+\.spec\.ts)`/g;
+    for (const match of overhaulDoc.matchAll(citedTestRegex)) {
+      const targetFile = match[3]!;
+      if (targetFile.endsWith("curriculumValidation.test.ts")) continue;
+      for (const title of [match[1], match[2]].filter((x): x is string => Boolean(x))) {
+        expect(
+          allTestSourceText.includes(title),
+          `Cited test "${title}" in docs/EDUCATIONAL_OVERHAUL.md not found in ${targetFile}`,
+        ).toBe(true);
       }
     }
   });

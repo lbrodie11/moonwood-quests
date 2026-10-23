@@ -73,16 +73,21 @@ function mergeEvidenceAndSchedule(
   const seenAttemptIds = new Set(existingLog.map((e) => e.attemptId));
   const mergedLog = [...existingLog];
   const skillOutcomesInQuest = new Map<ObjectiveId, boolean>();
+  const alreadySteppedBackSkills = new Set<ObjectiveId>();
 
   for (const record of newEvidence ?? []) {
+    const alreadySaved = seenAttemptIds.has(record.attemptId);
     if (record.completed) {
       const prevOutcome = skillOutcomesInQuest.get(record.skillId) ?? true;
       skillOutcomesInQuest.set(
         record.skillId,
         prevOutcome && record.independent && record.correct,
       );
+      if (alreadySaved && (!record.independent || !record.correct)) {
+        alreadySteppedBackSkills.add(record.skillId);
+      }
     }
-    if (seenAttemptIds.has(record.attemptId)) continue;
+    if (alreadySaved) continue;
     seenAttemptIds.add(record.attemptId);
     mergedLog.push({
       ...record,
@@ -91,13 +96,31 @@ function mergeEvidenceAndSchedule(
     });
   }
 
-  // Advance spaced review schedule once per skill when the quest session completes
-  if (advanceSchedule) {
-    for (const [skillId, allIndependent] of skillOutcomesInQuest.entries()) {
+  for (const [skillId, allIndependent] of skillOutcomesInQuest.entries()) {
+    if (advanceSchedule) {
+      if (!allIndependent && alreadySteppedBackSkills.has(skillId)) {
+        continue;
+      }
       existingSchedules[skillId] = advanceReviewSchedule(
         existingSchedules[skillId],
         skillId,
         allIndependent,
+        now,
+      );
+    } else if (!allIndependent && !alreadySteppedBackSkills.has(skillId)) {
+      // Mid-quest struggle: step back immediately so quitting mid-quest still schedules review
+      existingSchedules[skillId] = advanceReviewSchedule(
+        existingSchedules[skillId],
+        skillId,
+        false,
+        now,
+      );
+    } else if (!existingSchedules[skillId]) {
+      // Initialize unscheduled skill at Stage 0 so quitting mid-quest still creates a schedule
+      existingSchedules[skillId] = advanceReviewSchedule(
+        undefined,
+        skillId,
+        false,
         now,
       );
     }

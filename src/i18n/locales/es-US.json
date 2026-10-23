@@ -209,7 +209,7 @@
     "phonics": {
       "soundRecognition": "Revisa cada sonido ({{elkonin}}, {{soundCount}} sonidos) de la palabra que significa: {{clue}}. ¿Qué palabra tiene todos esos sonidos?",
       "soundMatch": "Une los {{soundCount}} sonidos en orden ({{elkonin}}) para: {{clue}}. ¿Qué palabra forman?",
-      "segmentWord": "Toca cada casilla de sonido ({{elkonin}}, {{soundCount}} sonidos) para: {{clue}}. ¿Qué palabra tiene esos sonidos en orden?",
+      "segmentWord": "Cuenta cada casilla de sonido ({{elkonin}}, {{soundCount}} sonidos) para: {{clue}}. ¿Qué palabra tiene esos sonidos en orden?",
       "buildWord": "Forma la palabra de {{soundCount}} sonidos ({{elkonin}}) que significa: {{clue}}. ¿Qué opción tiene cada letra en el orden correcto?",
       "storyClue": "Decodifica las tres palabras y elige la que completa la oración: \"{{sentence}}\"",
       "storySentence": "Lectura conectada: Lee \"{{sentence}}\" y elige la palabra decodificada que completa el cuento.",
@@ -368,7 +368,7 @@
           "sentence": "La ___ de plata suena en la torre.",
           "choice": {
             "1": { "label": "CAMPANA" },
-            "2": { "label": "CABAÑA" },
+            "2": { "label": "VENTANA" },
             "3": { "label": "CAMINO" }
           }
         }
@@ -592,7 +592,7 @@
           "choice": {
             "1": { "label": "Musgo enciende un farol." },
             "2": { "label": "Enciende Musgo farol un." },
-            "3": { "label": "Un Musgo farol enciende." }
+            "3": { "label": "Farol un enciende Musgo." }
           }
         },
         "7": {

@@ -102,9 +102,7 @@ export class AccessibleChallengeUI {
   show(challenge: ChallengePresentation): void {
     const focusWasInside = this.root.contains(document.activeElement) || this.shouldFocusFirstChoice;
     this.current = challenge;
-    if (challenge.isAssessment && challenge.index > 1) {
-      this.reflectionEarned = true;
-    }
+    this.reflectionEarned = Boolean(challenge.isAssessment && challenge.index > 1);
     this.currentModality = "independent-reading";
     this.feedback.textContent = "";
     this.feedback.dataset.kind = "";

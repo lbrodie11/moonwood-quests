@@ -31,9 +31,9 @@ Pattern membership is enforced by `validatePhonicsCurriculum()` against each uni
 | Unit ID | Difficulty | Prerequisite | Allowed Patterns (`allowedPatterns`) | Taught Graphemes | Target Words (`wordIds`) | Real-Word Minimal-Pair Distractors |
 |---|---|---|---|---|---|---|
 | `unit-1-cvc` | 1 | None | `cvc-short-vowel` | `c, a, t, s, u, n, f, o, x, g, e, m` | `CAT` (10), `SUN` (11), `FOX` (9), `GEM` (8) | `CAT`: `COT`, `CAP`<br>`SUN`: `RUN`, `SAP`<br>`FOX`: `BOX`, `FIX`<br>`GEM`: `GUM`, `HEM` |
-| `unit-2-blends-floss` | 2 | `unit-1-cvc` | `floss-or-digraph`, `consonant-blend` | `b, ll, fr, r` | `BELL` (12), `FROG` (4) | `BELL`: `BALL`, `BILL`<br>`FROG`: `FOG`, `FLAG` |
-| `unit-3-vowel-teams` | 3 | `unit-2-blends-floss` | `vowel-team-or-diphthong` | `m, oo, tr, ee, k` | `MOON` (1), `TREE` (5), `BOOK` (6) | `MOON`: `SOON`, `NOON`<br>`TREE`: `FREE`, `TRAY`<br>`BOOK`: `LOOK`, `BACK` |
-| `unit-4-connected` | 4 | `unit-3-vowel-teams` | `r-controlled`, `vowel-team-or-diphthong` | `st, ar, ow, l, cr, n` | `STAR` (2), `OWL` (3), `CROWN` (7) | `STAR`: `SCAR`, `STIR`<br>`OWL`: `HOWL`, `FOWL`<br>`CROWN`: `CLOWN`, `BROWN` |
+| `unit-2-blends-floss` | 2 | `unit-1-cvc` | `floss-or-digraph`, `consonant-blend` | `b, ll, fr, r` | `BELL` (12), `FROG` (4) | `BELL`: `BALL`, `BILL`<br>`FROG`: `FROM`, `FLAG` |
+| `unit-3-vowel-teams` | 3 | `unit-2-blends-floss` | `vowel-team-or-diphthong` | `m, oo, tr, ee, k` | `MOON` (1), `TREE` (5), `BOOK` (6) | `MOON`: `SOON`, `NOON`<br>`TREE`: `FREE`, `MEET`<br>`BOOK`: `LOOK`, `BACK` |
+| `unit-4-connected` | 4 | `unit-3-vowel-teams` | `r-controlled`, `vowel-team-or-diphthong` | `st, ar, ow, l, cr, n` | `STAR` (2), `OWL` (3), `CROWN` (7) | `STAR`: `SCAR`, `CART`<br>`OWL`: `HOWL`, `FOWL`<br>`CROWN`: `CLOWN`, `BROWN` |
 
 ---
 
@@ -44,7 +44,7 @@ Spanish literacy progresses from open CV syllables and silent `h` (`es-silaba-ab
 | Unit ID | Difficulty | Prerequisite | Allowed Patterns (`allowedPatterns`) | Taught Graphemes | Target Words (`wordIds`) | Real-Word Minimal-Pair Distractors |
 |---|---|---|---|---|---|---|
 | `es-unit-1-abiertas` | 1 | None | `es-silaba-abierta`, `es-hiato-h-muda` | `a, e, i, o, u, l, n, g, t, r, m, b, ú, h` | `LUNA` (1), `GATO` (10), `RANA` (4), `GEMA` (8), `BÚHO` (3) | `LUNA`: `CUNA`, `LUPA`<br>`GATO`: `PATO`, `GALO`<br>`RANA`: `RAMA`, `LANA`<br>`GEMA`: `YEMA`, `REMA`<br>`BÚHO`: `BUZO`, `CUBO` |
-| `es-unit-2-trabadas` | 2 | `es-unit-1-abiertas` | `es-silaba-trabada-cvc` | `s, b, c, p, á` | `SOL` (11), `ÁRBOL` (5), `CAMPANA` (12) | `SOL`: `SAL`, `SUR`<br>`ÁRBOL`: `ARCO`, `FAROL`<br>`CAMPANA`: `CABAÑA`, `CAMINO` |
+| `es-unit-2-trabadas` | 2 | `es-unit-1-abiertas` | `es-silaba-trabada-cvc` | `s, b, c, p, á` | `SOL` (11), `ÁRBOL` (5), `CAMPANA` (12) | `SOL`: `SAL`, `SUR`<br>`ÁRBOL`: `ARCO`, `FAROL`<br>`CAMPANA`: `VENTANA`, `CAMINO` |
 | `es-unit-3-digrafos` | 3 | `es-unit-2-trabadas` | `es-digrafo` | `z, rr, tr, ll` | `ZORRO` (9), `ESTRELLA` (2) | `ZORRO`: `CORRO`, `GORRO`<br>`ESTRELLA`: `ESTELA`, `ESPUELA` |
 | `es-unit-4-oraciones` | 4 | `es-unit-3-digrafos` | `es-grupo-consonantico`, `es-silaba-abierta` | `br, c` | `LIBRO` (6), `CORONA` (7) | `LIBRO`: `LIBRE`, `LITRO`<br>`CORONA`: `COLINA`, `CORO` |
 

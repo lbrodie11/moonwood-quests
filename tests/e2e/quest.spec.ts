@@ -360,7 +360,7 @@ test("regional sanctuaries, Storykeeper reading vs. listening modality, assessme
   await page.getByTestId("read-myself-btn").click();
   await expect(page.getByTestId("read-myself-btn")).toHaveClass(/modality-active/);
 
-  // Strategy reflection tray remains hidden on hint requests and wrong answers, and appears only after a correct answer (A5.1)
+  // Strategy reflection tray remains hidden on hint requests and wrong answers, appears after a correct answer on Q1, and resets hidden on Q2 before answering (A5.1)
   await page.getByTestId("ask-hint").click();
   await expect(page.getByTestId("strategy-reflection")).toBeHidden();
   await answer(page, 2);
@@ -369,6 +369,8 @@ test("regional sanctuaries, Storykeeper reading vs. listening modality, assessme
   await expect(page.getByTestId("strategy-reflection")).toBeVisible();
   await page.locator(".reflection-card").first().click();
   await expect(page.getByTestId("reflection-thanks")).toContainText("Thank you for sharing your strategy");
+  await expect(page.getByTestId("equation")).not.toHaveText("Story #1");
+  await expect(page.getByTestId("strategy-reflection")).toBeHidden();
   await page.getByTestId("leave-quest").click();
 
   // 4. Enter Starlight Independent Check and verify hints are disabled in assessment mode
