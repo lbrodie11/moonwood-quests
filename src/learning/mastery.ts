@@ -73,10 +73,17 @@ export function recordAttempt(state: MasteryState, attempt: LearningAttempt): Ma
   return next;
 }
 
-/** Should the next problem lean on manipulatives with counting support? */
-export function chooseRepresentation(state: MasteryState, difficulty: Difficulty): Representation {
+/** Should the next problem lean on manipulatives with counting support, a number line, or symbols? */
+export function chooseRepresentation(
+  state: MasteryState,
+  difficulty: Difficulty,
+  objectiveId?: ObjectiveId,
+): Representation {
   if (difficulty === 1 || state.recentErrors >= MASTERY_RULES.objectsSupportAtErrors) {
     return "objects";
+  }
+  if (objectiveId === "star-patterns" || objectiveId === "compare-lengths") {
+    return "number-line";
   }
   return "symbols";
 }

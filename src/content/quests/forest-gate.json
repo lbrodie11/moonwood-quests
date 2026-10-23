@@ -14,6 +14,6 @@
     { "kind": "mini-boss", "count": 1, "difficultyFloor": 2 }
   ],
   "rewards": [{ "id": "companion.moss", "kind": "companion", "nameKey": "reward.moss.name" }],
-  "unlocks": ["crystal-caves"],
+  "unlocks": ["lantern-bridge"],
   "map": { "x": 135, "y": 395 }
 }

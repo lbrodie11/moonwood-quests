@@ -83,16 +83,29 @@ describe("QuestRunner", () => {
     expect(runner.submit(1)).toEqual({ kind: "ignored" });
   });
 
-  it("supports 3-level progressive hints via requestHint and third wrong try", () => {
+  it("supports 3-level progressive hints and never drops hint level backwards", () => {
     const runner = new QuestRunner(plan, {}, mulberry32(9));
     expect(runner.requestHint()).toBe(1);
     expect(runner.requestHint()).toBe(2);
-    expect(runner.requestHint()).toBe(3);
+    const wrong = runner.current!.choices.find((c) => c !== runner.current!.correctAnswer)!;
+    // Submitting a wrong answer after 2 requested hints advances to hintLevel 3 (never drops to 1)
+    expect(runner.submit(wrong)).toEqual({ kind: "incorrect", hintLevel: 3, ruledOut: wrong });
     expect(runner.requestHint()).toBe(3);
 
     const runner2 = new QuestRunner(plan, {}, mulberry32(10));
-    const wrong = runner2.current!.choices.find((c) => c !== runner2.current!.correctAnswer)!;
-    expect(runner2.submit(wrong).kind === "incorrect" && runner2.submit(wrong).kind === "incorrect").toBe(true);
-    expect(runner2.submit(wrong)).toEqual({ kind: "incorrect", hintLevel: 3, ruledOut: wrong });
+    const wrong2 = runner2.current!.choices.find((c) => c !== runner2.current!.correctAnswer)!;
+    expect(runner2.submit(wrong2)).toEqual({ kind: "incorrect", hintLevel: 1, ruledOut: wrong2 });
+    expect(runner2.submit(wrong2)).toEqual({ kind: "incorrect", hintLevel: 2, ruledOut: wrong2 });
+    expect(runner2.submit(wrong2)).toEqual({ kind: "incorrect", hintLevel: 3, ruledOut: wrong2 });
+  });
+
+  it("uses the number-line representation for star-patterns at difficulty >= 2", () => {
+    const patternPlan: QuestPlan = {
+      id: "pattern-test",
+      objectiveIds: ["star-patterns"],
+      phases: [{ kind: "mini-boss", count: 1, difficultyFloor: 2 }],
+    };
+    const runner = new QuestRunner(patternPlan, {}, mulberry32(11));
+    expect(runner.current?.representation).toBe("number-line");
   });
 });

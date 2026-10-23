@@ -1,8 +1,8 @@
 {
-  "name": "fantasy-learning-game",
+  "name": "moonwood-quests",
   "version": "0.1.0",
   "private": true,
-  "description": "A browser-first 2D fantasy learning game for ages six to seven (Grade 1 mathematics).",
+  "description": "A browser-first 2D fantasy learning adventure for ages six to seven (Grade 1 mathematics & early reading).",
   "license": "Apache-2.0",
   "type": "module",
   "engines": {

@@ -42,7 +42,6 @@ export const QuestSchema = z.object({
   status: z.enum(["playable", "planned"]),
   regionId: RegionIdSchema.default("whispering-woods"),
   guideId: GuideIdSchema.default("pip"),
-  prerequisiteQuestId: z.string().regex(/^[a-z0-9-]+$/).optional(),
   titleKey: i18nKey,
   introKey: i18nKey,
   /** Phaser scene key that presents this quest's mechanic. */

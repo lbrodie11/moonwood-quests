@@ -30,12 +30,14 @@ export class AccessibleChallengeUI {
     className: "feedback",
     role: "status",
     "aria-live": "polite",
+    tabIndex: -1,
     "data-testid": "feedback",
   });
 
   private current: ChallengePresentation | null = null;
   private questTitleKey = "";
   private questIntroKey = "";
+  private shouldFocusFirstChoice = false;
 
   constructor(
     private readonly bridge: GameBridge,
@@ -66,25 +68,33 @@ export class AccessibleChallengeUI {
     this.questIntroKey = introKey;
     this.title.textContent = t(titleKey);
     this.intro.textContent = introKey ? t(introKey) : "";
-    this.intro.hidden = !introKey;
+    this.shouldFocusFirstChoice = false;
   }
 
   show(challenge: ChallengePresentation): void {
-    const keyboardUser = this.root.contains(document.activeElement);
+    const focusWasInside = this.root.contains(document.activeElement) || this.shouldFocusFirstChoice;
     this.current = challenge;
     this.feedback.textContent = "";
-    delete this.feedback.dataset.kind;
+    this.feedback.dataset.kind = "";
     this.renderText();
     this.renderChoices();
+    if (focusWasInside || challenge.index > 1) {
+      this.choices.querySelector<HTMLButtonElement>("button:not(:disabled)")?.focus();
+      this.shouldFocusFirstChoice = false;
+    }
     this.onPrompt(this.promptText());
-    if (keyboardUser) this.choices.querySelector("button")?.focus();
   }
 
   handleFeedback(feedback: GameEventMap["feedback"]): void {
     if (feedback.kind === "correct") {
-      this.feedback.textContent = t("feedback.correct");
+      const focusWasInChoices = this.choices.contains(document.activeElement);
       this.feedback.dataset.kind = "correct";
-      for (const button of this.choices.querySelectorAll("button")) button.disabled = true;
+      this.feedback.textContent = t("feedback.correct");
+      for (const b of this.choices.querySelectorAll("button")) b.disabled = true;
+      if (focusWasInChoices || document.activeElement === document.body) {
+        this.shouldFocusFirstChoice = true;
+        this.feedback.focus();
+      }
       return;
     }
 
@@ -106,10 +116,7 @@ export class AccessibleChallengeUI {
     }
 
     this.feedback.dataset.kind = "hint";
-    const hintText =
-      feedback.hintLevel === 3
-        ? t("feedback.hint3", { answer: answerLabel })
-        : t(`feedback.hint${feedback.hintLevel}`);
+    const hintText = this.formatObjectiveHint(feedback.hintLevel, answerLabel);
 
     if (feedback.ruledOut !== undefined) {
       const ruledOutLabel = this.choiceLabel(feedback.ruledOut);
@@ -140,6 +147,7 @@ export class AccessibleChallengeUI {
     if (c.operator === "phonics") {
       const [wordId = 1] = c.operands;
       return t(c.promptKey, {
+        icon: t(`challenge.phonics.word.${wordId}.icon`),
         sounds: t(`challenge.phonics.word.${wordId}.sounds`),
         clue: t(`challenge.phonics.word.${wordId}.clue`),
         sentence: t(`challenge.phonics.word.${wordId}.sentence`),
@@ -151,6 +159,24 @@ export class AccessibleChallengeUI {
     }
     const [a = 0, b = 0] = c.operands;
     return t(c.promptKey, { a, b });
+  }
+
+  private formatObjectiveHint(level: 1 | 2 | 3, answerLabel: string): string {
+    const c = this.current;
+    if (!c) {
+      return level === 3 ? t("feedback.hint3", { answer: answerLabel }) : t(`feedback.hint${level}`);
+    }
+    const [a = 0, b = 0, third = 0, step = 1] = c.operands;
+    const sounds = c.operator === "phonics" ? t(`challenge.phonics.word.${a || 1}.sounds`) : "";
+    return t(`feedback.byObjective.${c.objectiveId}.hint${level}`, {
+      a,
+      b,
+      c: third,
+      step,
+      tensValue: a * 10,
+      sounds,
+      answer: answerLabel,
+    });
   }
 
   private choiceLabel(value: number): string {
@@ -183,7 +209,6 @@ export class AccessibleChallengeUI {
       const [wordId = 1] = c.operands;
       this.equation.textContent = t("challenge.phonics.equation", {
         icon: t(`challenge.phonics.word.${wordId}.icon`),
-        sounds: t(`challenge.phonics.word.${wordId}.sounds`),
       });
     } else {
       this.equation.textContent = `${a} ${c.operator} ${b} = ?`;

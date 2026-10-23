@@ -13,6 +13,6 @@
     { "kind": "independent", "count": 3 }
   ],
   "rewards": [{ "id": "story.ravine-crossed", "kind": "story", "nameKey": "reward.ravineCrossed.name" }],
-  "unlocks": ["sigil-temple"],
+  "unlocks": ["enchanted-library"],
   "map": { "x": 575, "y": 355 }
 }

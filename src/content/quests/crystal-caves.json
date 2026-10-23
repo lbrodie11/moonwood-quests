@@ -13,6 +13,6 @@
     { "kind": "independent", "count": 4 }
   ],
   "rewards": [{ "id": "cosmetic.crystal-wand", "kind": "cosmetic", "nameKey": "reward.crystalWand.name" }],
-  "unlocks": ["ravine-bridge"],
+  "unlocks": ["echo-forge"],
   "map": { "x": 355, "y": 210 }
 }

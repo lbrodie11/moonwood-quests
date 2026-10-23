@@ -70,7 +70,7 @@ describe("completeQuest", () => {
     const after = completeQuest(before, forest, mastery);
 
     expect(after.completedQuestIds).toEqual(["forest-gate"]);
-    expect(after.unlockedQuestIds).toEqual(["forest-gate", "crystal-caves"]);
+    expect(after.unlockedQuestIds).toEqual(["forest-gate", "lantern-bridge"]);
     expect(after.rewardIds).toEqual(["companion.moss"]);
     expect(after.objectives["add-within-20"]?.attempts).toBe(6);
     expect(PlayerProgressSchema.safeParse(after).success).toBe(true);

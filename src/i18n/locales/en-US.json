@@ -152,7 +152,7 @@
     },
     "shapes": {
       "composeSigil": "Sky triangles: {{a}}. Sun diamonds: {{b}}. How many sigil pieces build the shape?",
-      "countSides": "First sigil has {{a}} sides. Second sigil has {{b}} sides. How many sides in all?",
+      "countSides": "First star sigil uses {{a}} sky triangles. Second star sigil uses {{b}} sun diamonds. How many sigil pieces in all?",
       "equation": "{{a}} shards + {{b}} shards = ?"
     },
     "pattern": {
@@ -160,13 +160,13 @@
       "equation": "{{a}} → {{b}} → {{c}} → ?"
     },
     "phonics": {
-      "soundMatch": "Sound out the glowing rune: {{sounds}} ({{clue}}). Which story word matches?",
-      "buildWord": "Blend the sounds {{sounds}} to find the word for: {{clue}}.",
-      "storyClue": "Complete the story page: \"{{sentence}}\" ({{sounds}})",
-      "equation": "{{icon}} {{sounds}} = ?",
+      "soundMatch": "Look at the picture clue {{icon}} ({{clue}}). Read the choices and pick the matching word!",
+      "buildWord": "Which story word means: {{icon}} {{clue}}?",
+      "storyClue": "Complete the story page: {{icon}} \"{{sentence}}\"",
+      "equation": "{{icon}} = ?",
       "word": {
         "1": {
-          "label": "🌙 MOON",
+          "label": "MOON",
           "word": "MOON",
           "icon": "🌙",
           "sounds": "M - OO - N",
@@ -174,7 +174,7 @@
           "sentence": "The silver ___ glows above the forest."
         },
         "2": {
-          "label": "⭐ STAR",
+          "label": "STAR",
           "word": "STAR",
           "icon": "⭐",
           "sounds": "S - T - A - R",
@@ -182,7 +182,7 @@
           "sentence": "Make a wish upon a bright ___."
         },
         "3": {
-          "label": "🦉 OWL",
+          "label": "OWL",
           "word": "OWL",
           "icon": "🦉",
           "sounds": "OW - L",
@@ -190,7 +190,7 @@
           "sentence": "Pip the wise ___ hoots in the tree."
         },
         "4": {
-          "label": "🐸 FROG",
+          "label": "FROG",
           "word": "FROG",
           "icon": "🐸",
           "sounds": "F - R - O - G",
@@ -198,7 +198,7 @@
           "sentence": "The happy green ___ jumps in the brook."
         },
         "5": {
-          "label": "🌲 TREE",
+          "label": "TREE",
           "word": "TREE",
           "icon": "🌲",
           "sounds": "T - R - EE",
@@ -206,7 +206,7 @@
           "sentence": "Moss naps under the tall green ___."
         },
         "6": {
-          "label": "📖 BOOK",
+          "label": "BOOK",
           "word": "BOOK",
           "icon": "📖",
           "sounds": "B - OO - K",
@@ -214,7 +214,7 @@
           "sentence": "Luma opens a magical story ___."
         },
         "7": {
-          "label": "👑 CROWN",
+          "label": "CROWN",
           "word": "CROWN",
           "icon": "👑",
           "sounds": "C - R - OW - N",
@@ -222,7 +222,7 @@
           "sentence": "The starlight ___ shines on the tower."
         },
         "8": {
-          "label": "💎 GEM",
+          "label": "GEM",
           "word": "GEM",
           "icon": "💎",
           "sounds": "G - E - M",
@@ -230,7 +230,7 @@
           "sentence": "Bramble found a glowing purple ___."
         },
         "9": {
-          "label": "🦊 FOX",
+          "label": "FOX",
           "word": "FOX",
           "icon": "🦊",
           "sounds": "F - O - X",
@@ -238,7 +238,7 @@
           "sentence": "Luma the clever ___ loves to read."
         },
         "10": {
-          "label": "🐱 CAT",
+          "label": "CAT",
           "word": "CAT",
           "icon": "🐱",
           "sounds": "C - A - T",
@@ -246,7 +246,7 @@
           "sentence": "The cozy little ___ purrs by the lantern."
         },
         "11": {
-          "label": "☀️ SUN",
+          "label": "SUN",
           "word": "SUN",
           "icon": "☀️",
           "sounds": "S - U - N",
@@ -254,7 +254,7 @@
           "sentence": "The morning ___ warms the meadow."
         },
         "12": {
-          "label": "🔔 BELL",
+          "label": "BELL",
           "word": "BELL",
           "icon": "🔔",
           "sounds": "B - E - L - L",
@@ -269,11 +269,53 @@
     "hint1": "Let's count the crystals together.",
     "hint2": "Look — all the crystals in one row. Count them all.",
     "hint3": "Guided magic: the answer is {{answer}}! Tap {{answer}} to cast the spell.",
+    "byObjective": {
+      "add-within-20": {
+        "hint1": "Start at {{a}} and count on {{b}} more crystals.",
+        "hint2": "Look — all the crystals in one row. Count them all.",
+        "hint3": "Guided magic: {{a}} + {{b}} makes {{answer}}! Tap {{answer}} to cast the spell."
+      },
+      "subtract-within-20": {
+        "hint1": "Start with {{a}} crystals and cross out the {{b}} dimmed crystals the spell used.",
+        "hint2": "Count only the bright blue crystals that are left.",
+        "hint3": "Guided magic: {{a}} minus {{b}} leaves {{answer}}! Tap {{answer}}."
+      },
+      "tens-and-ones": {
+        "hint1": "Count each purple bag by tens (10, 20…), then count on the loose gold crystals.",
+        "hint2": "{{a}} bags of ten make {{tensValue}}, plus {{b}} loose ones.",
+        "hint3": "Guided magic: {{tensValue}} + {{b}} makes {{answer}}! Tap {{answer}}."
+      },
+      "compare-lengths": {
+        "hint1": "Line the moon-tile planks up from the left edge to compare their lengths.",
+        "hint2": "Count each moon-tile along the bridge span one by one.",
+        "hint3": "Guided magic: the plank length is {{answer}} moon-tiles! Tap {{answer}}."
+      },
+      "compose-shapes": {
+        "hint1": "Count the {{a}} blue triangle shards first, then count on the {{b}} gold diamond shards.",
+        "hint2": "Look at all the sigil shards lined up together and count each piece.",
+        "hint3": "Guided magic: {{a}} triangles and {{b}} diamonds compose {{answer}} shards! Tap {{answer}}."
+      },
+      "phonics-words": {
+        "hint1": "Sound out the letters slowly: {{sounds}}.",
+        "hint2": "Blend the sounds together out loud: {{sounds}}.",
+        "hint3": "Guided magic: the sounds {{sounds}} blend into {{answer}}! Tap {{answer}}."
+      },
+      "star-patterns": {
+        "hint1": "Find how much the star numbers jump each time: +{{step}}.",
+        "hint2": "Start at {{c}} on the starlight number line and count up {{step}} more.",
+        "hint3": "Guided magic: {{c}} + {{step}} reaches star {{answer}}! Tap {{answer}}."
+      }
+    },
     "notThat": "Not {{value}}. Try another one.",
     "treasureDiscovered": "You discovered a hidden Star-Treasure: {{name}}!"
   },
   "reward": {
     "earned": "New friend: {{name}}!",
+    "earnedByKind": {
+      "companion": "New friend: {{name}}!",
+      "cosmetic": "Treasure earned: {{name}}!",
+      "story": "Magic restored: {{name}}!"
+    },
     "moss": {
       "name": "Moss the forest sprite"
     },

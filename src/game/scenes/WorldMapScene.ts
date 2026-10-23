@@ -38,6 +38,8 @@ export class WorldMapScene extends Phaser.Scene {
     | undefined;
   private guideSprites = new Map<GuideId, Phaser.GameObjects.Image>();
   private treasureSprites = new Map<string, Phaser.GameObjects.Image>();
+  private nodeObjects: Phaser.GameObjects.GameObject[] = [];
+  private modalOpen = false;
 
   constructor() {
     super(WorldMapScene.KEY);
@@ -47,8 +49,10 @@ export class WorldMapScene extends Phaser.Scene {
     this.services = servicesOf(this);
     this.audio = new AudioSystem(() => this.services.settings().sound);
     this.leaving = false;
+    this.modalOpen = false;
     this.guideSprites.clear();
     this.treasureSprites.clear();
+    this.nodeObjects = [];
 
     drawNightSky(this, 3);
     drawTreeLine(this, 290, PALETTE.treeFar, 0.55, 11);
@@ -63,6 +67,9 @@ export class WorldMapScene extends Phaser.Scene {
 
     const subscriptions = [
       this.services.bridge.on("startQuest", ({ questId }) => this.startQuest(questId)),
+      this.services.bridge.on("modalState", ({ open }) => {
+        this.modalOpen = open;
+      }),
       this.services.bridge.on("exploreMap", (payload) => {
         if (payload.target === "celebrate") {
           this.leaving = true;
@@ -73,6 +80,7 @@ export class WorldMapScene extends Phaser.Scene {
           void this.collectTreasure(payload.treasureId);
         }
       }),
+      this.services.progress.subscribe(() => this.refreshDynamicMapState()),
     ];
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => subscriptions.forEach((off) => off()));
 
@@ -80,9 +88,7 @@ export class WorldMapScene extends Phaser.Scene {
   }
 
   override update(_time: number, delta: number): void {
-    if (this.leaving || !this.hero) return;
-    // Ignore movement keys if a modal dialog is open
-    if (document.querySelector("dialog[open]")) return;
+    if (this.leaving || !this.hero || this.modalOpen) return;
 
     const speed = 180 * (delta / 1000);
     let dx = 0;
@@ -194,6 +200,12 @@ export class WorldMapScene extends Phaser.Scene {
   }
 
   private drawNodes(): void {
+    for (const obj of this.nodeObjects) {
+      this.tweens.killTweensOf(obj);
+      obj.destroy();
+    }
+    this.nodeObjects = [];
+
     const progress = this.services.progress.current;
     const reduced = this.services.settings().reducedMotion;
 
@@ -201,9 +213,10 @@ export class WorldMapScene extends Phaser.Scene {
       const state = questAvailability(quest, progress);
       const tint = { available: 0x9ff3ff, completed: 0xffc94a, locked: 0x55607a, planned: 0x55607a }[state];
       const node = this.add.image(quest.map.x, quest.map.y, "node").setScale(0.78).setTint(tint);
+      this.nodeObjects.push(node);
 
       // Quest number badge for clear visual order
-      this.add
+      const badge = this.add
         .text(quest.map.x, quest.map.y + 32, String(index + 1), {
           fontFamily: "system-ui, sans-serif",
           fontSize: "14px",
@@ -213,13 +226,18 @@ export class WorldMapScene extends Phaser.Scene {
           strokeThickness: 3,
         })
         .setOrigin(0.5);
+      this.nodeObjects.push(badge);
 
       if (state === "locked" || state === "planned") {
-        this.add.image(quest.map.x, quest.map.y, "lock").setScale(0.78);
+        const lock = this.add.image(quest.map.x, quest.map.y, "lock").setScale(0.78);
+        this.nodeObjects.push(lock);
         return;
       }
 
-      if (state === "completed") this.add.image(quest.map.x, quest.map.y, "rune-lit").setScale(0.85);
+      if (state === "completed") {
+        const lit = this.add.image(quest.map.x, quest.map.y, "rune-lit").setScale(0.85);
+        this.nodeObjects.push(lit);
+      }
       if (state === "available") {
         void animate(this, reduced, {
           targets: node,
@@ -233,6 +251,19 @@ export class WorldMapScene extends Phaser.Scene {
 
       node.setInteractive({ useHandCursor: true }).on("pointerup", () => this.startQuest(quest.id));
     });
+  }
+
+  private refreshDynamicMapState(): void {
+    if (!this.sys.settings.active || this.leaving) return;
+    const progress = this.services.progress.current;
+    for (const region of REGIONS) {
+      const found = progress.rewardIds.includes(region.treasureId);
+      const sprite = this.treasureSprites.get(region.treasureId);
+      if (sprite) {
+        sprite.setAlpha(found ? 0.55 : 1).setScale(found ? 0.75 : 0.9);
+      }
+    }
+    this.drawNodes();
   }
 
   private spawnHero(): void {

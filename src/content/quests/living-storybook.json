@@ -3,7 +3,6 @@
   "status": "playable",
   "regionId": "enchanted-library",
   "guideId": "luma",
-  "prerequisiteQuestId": "enchanted-library",
   "titleKey": "quest.livingStorybook.title",
   "introKey": "quest.livingStorybook.intro",
   "sceneKey": "ForestQuest",

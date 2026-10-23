@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { GENERATORS } from "../learning/generators";
-import { FIRST_QUEST_ID, loadQuests, RAW_QUESTS } from "./index";
+import { emptyProgress } from "../storage/ProgressRepository";
+import { completeQuest } from "../storage/progress";
+import { questAvailability } from "./availability";
+import { FINAL_QUEST_ID, FIRST_QUEST_ID, loadQuests, RAW_QUESTS, REGIONS } from "./index";
 import { QuestSchema } from "./schemas";
 
 const quests = loadQuests();
@@ -20,6 +23,29 @@ describe("quest content", () => {
     for (const quest of quests) {
       for (const unlock of quest.unlocks) expect(ids, `${quest.id} unlocks ${unlock}`).toContain(unlock);
     }
+  });
+
+  it("forms a single reachable 12-quest critical path across all four regions to the finale", () => {
+    let progress = emptyProgress(FIRST_QUEST_ID);
+    const visited: string[] = [];
+
+    while (true) {
+      const available = quests.filter((q) => questAvailability(q, progress) === "available");
+      if (available.length === 0) break;
+      // Exactly one next quest is unlocked at each step of the linear campaign
+      expect(available).toHaveLength(1);
+      const current = available[0]!;
+      if (current.id === FINAL_QUEST_ID) {
+        // The finale is only reachable after completing all 11 preceding quests
+        expect(visited).toHaveLength(quests.length - 1);
+      }
+      visited.push(current.id);
+      progress = completeQuest(progress, current, {});
+    }
+
+    expect(visited).toEqual(quests.map((q) => q.id));
+    const visitedRegions = new Set(quests.filter((q) => visited.includes(q.id)).map((q) => q.regionId));
+    expect([...visitedRegions].sort()).toEqual(REGIONS.map((r) => r.id).sort());
   });
 
   it("has a challenge generator for every objective in a playable quest", () => {

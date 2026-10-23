@@ -152,7 +152,7 @@
     },
     "shapes": {
       "composeSigil": "Triángulos celestes: {{a}}. Diamantes solares: {{b}}. ¿Cuántas piezas forman el símbolo?",
-      "countSides": "El primer símbolo tiene {{a}} lados. El segundo tiene {{b}} lados. ¿Cuántos lados hay en total?",
+      "countSides": "El primer símbolo usa {{a}} triángulos celestes. El segundo usa {{b}} diamantes solares. ¿Cuántas piezas hay en total?",
       "equation": "{{a}} piezas + {{b}} piezas = ?"
     },
     "pattern": {
@@ -160,13 +160,13 @@
       "equation": "{{a}} → {{b}} → {{c}} → ?"
     },
     "phonics": {
-      "soundMatch": "Escucha los sonidos de la runa: {{sounds}} ({{clue}}). ¿Qué palabra del cuento coincide?",
-      "buildWord": "Une los sonidos {{sounds}} para encontrar la palabra de: {{clue}}.",
-      "storyClue": "Completa la página del cuento: \"{{sentence}}\" ({{sounds}})",
-      "equation": "{{icon}} {{sounds}} = ?",
+      "soundMatch": "Mira la pista {{icon}} ({{clue}}). ¡Lee las opciones y elige la palabra correcta!",
+      "buildWord": "¿Qué palabra del cuento significa: {{icon}} {{clue}}?",
+      "storyClue": "Completa la página del cuento: {{icon}} \"{{sentence}}\"",
+      "equation": "{{icon}} = ?",
       "word": {
         "1": {
-          "label": "🌙 LUNA",
+          "label": "LUNA",
           "word": "LUNA",
           "icon": "🌙",
           "sounds": "L - U - N - A",
@@ -174,15 +174,15 @@
           "sentence": "La ___ plateada brilla sobre el bosque."
         },
         "2": {
-          "label": "⭐ SOL",
-          "word": "SOL",
+          "label": "ESTRELLA",
+          "word": "ESTRELLA",
           "icon": "⭐",
-          "sounds": "S - O - L",
-          "clue": "estrella brillante que nos da luz",
-          "sentence": "Pide un deseo a la estrella y al ___."
+          "sounds": "E - S - T - R - E - LL - A",
+          "clue": "titila en lo alto sobre la torre",
+          "sentence": "Pide un deseo a una ___ brillante."
         },
         "3": {
-          "label": "🦉 BÚHO",
+          "label": "BÚHO",
           "word": "BÚHO",
           "icon": "🦉",
           "sounds": "B - Ú - H - O",
@@ -190,7 +190,7 @@
           "sentence": "Pip el ___ sabio canta en el árbol."
         },
         "4": {
-          "label": "🐸 RANA",
+          "label": "RANA",
           "word": "RANA",
           "icon": "🐸",
           "sounds": "R - A - N - A",
@@ -198,7 +198,7 @@
           "sentence": "La ___ verde salta en el arroyo."
         },
         "5": {
-          "label": "🌲 ÁRBOL",
+          "label": "ÁRBOL",
           "word": "ÁRBOL",
           "icon": "🌲",
           "sounds": "Á - R - B - O - L",
@@ -206,7 +206,7 @@
           "sentence": "Musgo descansa bajo el gran ___."
         },
         "6": {
-          "label": "📖 LIBRO",
+          "label": "LIBRO",
           "word": "LIBRO",
           "icon": "📖",
           "sounds": "L - I - B - R - O",
@@ -214,7 +214,7 @@
           "sentence": "Luma abre un ___ mágico de cuentos."
         },
         "7": {
-          "label": "👑 CORONA",
+          "label": "CORONA",
           "word": "CORONA",
           "icon": "👑",
           "sounds": "C - O - R - O - N - A",
@@ -222,7 +222,7 @@
           "sentence": "La ___ estelar brilla en la torre."
         },
         "8": {
-          "label": "💎 GEMA",
+          "label": "GEMA",
           "word": "GEMA",
           "icon": "💎",
           "sounds": "G - E - M - A",
@@ -230,7 +230,7 @@
           "sentence": "Zarza encontró una ___ morada."
         },
         "9": {
-          "label": "🦊 ZORRO",
+          "label": "ZORRO",
           "word": "ZORRO",
           "icon": "🦊",
           "sounds": "Z - O - R - R - O",
@@ -238,7 +238,7 @@
           "sentence": "A Luma el ___ le encanta leer."
         },
         "10": {
-          "label": "🐱 GATO",
+          "label": "GATO",
           "word": "GATO",
           "icon": "🐱",
           "sounds": "G - A - T - O",
@@ -246,15 +246,15 @@
           "sentence": "El pequeño ___ ronronea junto al farol."
         },
         "11": {
-          "label": "☀️ FLOR",
-          "word": "FLOR",
+          "label": "SOL",
+          "word": "SOL",
           "icon": "☀️",
-          "sounds": "F - L - O - R",
-          "clue": "brote colorido que se abre al sol",
-          "sentence": "Una bella ___ se abre en la pradera."
+          "sounds": "S - O - L",
+          "clue": "luz dorada y tibia de la mañana",
+          "sentence": "El ___ de la mañana calienta la pradera."
         },
         "12": {
-          "label": "🔔 CAMPANA",
+          "label": "CAMPANA",
           "word": "CAMPANA",
           "icon": "🔔",
           "sounds": "C - A - M - P - A - N - A",
@@ -269,11 +269,53 @@
     "hint1": "Contemos los cristales juntos.",
     "hint2": "Mira: todos los cristales en una fila. Cuéntalos todos.",
     "hint3": "Magia guiada: ¡la respuesta es {{answer}}! Toca {{answer}} para lanzar el hechizo.",
+    "byObjective": {
+      "add-within-20": {
+        "hint1": "Empieza en {{a}} y cuenta {{b}} cristales más.",
+        "hint2": "Mira: todos los cristales en una fila. Cuéntalos todos.",
+        "hint3": "Magia guiada: ¡{{a}} + {{b}} es {{answer}}! Toca {{answer}} para lanzar el hechizo."
+      },
+      "subtract-within-20": {
+        "hint1": "Empieza con {{a}} cristales y tacha los {{b}} cristales apagados que usó el hechizo.",
+        "hint2": "Cuenta solo los cristales azules brillantes que quedan.",
+        "hint3": "Magia guiada: ¡{{a}} menos {{b}} deja {{answer}}! Toca {{answer}}."
+      },
+      "tens-and-ones": {
+        "hint1": "Cuenta cada bolsa morada de diez en diez (10, 20…), y luego suma los cristales sueltos.",
+        "hint2": "{{a}} bolsas de diez son {{tensValue}}, más {{b}} unidades sueltas.",
+        "hint3": "Magia guiada: ¡{{tensValue}} + {{b}} es {{answer}}! Toca {{answer}}."
+      },
+      "compare-lengths": {
+        "hint1": "Alinea las tablas de losas lunares desde la izquierda para comparar su largo.",
+        "hint2": "Cuenta cada losa lunar a lo largo del puente una por una.",
+        "hint3": "Magia guiada: ¡el largo es de {{answer}} losas lunares! Toca {{answer}}."
+      },
+      "compose-shapes": {
+        "hint1": "Cuenta primero los {{a}} triángulos celestes y luego suma los {{b}} diamantes solares.",
+        "hint2": "Mira todas las piezas del símbolo alineadas y cuenta cada una.",
+        "hint3": "Magia guiada: ¡{{a}} triángulos y {{b}} diamantes forman {{answer}} piezas! Toca {{answer}}."
+      },
+      "phonics-words": {
+        "hint1": "Pronuncia los sonidos despacio: {{sounds}}.",
+        "hint2": "Une los sonidos en voz alta: {{sounds}}.",
+        "hint3": "Magia guiada: ¡los sonidos {{sounds}} forman {{answer}}! Toca {{answer}}."
+      },
+      "star-patterns": {
+        "hint1": "Observa cuánto suben los números de las estrellas en cada paso: +{{step}}.",
+        "hint2": "Empieza en {{c}} en la línea estelar y cuenta {{step}} más.",
+        "hint3": "Magia guiada: ¡{{c}} + {{step}} llega a la estrella {{answer}}! Toca {{answer}}."
+      }
+    },
     "notThat": "No es {{value}}. Prueba otro.",
     "treasureDiscovered": "¡Descubriste un Tesoro Estelar oculto: {{name}}!"
   },
   "reward": {
     "earned": "¡Nuevo amigo: {{name}}!",
+    "earnedByKind": {
+      "companion": "¡Nuevo amigo: {{name}}!",
+      "cosmetic": "¡Tesoro ganado: {{name}}!",
+      "story": "¡Magia restaurada: {{name}}!"
+    },
     "moss": {
       "name": "Musgo, el duende del bosque"
     },

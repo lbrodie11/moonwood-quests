@@ -13,6 +13,6 @@
     { "kind": "independent", "count": 3 }
   ],
   "rewards": [{ "id": "cosmetic.star-robe", "kind": "cosmetic", "nameKey": "reward.starRobe.name" }],
-  "unlocks": [],
+  "unlocks": ["star-observatory"],
   "map": { "x": 715, "y": 200 }
 }

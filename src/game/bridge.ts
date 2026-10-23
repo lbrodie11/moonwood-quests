@@ -1,4 +1,5 @@
 import type { Operator, Representation } from "../learning/challenge";
+import type { ObjectiveId } from "../learning/objectives";
 import type { HintLevel } from "../learning/session";
 import type { GuideId } from "../content/schemas";
 import type { Settings } from "../app/settings";
@@ -6,6 +7,7 @@ import type { Settings } from "../app/settings";
 /** What the DOM shell needs to render a challenge accessibly. */
 export interface ChallengePresentation {
   challengeId: string;
+  objectiveId: ObjectiveId;
   promptKey: string;
   operator: Operator;
   operands: readonly number[];
@@ -47,6 +49,7 @@ export interface GameEventMap {
     | { target: "celebrate" };
   returnToMap: Record<string, never>;
   settingsChanged: Settings;
+  modalState: { open: boolean };
 }
 
 export type GameEvent = keyof GameEventMap;

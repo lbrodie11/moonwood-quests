@@ -300,6 +300,18 @@ button.danger {
   text-align: left;
 }
 
+.quest-card .quest-region-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.quest-card .quest-emblem {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
 .quest-card .quest-region-tag {
   font-size: 0.75rem;
   text-transform: uppercase;

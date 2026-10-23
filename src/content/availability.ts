@@ -8,9 +8,7 @@ export function questAvailability(
 ): QuestAvailability {
   if (quest.status === "planned") return "planned";
   if (progress.completedQuestIds.includes(quest.id)) return "completed";
-  const unlockedByPrereq =
-    quest.prerequisiteQuestId !== undefined && progress.completedQuestIds.includes(quest.prerequisiteQuestId);
-  return progress.unlockedQuestIds.includes(quest.id) || unlockedByPrereq ? "available" : "locked";
+  return progress.unlockedQuestIds.includes(quest.id) ? "available" : "locked";
 }
 
 export function isPlayable(state: QuestAvailability): boolean {

@@ -3,7 +3,6 @@
   "status": "playable",
   "regionId": "crystal-caves",
   "guideId": "bramble",
-  "prerequisiteQuestId": "echo-forge",
   "titleKey": "quest.prismSanctum.title",
   "introKey": "quest.prismSanctum.intro",
   "sceneKey": "ForestQuest",

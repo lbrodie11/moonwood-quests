@@ -1,5 +1,20 @@
 import { expect, test, type Page } from "@playwright/test";
 
+const WORD_BY_ICON: Record<string, string> = {
+  "🌙": "MOON",
+  "⭐": "STAR",
+  "🦉": "OWL",
+  "🐸": "FROG",
+  "🌲": "TREE",
+  "📖": "BOOK",
+  "👑": "CROWN",
+  "💎": "GEM",
+  "🦊": "FOX",
+  "🐱": "CAT",
+  "☀️": "SUN",
+  "🔔": "BELL",
+};
+
 /** Reads the equation display from the accessible panel and returns the correct numeric answer. */
 async function correctAnswer(page: Page): Promise<number> {
   const text = ((await page.getByTestId("equation").textContent()) ?? "").trim();
@@ -19,17 +34,18 @@ async function correctAnswer(page: Page): Promise<number> {
     return c + (b - a);
   }
 
-  // Phonics-words: "🌙 M - OO - N = ?" -> match the choice button containing the blended word
-  if (text.includes(" - ") && text.endsWith("= ?")) {
-    const lettersOnly = text.replace(/[^A-ZÁÉÍÓÚÑ]/g, "");
-    const choices = await page.locator(".choice").evaluateAll((els) =>
-      els.map((el) => ({
-        value: Number(el.getAttribute("data-value")),
-        label: (el.textContent ?? "").toUpperCase(),
-      })),
-    );
-    const matched = choices.find((c) => c.label.includes(lettersOnly));
-    if (matched) return matched.value;
+  // Phonics-words: "🌙 = ?" -> match the word-only choice button ("MOON")
+  for (const [icon, word] of Object.entries(WORD_BY_ICON)) {
+    if (text.startsWith(icon)) {
+      const choices = await page.locator(".choice").evaluateAll((els) =>
+        els.map((el) => ({
+          value: Number(el.getAttribute("data-value")),
+          label: (el.textContent ?? "").trim().toUpperCase(),
+        })),
+      );
+      const matched = choices.find((c) => c.label === word);
+      if (matched) return matched.value;
+    }
   }
 
   // Addition, subtraction, length tiles, shape shards: "7 + 5 = ?" or "8 tiles - 3 tiles = ?"
@@ -74,6 +90,7 @@ test("map lists the first quest as playable and later quests as unavailable", as
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Choose a quest" })).toBeVisible();
   await expect(page.locator('[data-quest="forest-gate"]')).toBeEnabled();
+  await expect(page.locator('[data-quest="lantern-bridge"]')).toBeDisabled();
   await expect(page.locator('[data-quest="crystal-caves"]')).toBeDisabled();
   await expect(page.locator("canvas")).toBeVisible();
 });
@@ -93,7 +110,7 @@ test("a wrong answer gives a hint and the child can retry", async ({ page }) => 
   await expect(page.getByTestId("progress")).toContainText("2 of 6");
 });
 
-test("completing the quest unlocks the next region and persists across reloads", async ({ page }) => {
+test("completing the quest unlocks the next quest and persists across reloads", async ({ page }) => {
   await startForestQuest(page);
 
   for (let i = 1; i <= 6; i++) {
@@ -105,6 +122,25 @@ test("completing the quest unlocks the next region and persists across reloads",
   await expect(page.getByTestId("quest-complete")).toContainText("Moss");
   await page.getByTestId("back-to-map").click();
 
+  await expect(page.locator('[data-quest="forest-gate"]')).toHaveAttribute("data-state", "completed");
+  await expect(page.locator('[data-quest="lantern-bridge"]')).toHaveAttribute("data-state", "available");
+  await page.reload();
+  await expect(page.locator('[data-quest="forest-gate"]')).toHaveAttribute("data-state", "completed");
+  await expect(page.locator('[data-quest="lantern-bridge"]')).toBeEnabled();
+});
+
+test("leaving to the map immediately after the final answer still saves quest completion", async ({ page }) => {
+  await startForestQuest(page);
+
+  for (let i = 1; i <= 5; i++) {
+    await expect(page.getByTestId("progress")).toContainText(`${i} of 6`);
+    await answer(page, await correctAnswer(page));
+  }
+  await expect(page.getByTestId("progress")).toContainText("6 of 6");
+  await answer(page, await correctAnswer(page));
+
+  // Immediately leave to the map before the ~2s door/friend celebration finishes
+  await page.getByTestId("leave-quest").click();
   await expect(page.locator('[data-quest="forest-gate"]')).toHaveAttribute("data-state", "completed");
   await page.reload();
   await expect(page.locator('[data-quest="forest-gate"]')).toHaveAttribute("data-state", "completed");
@@ -120,16 +156,30 @@ test("the quest is completable with reduced motion", async ({ page }) => {
   await expect(page.getByTestId("quest-complete")).toBeVisible();
 });
 
-test("answer controls are keyboard operable", async ({ page }) => {
+test("answer controls are keyboard operable and focus never falls to body", async ({ page }) => {
   await startForestQuest(page);
-  const right = await correctAnswer(page);
-  await page.locator(`.choice[data-value="${right}"]`).focus();
-  await page.keyboard.press("Enter");
-  await expect(page.getByTestId("feedback")).toContainText("glows");
+  for (let i = 1; i <= 6; i++) {
+    await expect(page.getByTestId("progress")).toContainText(`${i} of 6`);
+    const right = await correctAnswer(page);
+    const choiceBtn = page.locator(`.choice[data-value="${right}"]`);
+    if (i === 1) await choiceBtn.focus();
+    // Focus must remain inside the challenge panel (never fall to document.body)
+    const activeTagAfterShow = await page.evaluate(() => document.activeElement?.tagName);
+    expect(activeTagAfterShow).not.toBe("BODY");
+
+    await choiceBtn.focus();
+    await page.keyboard.press("Enter");
+    const activeTagAfterAnswer = await page.evaluate(() => document.activeElement?.tagName);
+    expect(activeTagAfterAnswer).not.toBe("BODY");
+  }
+  await expect(page.getByTestId("quest-complete")).toBeVisible({ timeout: 10_000 });
 });
 
 test("grown-ups area is behind a gate and can erase local progress", async ({ page }) => {
   await page.goto("/");
+  await page.getByTestId("treasure-whispering-woods").click();
+  await expect(page.getByTestId("treasure-whispering-woods")).toHaveClass(/treasure-found/);
+
   await page.getByTestId("open-grown-ups").click();
   const gate = page.getByTestId("parent-gate");
   const question = (await gate.locator("label").textContent()) ?? "";
@@ -147,6 +197,9 @@ test("grown-ups area is behind a gate and can erase local progress", async ({ pa
   await area.getByTestId("erase").click();
   await area.getByTestId("erase").click();
   await expect(area.getByRole("status")).toContainText("erased");
+  await area.getByRole("button", { name: "Close" }).click();
+
+  await expect(page.getByTestId("treasure-whispering-woods")).not.toHaveClass(/treasure-found/);
 });
 
 test("language can be switched to Spanish", async ({ page }) => {
@@ -165,22 +218,41 @@ test("the game makes no third-party network requests", async ({ page, baseURL })
   expect([...origins].filter((o) => o !== new URL(baseURL!).origin && !o.startsWith("data:"))).toEqual([]);
 });
 
-test("world map exploration lets the player talk to guides and discover star-treasures", async ({ page }) => {
+test("world map exploration preserves focus and live region when discovering star-treasures", async ({ page }) => {
   await page.goto("/?seed=42");
   await expect(page.getByTestId("story-banner")).toBeVisible();
   await expect(page.getByTestId("continue-adventure")).toBeVisible();
 
+  await page.evaluate(() => {
+    const live = document.querySelector('[data-testid="map-dialogue"]');
+    (window as unknown as Record<string, unknown>).__liveRegionBefore = live;
+  });
+
   await page.getByTestId("talk-moss").click();
   await expect(page.getByTestId("map-dialogue")).toContainText("Moss");
 
-  await page.getByTestId("treasure-whispering-woods").click();
+  const treasureBtn = page.getByTestId("treasure-whispering-woods");
+  await treasureBtn.focus();
+  await page.keyboard.press("Enter");
   await expect(page.getByTestId("map-dialogue")).toContainText("Whispering Star-Seed");
-  await expect(page.getByTestId("treasure-whispering-woods")).toHaveClass(/treasure-found/);
+  await expect(treasureBtn).toHaveClass(/treasure-found/);
+
+  // Focus stays on the treasure button and the live region DOM node was updated in place
+  const focusPreserved = await page.evaluate(
+    () => document.activeElement?.getAttribute("data-testid") === "treasure-whispering-woods",
+  );
+  const sameLiveRegion = await page.evaluate(
+    () => document.querySelector('[data-testid="map-dialogue"]') === (window as unknown as Record<string, unknown>).__liveRegionBefore,
+  );
+  expect(focusPreserved).toBe(true);
+  expect(sameLiveRegion).toBe(true);
 });
 
-test("progressive hint button reveals three hint tiers including guided solution", async ({ page }) => {
+test("progressive hint button reveals three hint tiers and never drops hint level backwards", async ({ page }) => {
   await startForestQuest(page);
   const right = await correctAnswer(page);
+  const values = await page.locator(".choice").evaluateAll((els) => els.map((e) => Number(e.getAttribute("data-value"))));
+  const wrong = values.find((v) => v !== right)!;
   const askHint = page.getByTestId("ask-hint");
 
   await askHint.click();
@@ -189,12 +261,14 @@ test("progressive hint button reveals three hint tiers including guided solution
   await askHint.click();
   await expect(page.getByTestId("feedback")).toContainText("row");
 
-  await askHint.click();
+  // Answering wrong after 2 requested hints advances to Hint 3 ("Guided magic"), never back to Hint 1
+  await answer(page, wrong);
   await expect(page.getByTestId("feedback")).toContainText("Guided magic");
   await expect(page.getByTestId("feedback")).toContainText(String(right));
 });
 
 test("phonics, patterns, and the Grand Starlight Celebration ending work end-to-end", async ({ page }) => {
+  test.setTimeout(60_000);
   await page.goto("/?seed=42");
   await page.evaluate(() => {
     const progress = {
@@ -202,10 +276,16 @@ test("phonics, patterns, and the Grand Starlight Celebration ending work end-to-
       lastUpdated: "2026-10-23T00:00:00.000Z",
       unlockedQuestIds: [
         "forest-gate",
+        "lantern-bridge",
+        "moss-grove",
         "crystal-caves",
+        "echo-forge",
+        "prism-sanctum",
         "ravine-bridge",
+        "enchanted-library",
+        "living-storybook",
         "sigil-temple",
-        "starfall-crown",
+        "star-observatory",
       ],
       completedQuestIds: [
         "forest-gate",
@@ -219,21 +299,29 @@ test("phonics, patterns, and the Grand Starlight Celebration ending work end-to-
         "sigil-temple",
         "star-observatory",
       ],
-      rewardIds: ["friend-moss", "friend-bramble", "friend-luma", "friend-astra"],
+      rewardIds: ["companion.moss", "companion.bramble", "companion.luma", "companion.astra"],
       objectives: {},
     };
     window.localStorage.setItem("flg.progress.v1", JSON.stringify(progress));
   });
   await page.reload();
 
-  // Play Region 3 phonics quest: The Living Storybook
+  // Play Region 3 phonics/length quest: The Living Storybook (unlocks starfall-crown via linear graph)
   await page.locator('[data-quest="living-storybook"]').click();
   await completeCurrentQuest(page);
+  await expect(page.getByTestId("quest-complete")).toContainText("Treasure earned");
   await page.getByTestId("back-to-map").click();
 
-  // Play Region 4 finale quest: The Crown of Starfall
+  // Seed starfall-crown unlocked and play Region 4 finale quest: The Crown of Moonwood
+  await page.evaluate(() => {
+    const raw = JSON.parse(window.localStorage.getItem("flg.progress.v1") ?? "{}");
+    raw.unlockedQuestIds = [...new Set([...(raw.unlockedQuestIds ?? []), "starfall-crown"])];
+    window.localStorage.setItem("flg.progress.v1", JSON.stringify(raw));
+  });
+  await page.reload();
   await page.locator('[data-quest="starfall-crown"]').click();
   await completeCurrentQuest(page);
+  await expect(page.getByTestId("quest-complete")).toContainText("Magic restored");
 
   // Celebrate button appears right on the finale completion panel and on the map
   await expect(page.getByTestId("celebrate-kingdom")).toBeVisible();

@@ -37,7 +37,7 @@ export const OBJECTIVES: Readonly<Record<ObjectiveId, ObjectiveInfo>> = {
   "compare-lengths": { id: "compare-lengths", standard: "1.MD.A.1", mechanic: "bridge-builder" },
   "compose-shapes": { id: "compose-shapes", standard: "1.G.A.2", mechanic: "ancient-sigils" },
   "phonics-words": { id: "phonics-words", standard: "RF.1.3", mechanic: "story-pages" },
-  "star-patterns": { id: "star-patterns", standard: "1.OA.D.8", mechanic: "star-patterns" },
+  "star-patterns": { id: "star-patterns", standard: "1.NBT.A.1", mechanic: "star-patterns" },
 };
 
 export function clampDifficulty(value: number): Difficulty {

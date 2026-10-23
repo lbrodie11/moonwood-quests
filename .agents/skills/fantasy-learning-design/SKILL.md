@@ -20,13 +20,15 @@ redesign it.
 
 ## Curriculum map (do not widen without an educator review)
 
-| Objective id         | Standard  | Mechanic         | Generator              |
-|----------------------|-----------|------------------|------------------------|
-| `add-within-20`      | 1.OA.C.6  | spell crafting   | `createAddition`       |
-| `subtract-within-20` | 1.OA.C.6  | spell crafting   | `createSubtraction`    |
-| `tens-and-ones`      | 1.NBT.B.2 | rune inventory   | `createTensAndOnes`    |
-| `compare-lengths`    | 1.MD.A.1  | bridge builder   | *not yet implemented*  |
-| `compose-shapes`     | 1.G.A.2   | ancient sigils   | *not yet implemented*  |
+| Objective id         | Standard  | Mechanic         | Generator               |
+|----------------------|-----------|------------------|-------------------------|
+| `add-within-20`      | 1.OA.C.6  | spell crafting   | `createAddition`        |
+| `subtract-within-20` | 1.OA.C.6  | spell crafting   | `createSubtraction`     |
+| `tens-and-ones`      | 1.NBT.B.2 | rune inventory   | `createTensAndOnes`     |
+| `compare-lengths`    | 1.MD.A.1  | bridge builder   | `createCompareLengths`  |
+| `compose-shapes`     | 1.G.A.2   | ancient sigils   | `createComposeShapes`   |
+| `phonics-words`      | RF.1.3    | story pages      | `createPhonicsWords`    |
+| `star-patterns`      | 1.NBT.A.1 | star patterns    | `createStarPatterns`    |
 
 Generators live in `src/learning/generators/` and must stay pure: they take a
 `RandomSource` and a `Difficulty` and return data. No Phaser, no DOM, no clock.

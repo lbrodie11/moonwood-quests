@@ -3,7 +3,6 @@
   "status": "playable",
   "regionId": "starfall-tower",
   "guideId": "astra",
-  "prerequisiteQuestId": "sigil-temple",
   "titleKey": "quest.starObservatory.title",
   "introKey": "quest.starObservatory.intro",
   "sceneKey": "ForestQuest",

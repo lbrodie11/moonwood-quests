@@ -3,7 +3,6 @@
   "status": "playable",
   "regionId": "enchanted-library",
   "guideId": "luma",
-  "prerequisiteQuestId": "ravine-bridge",
   "titleKey": "quest.enchantedLibrary.title",
   "introKey": "quest.enchantedLibrary.intro",
   "sceneKey": "ForestQuest",

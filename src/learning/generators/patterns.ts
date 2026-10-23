@@ -5,15 +5,15 @@ import { buildChoices } from "./choices";
 
 const STEPS_BY_DIFFICULTY: Readonly<Record<Difficulty, readonly number[]>> = {
   1: [1, 2],
-  2: [2, 5],
-  3: [3, 5, 10],
-  4: [3, 4, 5, 10],
+  2: [1, 2, 5],
+  3: [2, 5, 10],
+  4: [2, 5, 10],
 };
 
 /**
- * Starfall Tower (1.OA.D.8 & 1.NBT.A.1):
- * Identify the pattern rule in a glowing constellation sequence
- * (`s1 → s2 → s3 → ?`) and find the next star number.
+ * Starfall Tower (1.NBT.A.1):
+ * Identify the skip-counting pattern rule in a glowing constellation sequence
+ * (`s1 → s2 → s3 → ?`) by 1s, 2s, 5s, or 10s and find the next star number.
  */
 export function createStarPatterns(rng: RandomSource, difficulty: Difficulty): ChallengeSpec {
   const steps = STEPS_BY_DIFFICULTY[difficulty];

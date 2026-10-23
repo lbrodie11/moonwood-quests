@@ -61,6 +61,7 @@ export class AppShell {
   private screen: Screen = "loading";
   private completedQuestId = "";
   private mapDialogueText = "";
+  private activeQuestId = "";
 
   constructor(private readonly deps: ShellDeps) {
     this.narrator = new Narrator(() => deps.getSettings().narration);
@@ -71,9 +72,26 @@ export class AppShell {
   }
 
   mount(): void {
+    const syncModalState = (): void => {
+      const open =
+        this.settingsPanel.dialog.open || this.parentGate.gate.open || this.parentGate.area.open;
+      this.deps.bridge.emit("modalState", { open });
+    };
+
     this.hearButton.addEventListener("click", () => this.narrator.repeat());
-    this.settingsButton.addEventListener("click", () => this.settingsPanel.open());
-    this.grownUpsButton.addEventListener("click", () => this.parentGate.open());
+    this.settingsButton.addEventListener("click", () => {
+      this.settingsPanel.open();
+      syncModalState();
+    });
+    this.grownUpsButton.addEventListener("click", () => {
+      this.parentGate.open();
+      syncModalState();
+    });
+
+    for (const dialog of [this.settingsPanel.dialog, this.parentGate.gate, this.parentGate.area]) {
+      dialog.addEventListener("close", syncModalState);
+    }
+
     this.toolbar.append(this.hearButton, this.settingsButton, this.grownUpsButton);
     document.body.append(this.settingsPanel.dialog, this.parentGate.gate, this.parentGate.area);
 
@@ -84,7 +102,7 @@ export class AppShell {
     bridge.on("questComplete", ({ questId }) => (this.completedQuestId = questId));
     bridge.on("mapDiscovery", (payload) => this.handleMapDiscovery(payload));
     this.deps.progress.subscribe(() => {
-      if (this.screen === "map") this.render();
+      if (this.screen === "map") this.updateMapInPlace();
     });
 
     this.render();
@@ -93,6 +111,7 @@ export class AppShell {
   private show(screen: Screen, questId?: string): void {
     this.screen = screen;
     if (screen === "quest" && questId) {
+      this.activeQuestId = questId;
       const quest = this.deps.quests.find((q) => q.id === questId);
       if (quest) this.challengeUI.setQuest(quest.titleKey, quest.introKey);
     }
@@ -145,6 +164,75 @@ export class AppShell {
     }
   }
 
+  /**
+   * Updates the map panel DOM in place when progress changes (e.g. discovering
+   * a treasure or erasing progress in Grown-ups), preserving keyboard focus and
+   * keeping the `aria-live="polite"` dialogue region intact.
+   */
+  private updateMapInPlace(): void {
+    const storyBanner = this.panel.querySelector<HTMLElement>('[data-testid="story-banner"]');
+    if (!storyBanner) {
+      this.render();
+      return;
+    }
+
+    const progress = this.deps.progress.current;
+    const kingdomRestored = progress.completedQuestIds.includes(FINAL_QUEST_ID);
+    const nextAvailableQuest =
+      this.deps.quests.find((q) => questAvailability(q, progress) === "available") ?? this.deps.quests[0];
+
+    const treasuresFound = REGIONS.filter((r) => progress.rewardIds.includes(r.treasureId)).length;
+    const statsEl = this.panel.querySelector<HTMLElement>('[data-testid="story-stats"]');
+    if (statsEl) {
+      statsEl.textContent = t("ui.collectiblesCount", {
+        found: treasuresFound,
+        total: REGIONS.length,
+        quests: progress.completedQuestIds.length,
+        totalQuests: this.deps.quests.length,
+      });
+    }
+
+    const storyTitleEl = storyBanner.querySelector<HTMLElement>(".story-title");
+    const storyBodyEl = storyBanner.querySelector<HTMLElement>(".story-body");
+    if (storyTitleEl) {
+      storyTitleEl.textContent = t(kingdomRestored ? "story.restoredTitle" : "story.introTitle");
+    }
+    if (storyBodyEl) {
+      storyBodyEl.textContent = t(kingdomRestored ? "story.restoredBody" : "story.introBody");
+    }
+
+    const continueBtn = this.panel.querySelector<HTMLButtonElement>('[data-testid="continue-adventure"]');
+    if (continueBtn && nextAvailableQuest) {
+      continueBtn.textContent =
+        progress.completedQuestIds.length === 0
+          ? t("ui.startAdventure", { title: t(nextAvailableQuest.titleKey) })
+          : t("ui.continueAdventure", { title: t(nextAvailableQuest.titleKey) });
+      continueBtn.dataset.targetQuest = nextAvailableQuest.id;
+    }
+
+    for (const region of REGIONS) {
+      const btn = this.panel.querySelector<HTMLButtonElement>(`[data-testid="treasure-${region.id}"]`);
+      if (btn) {
+        const found = progress.rewardIds.includes(region.treasureId);
+        const name = t(region.treasureNameKey);
+        btn.className = found ? "tool subtle treasure-found" : "tool subtle";
+        btn.textContent = found ? t("ui.treasureFound", { name }) : `✨ ${t("ui.findTreasure", { name })}`;
+      }
+    }
+
+    for (const quest of this.deps.quests) {
+      const card = this.panel.querySelector<HTMLButtonElement>(`[data-quest="${quest.id}"]`);
+      if (card) {
+        const state = questAvailability(quest, progress);
+        card.className = `quest-card ${state}`;
+        card.dataset.state = state;
+        card.disabled = !isPlayable(state);
+        const statusSpan = card.querySelector<HTMLElement>(".quest-status");
+        if (statusSpan) statusSpan.textContent = t(STATUS_KEY[state]);
+      }
+    }
+  }
+
   private renderToolbar(): void {
     const narrationAvailable = this.narrator.canSpeak(currentLanguage()) && this.deps.getSettings().narration;
     this.hearButton.hidden = !(this.screen === "quest" && narrationAvailable);
@@ -178,14 +266,14 @@ export class AppShell {
         type: "button",
         className: "primary",
         "data-testid": "continue-adventure",
+        "data-target-quest": nextAvailableQuest?.id ?? "forest-gate",
       },
       continueLabel,
     );
-    if (nextAvailableQuest) {
-      continueBtn.addEventListener("click", () =>
-        this.deps.bridge.emit("startQuest", { questId: nextAvailableQuest.id }),
-      );
-    }
+    continueBtn.addEventListener("click", () => {
+      const targetId = continueBtn.dataset.targetQuest ?? nextAvailableQuest?.id;
+      if (targetId) this.deps.bridge.emit("startQuest", { questId: targetId });
+    });
 
     const celebrateBtn = kingdomRestored
       ? el(
@@ -215,7 +303,6 @@ export class AppShell {
       el("div", { className: "story-actions" }, continueBtn, celebrateBtn),
     );
 
-    // Accessible World Exploration Bar (talk to friends & discover hidden Star-Treasures)
     const dialogueText =
       this.mapDialogueText || `${t("guide.pip.name")}: "${t("guide.pip.greeting")}"`;
     const dialogueBox = el(
@@ -279,6 +366,13 @@ export class AppShell {
     for (const quest of this.deps.quests) {
       const state = questAvailability(quest, progress);
       const regionTitle = t(REGION_TITLE_KEY[quest.regionId] ?? "region.whisperingWoods.title");
+      const emblem = el("img", {
+        className: "quest-emblem",
+        src: `/assets/emblems/${quest.regionId}.svg`,
+        alt: "",
+        width: 28,
+        height: 28,
+      });
       const button = el(
         "button",
         {
@@ -289,7 +383,7 @@ export class AppShell {
           "data-state": state,
           disabled: !isPlayable(state),
         },
-        el("span", { className: "quest-region-tag" }, regionTitle),
+        el("span", { className: "quest-region-header" }, emblem, el("span", { className: "quest-region-tag" }, regionTitle)),
         el("span", { className: "quest-name" }, t(quest.titleKey)),
         el("span", { className: "quest-status" }, t(STATUS_KEY[state])),
       );
@@ -309,12 +403,13 @@ export class AppShell {
 
   private renderComplete(): HTMLElement {
     const progress = this.deps.progress.current;
-    const quest = this.deps.quests.find((q) => q.id === this.completedQuestId);
+    const targetQuestId = this.completedQuestId || this.activeQuestId;
+    const quest = this.deps.quests.find((q) => q.id === targetQuestId);
     const back = el("button", { type: "button", className: "primary", "data-testid": "back-to-map" }, t("ui.backToMap"));
     back.addEventListener("click", () => this.deps.bridge.emit("returnToMap", {}));
 
     const nextUnlocked = this.deps.quests.find(
-      (q) => q.id !== this.completedQuestId && questAvailability(q, progress) === "available",
+      (q) => q.id !== targetQuestId && questAvailability(q, progress) === "available",
     );
     const nextButton = nextUnlocked
       ? el(
@@ -329,7 +424,7 @@ export class AppShell {
       );
     }
 
-    const isFinale = this.completedQuestId === FINAL_QUEST_ID || progress.completedQuestIds.includes(FINAL_QUEST_ID);
+    const isFinale = targetQuestId === FINAL_QUEST_ID || progress.completedQuestIds.includes(FINAL_QUEST_ID);
     const celebrateButton = isFinale
       ? el(
           "button",
@@ -346,7 +441,9 @@ export class AppShell {
       "section",
       { className: "complete-panel", "aria-labelledby": "complete-heading", "data-testid": "quest-complete" },
       el("h2", { id: "complete-heading" }, t("quest.complete")),
-      ...rewards.map((r) => el("p", { className: "reward" }, t("reward.earned", { name: t(r.nameKey) }))),
+      ...rewards.map((r) =>
+        el("p", { className: "reward" }, t(`reward.earnedByKind.${r.kind}`, { name: t(r.nameKey) })),
+      ),
       el("div", { className: "dialog-actions" }, back, nextButton, celebrateButton),
     );
   }

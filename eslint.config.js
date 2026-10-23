@@ -53,4 +53,15 @@ export default tseslint.config(
       ],
     },
   },
+  {
+    // Phaser game scenes and systems communicate with the DOM shell strictly via GameBridge.
+    files: ["src/game/**/*.ts"],
+    rules: {
+      "no-restricted-globals": [
+        "error",
+        ...NETWORK_GLOBALS,
+        { name: "document", message: "Phaser scenes must not query the DOM directly; use GameBridge." },
+      ],
+    },
+  },
 );

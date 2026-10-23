@@ -147,11 +147,12 @@ describe("createPhonicsWords", () => {
 });
 
 describe("createStarPatterns", () => {
-  it("generates arithmetic star sequences with a valid next term", () => {
+  it("generates Grade 1 skip-counting star sequences (steps of 1, 2, 5, 10) with a valid next term", () => {
     for (const seed of SEEDS) {
       for (const d of DIFFICULTIES) {
         const c = createStarPatterns(mulberry32(seed), d);
         const [first, second, third, step] = c.operands as [number, number, number, number];
+        expect([1, 2, 5, 10]).toContain(step);
         expect(second - first).toBe(step);
         expect(third - second).toBe(step);
         expect(c.correctAnswer).toBe(third + step);

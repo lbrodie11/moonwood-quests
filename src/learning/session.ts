@@ -93,7 +93,7 @@ export class QuestRunner {
 
     if (value !== challenge.correctAnswer) {
       this.hintsUsed += 1;
-      const hintLevel: HintLevel = this.tries >= 3 ? 3 : this.tries === 2 ? 2 : 1;
+      const hintLevel: HintLevel = Math.min(3, this.hintsUsed) as HintLevel;
       return { kind: "incorrect", hintLevel, ruledOut: value };
     }
 
@@ -139,7 +139,7 @@ export class QuestRunner {
     return {
       ...spec,
       id: `${this.plan.id}:${this.index}`,
-      representation: phase.kind === "guided" ? "objects" : chooseRepresentation(state, difficulty),
+      representation: phase.kind === "guided" ? "objects" : chooseRepresentation(state, difficulty, objectiveId),
     };
   }
 

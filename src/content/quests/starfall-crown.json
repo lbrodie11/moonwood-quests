@@ -3,7 +3,6 @@
   "status": "playable",
   "regionId": "starfall-tower",
   "guideId": "astra",
-  "prerequisiteQuestId": "star-observatory",
   "titleKey": "quest.starfallCrown.title",
   "introKey": "quest.starfallCrown.intro",
   "sceneKey": "ForestQuest",

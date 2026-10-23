@@ -47,11 +47,10 @@ export function createComposeShapes(rng: RandomSource, difficulty: Difficulty): 
     };
   }
 
-  // Difficulty 3-4: Compose composite polygons and count total sides/shards
-  // (e.g. a triangle has 3 sides, a square has 4 sides, a hexagon has 6 sides).
-  const shapeSidesPool = difficulty === 3 ? [3, 4, 5, 6] : [4, 5, 6, 8];
-  const a = shapeSidesPool[randomInt(rng, 0, shapeSidesPool.length - 1)] ?? 3;
-  const b = shapeSidesPool[randomInt(rng, 0, shapeSidesPool.length - 1)] ?? 4;
+  // Difficulty 3-4: Compose larger composite star sigils from triangle and diamond shards.
+  const shardPool = difficulty === 3 ? [3, 4, 5, 6] : [4, 5, 6, 8];
+  const a = shardPool[randomInt(rng, 0, shardPool.length - 1)] ?? 3;
+  const b = shardPool[randomInt(rng, 0, shardPool.length - 1)] ?? 4;
   const answer = a + b;
   return {
     objectiveId: "compose-shapes",

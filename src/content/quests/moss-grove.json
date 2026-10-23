@@ -3,7 +3,6 @@
   "status": "playable",
   "regionId": "whispering-woods",
   "guideId": "moss",
-  "prerequisiteQuestId": "lantern-bridge",
   "titleKey": "quest.mossGrove.title",
   "introKey": "quest.mossGrove.intro",
   "sceneKey": "ForestQuest",
