@@ -1,10 +1,10 @@
-import type { Operator, Representation } from "../learning/challenge";
-import type { ObjectiveId } from "../learning/objectives";
-import type { HintLevel } from "../learning/session";
-import type { GuideId } from "../content/schemas";
 import type { Settings } from "../app/settings";
+import type { GuideId } from "../content/schemas";
+import type { InteractiveTaskMeta, Operator, Representation } from "../learning/challenge";
+import type { ObjectiveId } from "../learning/objectives";
 
-/** What the DOM shell needs to render a challenge accessibly. */
+export type Screen = "loading" | "map" | "quest" | "complete" | "ending";
+
 export interface ChallengePresentation {
   challengeId: string;
   objectiveId: ObjectiveId;
@@ -15,55 +15,59 @@ export interface ChallengePresentation {
   correctAnswer: number;
   choiceKeyPrefix?: string | undefined;
   representation: Representation;
-  /** 1-based position within the quest. */
   index: number;
   total: number;
+  meta?: InteractiveTaskMeta | undefined;
+  isAssessment?: boolean | undefined;
 }
 
-export type Screen = "loading" | "map" | "quest" | "complete" | "ending";
-
-/**
- * Typed events between the Phaser canvas and the DOM shell. Neither side
- * imports the other: scenes don't know about DOM elements, and the shell
- * doesn't know about Phaser objects.
- */
 export interface GameEventMap {
-  // game → shell
   screen: { screen: Screen; questId?: string };
-  challenge: ChallengePresentation;
-  feedback:
-    | { kind: "correct" }
-    | { kind: "try-again"; hintLevel: HintLevel; ruledOut?: number | undefined };
-  questComplete: { questId: string; rewardIds: readonly string[] };
-  mapDiscovery:
-    | { kind: "guide"; guideId: GuideId }
-    | { kind: "treasure"; treasureId: string; nameKey: string };
-
-  // shell → game
   startQuest: { questId: string };
+  returnToMap: Record<string, never>;
+  challenge: ChallengePresentation;
   answer: { challengeId: string; value: number };
   requestHint: { challengeId: string };
+  setModality: { challengeId?: string | undefined; modality: "listening" | "independent-reading" };
+  settingsChanged: Settings;
+  feedback:
+    | { kind: "correct" }
+    | { kind: "try-again"; hintLevel: 1 | 2 | 3; ruledOut?: number | undefined };
+  questComplete: { questId: string; rewardIds: readonly string[] };
+  modalState: { open: boolean };
   exploreMap:
     | { target: "guide"; guideId: GuideId }
     | { target: "treasure"; treasureId: string }
     | { target: "celebrate" };
-  returnToMap: Record<string, never>;
-  settingsChanged: Settings;
-  modalState: { open: boolean };
+  mapDiscovery:
+    | { kind: "guide"; guideId: GuideId }
+    | { kind: "treasure"; treasureId: string; nameKey: string };
 }
 
-export type GameEvent = keyof GameEventMap;
+type Listener<T> = (payload: T) => void;
 
+/**
+ * Typed pub/sub bus between Phaser scenes and the accessible DOM shell.
+ * Keeps Phaser imports out of `src/app` and DOM manipulation out of `src/game`.
+ */
 export class GameBridge {
-  private readonly target = new EventTarget();
+  private readonly listeners = new Map<keyof GameEventMap, Set<Listener< never >>>();
 
-  emit<K extends GameEvent>(type: K, detail: GameEventMap[K]): void {
-    this.target.dispatchEvent(new CustomEvent(type, { detail }));
+  on<K extends keyof GameEventMap>(event: K, listener: Listener<GameEventMap[K]>): () => void {
+    let set = this.listeners.get(event);
+    if (!set) {
+      set = new Set();
+      this.listeners.set(event, set);
+    }
+    set.add(listener as Listener<never>);
+    return () => set?.delete(listener as Listener<never>);
   }
 
-  on<K extends GameEvent>(type: K, handler: (payload: GameEventMap[K]) => void): () => void {
-    const listener: EventListener = (event) => handler((event as CustomEvent<GameEventMap[K]>).detail);
-    this.target.addEventListener(type, listener);
-    return () => this.target.removeEventListener(type, listener);
+  emit<K extends keyof GameEventMap>(event: K, payload: GameEventMap[K]): void {
+    const set = this.listeners.get(event);
+    if (!set) return;
+    for (const listener of [...set]) {
+      (listener as Listener<GameEventMap[K]>)(payload);
+    }
   }
 }

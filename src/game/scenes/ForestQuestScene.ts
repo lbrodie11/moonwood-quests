@@ -1,5 +1,7 @@
 import Phaser from "phaser";
+import { findQuestOrSanctuary } from "../../content";
 import type { QuestDefinition } from "../../content/schemas";
+import { currentLanguage } from "../../i18n";
 import { QuestRunner, type HintLevel } from "../../learning/session";
 import { completeQuest, updateMastery } from "../../storage/progress";
 import type { GameEventMap } from "../bridge";
@@ -20,11 +22,11 @@ import {
 import { WorldMapScene } from "./WorldMapScene";
 
 /**
- * Multi-region fantasy quest scene.
+ * Multi-region fantasy quest and regional sanctuary scene.
  *
  * Delegates region themes and per-operator manipulative/hint rendering to
- * `questRenderers.ts` while coordinating `QuestRunner` state, audio cues,
- * and persistence.
+ * `questRenderers.ts` while coordinating `QuestRunner` state, structured
+ * learning evidence, audio cues, and persistence.
  */
 export class ForestQuestScene extends Phaser.Scene {
   static readonly KEY = "ForestQuest";
@@ -59,13 +61,20 @@ export class ForestQuestScene extends Phaser.Scene {
 
   create(): void {
     this.services = servicesOf(this);
-    const quest = this.services.quests.find((q) => q.id === this.questId);
+    const quest = findQuestOrSanctuary(this.questId, this.services.quests);
     if (!quest) throw new Error(`Unknown quest "${this.questId}"`);
     this.quest = quest;
     this.audio = new AudioSystem(() => this.services.settings().sound);
+    const progress = this.services.progress.current;
     this.runner = new QuestRunner(
-      quest,
-      this.services.progress.current.objectives,
+      {
+        ...quest,
+        assessmentMode: quest.assessmentMode ?? "standard",
+        locale: currentLanguage(),
+        seenItemSignatures: progress.seenItemSignatures,
+        placedSkills: progress.placedSkills,
+      },
+      progress.objectives,
       this.services.rngForQuest(quest.id),
     );
 
@@ -75,6 +84,7 @@ export class ForestQuestScene extends Phaser.Scene {
     const subscriptions = [
       bridge.on("answer", (payload) => void this.handleAnswer(payload)),
       bridge.on("requestHint", ({ challengeId }) => void this.handleHintRequest(challengeId)),
+      bridge.on("setModality", ({ modality }) => this.runner.setResponseModality(modality)),
       bridge.on("returnToMap", () => this.scene.start(WorldMapScene.KEY)),
       bridge.on("startQuest", ({ questId }) => this.scene.start(ForestQuestScene.KEY, { questId })),
       bridge.on("exploreMap", (payload) => {
@@ -173,6 +183,8 @@ export class ForestQuestScene extends Phaser.Scene {
       representation: challenge.representation,
       index: this.runner.solved + 1,
       total: this.runner.total,
+      meta: challenge.meta,
+      isAssessment: challenge.isAssessment,
     });
   }
 
@@ -204,6 +216,40 @@ export class ForestQuestScene extends Phaser.Scene {
     const bridge = this.services.bridge;
 
     if (result.kind === "incorrect") {
+      // Persist recorded incorrect-attempt evidence immediately
+      await this.services.progress.update((p) =>
+        updateMastery(
+          p,
+          this.runner.masterySnapshot(),
+          new Date(),
+          this.runner.recordedEvidence,
+          this.runner.knownItemSignatures,
+        ),
+      );
+
+      if (result.assessmentTransitioned) {
+        this.busy = true;
+        if (result.questComplete) {
+          await this.services.progress.update((p) =>
+            completeQuest(
+              p,
+              this.quest,
+              this.runner.masterySnapshot(),
+              new Date(),
+              this.runner.recordedEvidence,
+              this.runner.knownItemSignatures,
+            ),
+          );
+          await this.finishQuest();
+        } else {
+          await wait(this, this.reduced ? 200 : 350);
+          if (!this.alive) return;
+          this.presentChallenge();
+        }
+        this.busy = false;
+        return;
+      }
+
       this.audio.hmm();
       bridge.emit("feedback", { kind: "try-again", hintLevel: result.hintLevel, ruledOut: result.ruledOut });
       await this.showHint(result.hintLevel);
@@ -215,12 +261,29 @@ export class ForestQuestScene extends Phaser.Scene {
     this.audio.chime();
     bridge.emit("feedback", { kind: "correct" });
 
-    // Persist mastery and quest completion BEFORE playing celebration animations
+    // Persist mastery, structured evidence, and quest completion BEFORE playing celebration animations
     // so navigating back to the map during the celebration never loses progress.
     if (result.questComplete) {
-      await this.services.progress.update((p) => completeQuest(p, this.quest, this.runner.masterySnapshot()));
+      await this.services.progress.update((p) =>
+        completeQuest(
+          p,
+          this.quest,
+          this.runner.masterySnapshot(),
+          new Date(),
+          this.runner.recordedEvidence,
+          this.runner.knownItemSignatures,
+        ),
+      );
     } else {
-      await this.services.progress.update((p) => updateMastery(p, this.runner.masterySnapshot()));
+      await this.services.progress.update((p) =>
+        updateMastery(
+          p,
+          this.runner.masterySnapshot(),
+          new Date(),
+          this.runner.recordedEvidence,
+          this.runner.knownItemSignatures,
+        ),
+      );
     }
 
     void animate(this, this.reduced, {

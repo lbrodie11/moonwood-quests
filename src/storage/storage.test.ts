@@ -24,7 +24,7 @@ describe("LocalProgressRepository", () => {
     expect(await repo.load()).toBeNull();
   });
 
-  it("migrates legacy v0 saves and recovers from backup if primary is corrupted", async () => {
+  it("migrates legacy v0 and v1 saves to v2 with legacyMigratedFromV1 flag and recovers from backup if primary is corrupted", async () => {
     const store = new MemoryStore();
     const repo = new LocalProgressRepository(store);
     store.setItem(
@@ -32,13 +32,25 @@ describe("LocalProgressRepository", () => {
       JSON.stringify({
         unlockedQuestIds: ["forest-gate"],
         completedQuestIds: ["forest-gate"],
-        objectives: { "unknown-old-id": { attempts: 1 } },
+        objectives: {
+          "unknown-old-id": { attempts: 1 },
+          "add-within-20": {
+            objectiveId: "add-within-20",
+            attempts: 4,
+            independentSuccesses: 3,
+            supportedSuccesses: 1,
+            streak: 3,
+            nextDifficulty: 2,
+          },
+        },
       }),
     );
     const migrated = await repo.load();
-    expect(migrated?.schemaVersion).toBe(1);
+    expect(migrated?.schemaVersion).toBe(2);
+    expect(migrated?.legacyMigratedFromV1).toBe(true);
     expect(migrated?.completedQuestIds).toEqual(["forest-gate"]);
-    expect(migrated?.objectives).toEqual({});
+    expect(migrated?.objectives["add-within-20"]?.attempts).toBe(4);
+    expect(migrated?.objectives["unknown-old-id" as "add-within-20"]).toBeUndefined();
 
     await repo.save(migrated!);
     const updated = discoverTreasure(migrated!, "treasure.whispering-seed");
@@ -86,7 +98,19 @@ describe("completeQuest", () => {
 
 describe("privacy invariant", () => {
   it("stores no personal fields", () => {
-    const allowed = ["schemaVersion", "lastUpdated", "unlockedQuestIds", "completedQuestIds", "rewardIds", "objectives"];
+    const allowed = [
+      "schemaVersion",
+      "lastUpdated",
+      "unlockedQuestIds",
+      "completedQuestIds",
+      "rewardIds",
+      "objectives",
+      "evidenceLog",
+      "reviewSchedule",
+      "seenItemSignatures",
+      "placedSkills",
+      "legacyMigratedFromV1",
+    ];
     expect(Object.keys(PlayerProgressSchema.shape).sort()).toEqual(allowed.sort());
   });
 });

@@ -1,6 +1,9 @@
+import { SANCTUARY_ACTIVITIES } from "../content";
 import type { QuestDefinition } from "../content/schemas";
-import { t } from "../i18n";
-import { OBJECTIVES } from "../learning/objectives";
+import { currentLanguage, t } from "../i18n";
+import { buildParentRecommendations } from "../learning/adaptation/spacedReview";
+import { evaluateSkillEvidence } from "../learning/assessment/evidence";
+import { OBJECTIVE_IDS, OBJECTIVES } from "../learning/objectives";
 import type { ProgressStore } from "../storage/ProgressStore";
 import { el, enableDialogLightDismiss } from "./dom";
 
@@ -87,12 +90,26 @@ export class ParentGate {
 
   private renderArea(): void {
     const progress = this.progress.current;
+    const locale = currentLanguage();
     const objectives = Object.values(progress.objectives);
+
+    const evaluations = OBJECTIVE_IDS.map((skillId) => {
+      const legacyObj = progress.objectives[skillId];
+      const legacyAttempts = progress.legacyMigratedFromV1 ? (legacyObj?.attempts ?? 0) : 0;
+      return evaluateSkillEvidence(skillId, progress.evidenceLog ?? [], {
+        locale,
+        legacyAttempts,
+      });
+    });
+
+    const activeEvaluations = evaluations.filter(
+      (ev) => ev.totalCompletedAttempts > 0 || ev.classification === "legacy-unverified",
+    );
 
     const summary = objectives.length
       ? el(
           "ul",
-          {},
+          { "data-testid": "parent-objective-list" },
           ...objectives.map((m) =>
             el(
               "li",
@@ -107,12 +124,92 @@ export class ParentGate {
         )
       : el("p", {}, t("parent.noProgress"));
 
-    const completed = this.quests.filter((q) => progress.completedQuestIds.includes(q.id));
+    const evidenceSection = activeEvaluations.length
+      ? el(
+          "ul",
+          { className: "evidence-list", "data-testid": "parent-evidence-summary" },
+          ...activeEvaluations.map((ev) => {
+            const obj = OBJECTIVES[ev.skillId];
+            return el(
+              "li",
+              {},
+              t("parent.evidenceSummaryRow", {
+                standard: obj.standard,
+                ncStandard: obj.ncStandard,
+                stage: ev.currentStage,
+                status: ev.classification,
+                sampleNote: ev.sampleSizeWarning,
+              }),
+            );
+          }),
+        )
+      : null;
+
+    const readingEv = evaluations.find((ev) => ev.skillId === "reading-comprehension");
+    const readingModalityNote =
+      readingEv && (readingEv.independentReadingCount > 0 || readingEv.listeningOnlyCount > 0)
+        ? el(
+            "p",
+            { className: "modality-note", "data-testid": "reading-modality-note" },
+            t("parent.readingModalityNote", {
+              independentRead: readingEv.independentReadingCount,
+              listened: readingEv.listeningOnlyCount,
+            }),
+          )
+        : null;
+
+    const legacyNote = progress.legacyMigratedFromV1
+      ? el(
+          "p",
+          { className: "legacy-note", "data-testid": "legacy-migration-note" },
+          t("parent.legacyMigrationNote"),
+        )
+      : null;
+
+    const recommendations = buildParentRecommendations(evaluations);
+    const recommendationsList = el(
+      "ul",
+      { className: "recommendations-list", "data-testid": "parent-recommendations" },
+      ...recommendations.map((rec) =>
+        el(
+          "li",
+          {},
+          `${OBJECTIVES[rec.skillId].standard} — ${t(rec.reasonKey)} ${t(rec.activityKey)}`,
+        ),
+      ),
+    );
+
+    const allActivities = [...this.quests, ...SANCTUARY_ACTIVITIES];
+    const completed = allActivities.filter((q) => progress.completedQuestIds.includes(q.id));
     const completedList = completed.length
       ? el("ul", {}, ...completed.map((q) => el("li", {}, `${t(q.titleKey)} — ${t("ui.completed")}`)))
       : null;
 
-    const status = el("p", { role: "status" });
+    const status = el("p", { role: "status", "data-testid": "parent-status" });
+
+    const exportBtn = el(
+      "button",
+      { type: "button", className: "secondary", "data-testid": "export-learning-report" },
+      t("parent.exportJson"),
+    );
+    exportBtn.addEventListener("click", () => {
+      const report = {
+        privacyNotice: "Local-only academic progress report. Contains no child PII.",
+        schemaVersion: progress.schemaVersion,
+        legacyMigratedFromV1: progress.legacyMigratedFromV1 ?? false,
+        completedQuestIds: progress.completedQuestIds,
+        objectives: progress.objectives,
+        evidenceEvaluations: activeEvaluations,
+        recommendations: recommendations.map((r) => ({
+          skillId: r.skillId,
+          standard: OBJECTIVES[r.skillId].standard,
+          activity: t(r.activityKey),
+        })),
+      };
+      status.dataset.exportPayload = JSON.stringify(report);
+      status.textContent = t("parent.exported");
+    });
+
     const erase = el("button", { type: "button", className: "danger", "data-testid": "erase" }, t("parent.erase"));
     let confirming = false;
     erase.addEventListener("click", async () => {
@@ -135,8 +232,15 @@ export class ParentGate {
       el("p", {}, t("parent.privacy")),
       el("h3", {}, t("parent.progressHeading")),
       summary,
+      evidenceSection ?? "",
+      readingModalityNote ?? "",
+      legacyNote ?? "",
       completedList ?? "",
-      el("div", { className: "dialog-actions" }, erase, close),
+      el("h3", {}, t("parent.confidenceHeading")),
+      el("p", { "data-testid": "parent-confidence-note" }, t("parent.confidenceBody")),
+      el("h3", {}, t("parent.recommendationsHeading")),
+      recommendationsList,
+      el("div", { className: "dialog-actions" }, exportBtn, erase, close),
       status,
     );
   }

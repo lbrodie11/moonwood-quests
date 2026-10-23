@@ -15,12 +15,13 @@ anywhere.
 
 | Key | Contents | Schema | Personal info? |
 |---|---|---|---|
-| `flg.progress.v1` | Unlocked/completed quest ids, reward/treasure ids, per-objective learning counts and next difficulty | `PlayerProgressSchema` in `src/storage/ProgressRepository.ts` | No |
+| `flg.progress.v1` | Unlocked/completed quest ids, reward/treasure ids, per-objective learning counts, structured attempt evidence log (`evidenceLog`), spaced review schedule (`reviewSchedule`), seen item signatures (`seenItemSignatures`), diagnostic placement (`placedSkills`), and legacy migration flag (`legacyMigratedFromV1`) | `PlayerProgressSchema` in `src/storage/ProgressRepository.ts` | No |
 | `flg.progress.v1.bak` | Last known-good backup copy of `flg.progress.v1` for corruption recovery (erased alongside primary save) | `PlayerProgressSchema` in `src/storage/ProgressRepository.ts` | No |
 | `flg.settings.v1` | Language, sound, calm motion, narration | `SettingsSchema` in `src/app/settings.ts` | No |
 
-Grown-ups can erase progress from the Grown-ups area (which removes both primary
-and backup keys); clearing site data in the browser also removes everything.
+Grown-ups can export a local JSON snapshot or erase progress from the Grown-ups
+area (which removes both primary and backup keys); clearing site data in the
+browser also removes everything.
 
 ## What is never collected
 
@@ -35,7 +36,7 @@ behavioural analytics.
 | ESLint bans `fetch`, XHR, WebSocket, `sendBeacon`, geolocation, media devices, cookies | `eslint.config.js` |
 | Content Security Policy allows only same-origin resources | `vite.config.ts`, `public/_headers` |
 | Permissions-Policy disables camera, microphone, geolocation | `public/_headers` |
-| A unit test fails if a field is added to saved progress | `src/storage/storage.test.ts` |
+| A unit test fails if an unapproved field is added to saved progress | `src/storage/storage.test.ts` |
 | An E2E test fails on any third-party network request | `tests/e2e/quest.spec.ts` |
 | Speech uses only on-device voices | `src/app/Narrator.ts` |
 | Agent policy for any data-related change | `.agents/skills/coppa-data-minimization/SKILL.md` |

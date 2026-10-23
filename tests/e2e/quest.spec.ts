@@ -34,6 +34,28 @@ async function correctAnswer(page: Page): Promise<number> {
     return c + (b - a);
   }
 
+  // Unknown-number equations (1.OA.D.8):
+  // 1) "6 + ? = 10"
+  const missingSecond = text.match(/^(\d+)\s*\+\s*\?\s*=\s*(\d+)$/);
+  if (missingSecond) {
+    return Number(missingSecond[2]) - Number(missingSecond[1]);
+  }
+  // 2) "? + 4 = 9"
+  const missingFirst = text.match(/^\?\s*\+\s*(\d+)\s*=\s*(\d+)$/);
+  if (missingFirst) {
+    return Number(missingFirst[2]) - Number(missingFirst[1]);
+  }
+  // 3) "12 - ? = 7"
+  const missingSub = text.match(/^(\d+)\s*-\s*\?\s*=\s*(\d+)$/);
+  if (missingSub) {
+    return Number(missingSub[1]) - Number(missingSub[2]);
+  }
+  // 4) "8 = ? - 3"
+  const reversedMinuend = text.match(/^(\d+)\s*=\s*\?\s*-\s*(\d+)$/);
+  if (reversedMinuend) {
+    return Number(reversedMinuend[1]) + Number(reversedMinuend[2]);
+  }
+
   // Phonics-words: "🌙 = ?" -> match the word-only choice button ("MOON")
   for (const [icon, word] of Object.entries(WORD_BY_ICON)) {
     if (text.startsWith(icon)) {
@@ -330,4 +352,56 @@ test("phonics, patterns, and the Grand Starlight Celebration ending work end-to-
   await expect(page.getByTestId("ending-panel")).toContainText("The Grand Starlight Celebration");
   await page.getByTestId("ending-back-to-map").click();
   await expect(page.getByRole("heading", { name: "Choose a quest" })).toBeVisible();
+});
+
+test("regional sanctuaries, Storykeeper reading vs. listening modality, assessment mode, and Parent Dashboard evidence work end-to-end", async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.goto("/?seed=42");
+
+  // 1. All 8 regional sanctuaries are visible on the World Map
+  await expect(page.getByTestId("sanctuaries-section")).toBeVisible();
+  await expect(page.locator("[data-sanctuary]")).toHaveCount(8);
+
+  // 2. Complete Alchemist's Equation Forge (1.OA.D.8 / NC.1.OA.8)
+  await page.locator('[data-sanctuary="equation-alchemy"]').click();
+  await expect(page.getByTestId("challenge-panel")).toBeVisible();
+  await completeCurrentQuest(page);
+  await expect(page.getByTestId("quest-complete")).toContainText("Balanced Alchemy Vial");
+  await page.getByTestId("back-to-map").click();
+
+  // 3. Enter Storykeeper Hollow and verify reading vs. listening modality & non-graded strategy reflection
+  await page.locator('[data-sanctuary="storykeeper-hollow"]').click();
+  await expect(page.getByTestId("story-passage")).toBeVisible();
+  await page.getByTestId("listen-story-btn").click();
+  await expect(page.getByTestId("listen-story-btn")).toHaveClass(/modality-active/);
+  await page.getByTestId("read-myself-btn").click();
+  await expect(page.getByTestId("read-myself-btn")).toHaveClass(/modality-active/);
+
+  // Non-graded strategy reflection card responds with positive acknowledgement
+  await expect(page.getByTestId("strategy-reflection")).toBeVisible();
+  await page.locator(".reflection-card").first().click();
+  await expect(page.getByTestId("reflection-thanks")).toContainText("Thank you for sharing your strategy");
+  await page.getByTestId("leave-quest").click();
+
+  // 4. Enter Starlight Independent Check and verify hints are disabled in assessment mode
+  await page.locator('[data-sanctuary="starlight-check"]').click();
+  await expect(page.getByTestId("assessment-banner")).toBeVisible();
+  await expect(page.getByTestId("ask-hint")).toBeHidden();
+  await page.getByTestId("leave-quest").click();
+
+  // 5. Open Grown-ups Dashboard and verify evidence summary, confidence note, offline recommendations, and JSON export
+  await page.getByTestId("open-grown-ups").click();
+  const gate = page.getByTestId("parent-gate");
+  const question = (await gate.locator("label").textContent()) ?? "";
+  const [, a, b] = question.match(/(\d+)\s*×\s*(\d+)/) ?? [];
+  await gate.locator("input").fill(String(Number(a) * Number(b)));
+  await gate.getByRole("button", { name: "Continue" }).click();
+
+  const area = page.getByTestId("parent-area");
+  await expect(area.getByTestId("parent-evidence-summary")).toContainText("1.OA.D.8 (NC.1.OA.8)");
+  await expect(area.getByTestId("parent-confidence-note")).toContainText("Provisional mastery requires");
+  await expect(area.getByTestId("parent-recommendations")).toBeVisible();
+
+  await area.getByTestId("export-learning-report").click();
+  await expect(area.getByTestId("parent-status")).toContainText("Learning report copied");
 });

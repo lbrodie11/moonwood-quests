@@ -22,10 +22,15 @@
     "continueAdventure": "Continuar aventura: {{title}}",
     "replayAdventure": "Repetir cualquier misión",
     "exploreHeading": "Explora el Bosque Lunar y conoce amigos",
+    "sanctuariesHeading": "Santuarios de Aprendizaje y Talleres Regionales",
     "talkTo": "Hablar con {{name}}",
     "findTreasure": "Buscar {{name}}",
     "treasureFound": "Encontrado: {{name}} ✨",
-    "collectiblesCount": "{{found}} de {{total}} Tesoros Estelares · {{quests}} de {{totalQuests}} Misiones listas"
+    "collectiblesCount": "{{found}} de {{total}} Tesoros Estelares · {{quests}} de {{totalQuests}} Misiones listas",
+    "hearPassage": "Escuchar el cuento en voz alta",
+    "readIndependently": "Leí el cuento yo solo",
+    "reflectionHeading": "Reflexión de Estrategia (Opcional — ¡no hay respuestas incorrectas!)",
+    "assessmentNotice": "Prueba Estelar Independiente: ¡Haz tu mejor esfuerzo tú solo! Las pistas descansan en esta prueba."
   },
   "story": {
     "introTitle": "La Luz Estelar del Bosque Lunar",
@@ -45,19 +50,19 @@
   "region": {
     "whisperingWoods": {
       "title": "Bosque Susurrante",
-      "subtitle": "Sumas y sentido numérico"
+      "subtitle": "Sumas, cuentos y naturaleza"
     },
     "crystalCaves": {
       "title": "Cuevas de Cristal",
-      "subtitle": "Decenas, unidades y restas"
+      "subtitle": "Decenas, ecuaciones y vocabulario"
     },
     "enchantedLibrary": {
       "title": "La Biblioteca Encantada",
-      "subtitle": "Medidas del puente y palabras"
+      "subtitle": "Fonética, medidas y diario de runas"
     },
     "starfallTower": {
       "title": "Torre Estelar",
-      "subtitle": "Figuras, patrones y gran final"
+      "subtitle": "Geometría, lógica y taller creativo"
     }
   },
   "guide": {
@@ -67,11 +72,11 @@
     },
     "moss": {
       "name": "Musgo el Duende",
-      "greeting": "¡Las flores del bosque cantan cuando juntamos cristales azules y dorados!"
+      "greeting": "¡Las flores del bosque cantan cuando juntamos cristales y exploramos la naturaleza real!"
     },
     "bramble": {
       "name": "Zarza el Topo de Cristal",
-      "greeting": "¡En las Cuevas de Cristal guardamos las gemas en bolsas de diez para contar mejor!"
+      "greeting": "¡En las Cuevas de Cristal guardamos gemas en bolsas de diez y equilibramos ecuaciones!"
     },
     "luma": {
       "name": "Luma la Zorra Bibliotecaria",
@@ -79,7 +84,7 @@
     },
     "astra": {
       "name": "Astra el Hada Estelar",
-      "greeting": "¡Mira las estrellas! ¡Las figuras y los patrones muestran cómo bailan las constelaciones!"
+      "greeting": "¡Mira las estrellas! ¡Las figuras, los acertijos lógicos y el taller muestran cómo bailan las constelaciones!"
     }
   },
   "quest": {
@@ -131,6 +136,38 @@
       "title": "La Corona del Bosque Lunar",
       "intro": "¡Usa toda tu magia —números, decenas, palabras, figuras y patrones— para encender el Gran Faro Estelar!"
     },
+    "storykeeperHollow": {
+      "title": "Claro de los Cuentos",
+      "intro": "¡Lee o escucha cuentos cortos del Bosque Lunar con Musgo y responde preguntas de comprensión!"
+    },
+    "naturekeeperGlade": {
+      "title": "Pradera de la Naturaleza",
+      "intro": "¡Explora el ciclo de vida de las plantas, los hábitats animales y la diferencia entre magia y ciencia real!"
+    },
+    "equationAlchemy": {
+      "title": "Forja de Ecuaciones",
+      "intro": "¡Encuentra el número desconocido en las ecuaciones de cristal de Zarza para equilibrar la forja!"
+    },
+    "creatureCavern": {
+      "title": "Conversaciones de Criaturas",
+      "intro": "¡Conversa con los amigos del Bosque Lunar para clasificar palabras y descubrir significados!"
+    },
+    "runeJournalDesk": {
+      "title": "El Diario de Runas",
+      "intro": "¡Forma palabras con fichas de letras, ordena oraciones y practica mayúsculas y puntos!"
+    },
+    "wizardsWorkshop": {
+      "title": "El Taller del Mago",
+      "intro": "¡Usa pistas lógicas, planifica pasos y reflexiona sobre tus estrategias!"
+    },
+    "moonwoodWorkshop": {
+      "title": "Taller de Construcción",
+      "intro": "¡Diseña puentes, hábitats y torres de figuras que cumplan las metas del taller!"
+    },
+    "starlightCheck": {
+      "title": "Prueba Estelar Independiente",
+      "intro": "¡Una prueba breve y tranquila para ver qué puedes resolver tú solo sin pistas!"
+    },
     "complete": "¡La puerta está abierta!"
   },
   "challenge": {
@@ -140,19 +177,29 @@
     "subtraction": {
       "spendMana": "Cristales que tenías: {{a}}. Cristales que usó el hechizo: {{b}}. ¿Cuántos quedan?"
     },
+    "unknownEquation": {
+      "missingSecondAddend": "Alquimia de Ecuaciones: {{a}} + ? = {{b}}. ¿Qué número desconocido equilibra la ecuación?",
+      "missingFirstAddend": "Alquimia de Ecuaciones: ? + {{a}} = {{b}}. ¿Qué número inicial equilibra la ecuación?",
+      "missingSubtrahend": "Alquimia de Ecuaciones: {{a}} - ? = {{b}}. ¿Qué número desconocido se restó?",
+      "reversedMissingMinuend": "Alquimia de Ecuaciones: {{a}} = ? - {{b}}. ¿Qué número total inicia la resta?",
+      "equationSecond": "{{a}} + ? = {{b}}",
+      "equationFirst": "? + {{a}} = {{b}}",
+      "equationSub": "{{a}} - ? = {{b}}",
+      "equationRev": "{{a}} = ? - {{b}}"
+    },
     "placeValue": {
       "countRunes": "Bolsas de diez: {{a}}. Cristales sueltos: {{b}}. ¿Cuántos cristales hay en total?",
       "equation": "{{a}} decenas + {{b}} unidades = ?"
     },
     "length": {
-      "joinPlanks": "Primera tabla: {{a}} losas lunares. Segunda tabla: {{b}} losas lunares. ¿Cuántas losas mide el puente?",
-      "missingPlank": "El barranco mide {{a}} losas lunares. Una tabla cubre {{b}} losas. ¿Cuántas losas más faltan?",
+      "joinPlanks": "Primera tabla: {{a}} losas lunares. Segunda tabla: {{b}} losas colocadas extremo con extremo sin espacios. ¿Cuántas losas mide el puente?",
+      "missingPlank": "El barranco de referencia mide {{a}} losas lunares. Una tabla cubre {{b}} losas sin superponerse. ¿Cuántas losas más faltan?",
       "joinEquation": "{{a}} losas + {{b}} losas = ?",
       "missingEquation": "{{a}} losas - {{b}} losas = ?"
     },
     "shapes": {
-      "composeSigil": "Triángulos celestes: {{a}}. Diamantes solares: {{b}}. ¿Cuántas piezas forman el símbolo?",
-      "countSides": "El primer símbolo usa {{a}} triángulos celestes. El segundo usa {{b}} diamantes solares. ¿Cuántas piezas hay en total?",
+      "composeSigil": "Triángulos celestes (3 lados rectos): {{a}}. Rombos solares (4 lados iguales): {{b}}. ¿Cuántas piezas forman la figura compuesta?",
+      "countSides": "El primer símbolo usa {{a}} partes iguales. El segundo usa {{b}} partes iguales. ¿Cuántas piezas hay en total?",
       "equation": "{{a}} piezas + {{b}} piezas = ?"
     },
     "pattern": {
@@ -160,9 +207,11 @@
       "equation": "{{a}} → {{b}} → {{c}} → ?"
     },
     "phonics": {
-      "soundMatch": "Mira la pista {{icon}} ({{clue}}). ¡Lee las opciones y elige la palabra correcta!",
-      "buildWord": "¿Qué palabra del cuento significa: {{icon}} {{clue}}?",
-      "storyClue": "Completa la página del cuento: {{icon}} \"{{sentence}}\"",
+      "soundMatch": "Mira la pista {{icon}} ({{clue}}). ¡Une los sonidos y elige la palabra correcta!",
+      "buildWord": "¡Separa en sílabas y forma la palabra que significa: {{icon}} {{clue}}!",
+      "storyClue": "Lee la palabra para completar la página: {{icon}} \"{{sentence}}\"",
+      "storySentence": "Lectura conectada: \"{{sentence}}\" ({{clue}}). ¿Qué palabra completa la oración?",
+      "parentPronunciationGuide": "Consejo para adultos: Modele los sonidos de cada letra y sílaba con claridad.",
       "equation": "{{icon}} = ?",
       "word": {
         "1": {
@@ -262,6 +311,251 @@
           "sentence": "La ___ de plata suena en la torre."
         }
       }
+    },
+    "comprehension": {
+      "equation": "Cuento #{{a}}",
+      "item": {
+        "1": {
+          "passage": "Pip el búho llevó un pequeño farol de bronce al puente de madera para que Musgo pudiera ver las piedras del camino.",
+          "prompt": "¿Por qué llevó Pip el farol de bronce al puente?",
+          "label": "Para que Musgo pudiera ver las piedras del camino"
+        },
+        "2": {
+          "passage": "Zarza guardó sus brillantes gemas moradas en bolsas de diez antes de cerrar la bóveda de la cueva.",
+          "prompt": "¿Quién guardó las gemas brillantes en bolsas de diez?",
+          "label": "Zarza el topo de cristal"
+        },
+        "3": {
+          "passage": "Primero, Luma limpió la portada del libro. Después, abrió el broche dorado. Al final, leyó el poema estelar.",
+          "prompt": "¿Qué hizo Luma justo después de limpiar la portada del libro?",
+          "label": "Abrió el broche dorado"
+        },
+        "4": {
+          "passage": "Primero, Aria plantó una pequeña semilla en la tierra. Luego, la regó cada mañana. Pronto brotó un tallo verde.",
+          "prompt": "¿Qué pasó primero en el cuento del jardín de Aria?",
+          "label": "Aria plantó una pequeña semilla en la tierra"
+        },
+        "5": {
+          "passage": "Como una lluvia repentina mojó las tablas de madera, el puente quedó resbaloso y Luma esperó adentro.",
+          "prompt": "¿Por qué esperó Luma adentro en lugar de cruzar el puente?",
+          "label": "La lluvia dejó resbalosas las tablas del puente"
+        },
+        "6": {
+          "passage": "La campana de la torre estaba en silencio porque una ardilla dormilona había guardado piñas dentro de la campana.",
+          "prompt": "¿Qué causó que la campana de la torre permaneciera en silencio?",
+          "label": "Había piñas guardadas dentro de la campana"
+        },
+        "7": {
+          "passage": "Astra se puso su capa tibia de lana, encendió la chimenea y miró caer copos blancos por la ventana.",
+          "prompt": "¿En qué estación del año ocurre probablemente el cuento de Astra?",
+          "label": "Una noche nevada de invierno"
+        },
+        "8": {
+          "passage": "Musgo preparó una regadera, una pala pequeña y semillas de girasol antes de caminar hacia el claro soleado.",
+          "prompt": "¿Qué hará Musgo probablemente al llegar al claro soleado?",
+          "label": "Plantar y regar las semillas de girasol"
+        }
+      }
+    },
+    "vocabulary": {
+      "equation": "Palabra #{{a}}",
+      "parentOralPrompt": "Conversación con adultos: ¡Invite a su niño o niña a usar esta palabra en una oración propia en voz alta!",
+      "item": {
+        "1": {
+          "prompt": "Musgo dice que el puente de piedra es RESISTENTE para el vagón pesado. ¿Qué significa RESISTENTE?",
+          "label": "Fuerte y firme, que no se rompe fácilmente"
+        },
+        "2": {
+          "prompt": "Luma sostiene un farol de vidrio FRÁGIL con mucho cuidado. ¿Qué significa FRÁGIL?",
+          "label": "Delicado y fácil de quebrarse"
+        },
+        "3": {
+          "prompt": "Clasificación: ¿Cuál grupo contiene SOLO animales vivos del bosque?",
+          "label": "Búho, rana y zorro"
+        },
+        "4": {
+          "prompt": "Clasificación: ¿Cuál grupo contiene SOLO palabras del clima y del cielo?",
+          "label": "Nube de lluvia, brisa y luz del sol"
+        },
+        "5": {
+          "prompt": "Matices de significado: ¿Qué palabra significa casi lo MISMO que RESPLANDECIENTE?",
+          "label": "Que brilla con mucha luz"
+        },
+        "6": {
+          "prompt": "Opuestos (Antónimos): ¿Cuál es el opuesto de un árbol ANTIGUO y muy viejo?",
+          "label": "Un arbolito joven recién brotado"
+        },
+        "7": {
+          "prompt": "Conversación: ¿Por qué decimos que Zarza es COOPERATIVO cuando comparte sus bolsas de diez?",
+          "label": "Porque ayuda y trabaja en equipo con sus amigos"
+        },
+        "8": {
+          "prompt": "Conversación: Si Aria OBSERVA las estrellas por el telescopio, ¿qué está haciendo?",
+          "label": "Mirando con mucha atención para notar detalles"
+        }
+      }
+    },
+    "spelling": {
+      "equation": "Runa #{{a}}",
+      "paperCompanionPrompt": "Compañero de Papel y Lápiz: ¡Toma un lápiz y papel real para escribir esta palabra u oración!",
+      "item": {
+        "1": {
+          "prompt": "Usa las fichas [G] [A] [T] [O] para formar la palabra de la mascota que ronronea:",
+          "label": "GATO (G - A - T - O)"
+        },
+        "2": {
+          "prompt": "Usa las fichas [S] [O] [L] para formar la palabra del astro que ilumina el día:",
+          "label": "SOL (S - O - L)"
+        },
+        "3": {
+          "prompt": "Une las fichas [R] [A] [N] [A] para formar la palabra de quien salta en el estanque:",
+          "label": "RANA (R - A - N - A)"
+        },
+        "4": {
+          "prompt": "Usa las fichas [L] [U] [N] [A] para formar lo que brilla de noche:",
+          "label": "LUNA (L - U - N - A)"
+        },
+        "5": {
+          "prompt": "Orden de la oración: Ordena las palabras [la] [ve] [Pip] [luna.] correctamente:",
+          "label": "Pip ve la luna."
+        },
+        "6": {
+          "prompt": "Orden de la oración: Ordena las palabras [un] [Musgo] [farol.] [enciende] correctamente:",
+          "label": "Musgo enciende un farol."
+        },
+        "7": {
+          "prompt": "Escritura: ¿Cuál oración empieza con letra mayúscula y termina con un punto?",
+          "label": "Luma lee un libro."
+        },
+        "8": {
+          "prompt": "Inicio de cuento: ¿Cuál oración comienza mejor un cuento sobre una semilla estelar?",
+          "label": "Una noche tranquila, Aria encontró una semilla brillante."
+        }
+      }
+    },
+    "reasoning": {
+      "equation": "Lógica #{{a}}",
+      "item": {
+        "1": {
+          "prompt": "Deducción por pistas: La llave de la puerta NO es redonda y NO es roja. ¿Cuál llave abre la puerta?",
+          "label": "La llave cuadrada y azul"
+        },
+        "2": {
+          "prompt": "Deducción por pistas: La gema de Zarza tiene 3 lados rectos y es dorada. ¿Cuál gema es?",
+          "label": "La gema triangular dorada"
+        },
+        "3": {
+          "prompt": "Planificar pasos: Para cruzar un barranco oscuro con el puente roto, ¿cuál es el mejor plan?",
+          "label": "Primero medir y colocar la tabla, luego encender el farol y cruzar"
+        },
+        "4": {
+          "prompt": "Planificar pasos: Luma quiere hornear pan de bayas. ¿Qué orden tiene sentido?",
+          "label": "Mezclar la masa, hornearla y luego cortar el pan tibio"
+        },
+        "5": {
+          "prompt": "Probar una idea: Aria probó una tabla de 4 losas en un espacio de 7 losas y quedó corta. ¿Qué debe hacer?",
+          "label": "Añadir una tabla de 3 losas para que 4 + 3 = 7 losas"
+        },
+        "6": {
+          "prompt": "Regla oculta: Las gemas azules dan 2 de magia y las doradas dan 5. ¿Cómo logras 7 de magia con dos gemas?",
+          "label": "Usar 1 gema azul (2) y 1 gema dorada (5)"
+        },
+        "7": {
+          "prompt": "Elegir representación: ¿Qué herramienta muestra mejor por qué 8 + 5 es igual a 10 + 3?",
+          "label": "Un tablero de diez donde 8 más 2 completan 10 y quedan 3"
+        },
+        "8": {
+          "prompt": "Estrategia: Si olvidas cuánto es 13 - 8, ¿cómo te ayuda la suma a encontrar la respuesta?",
+          "label": "Pensar: ¿8 más qué número forma 13? (8 + 5 = 13)"
+        }
+      }
+    },
+    "science": {
+      "equation": "Naturaleza #{{a}}",
+      "familyHandsOnTip": "Ciencia en Familia: ¡Observen juntos una planta real y una piedra o herramienta para comparar lo vivo y lo no vivo!",
+      "item": {
+        "1": {
+          "prompt": "Vivo o no vivo: ¿Qué elemento del Bosque Susurrante es un SER VIVO porque crece y necesita agua?",
+          "label": "Un brote verde de roble"
+        },
+        "2": {
+          "prompt": "Hábitats animales: ¿Dónde encuentra una rana real el agua y el refugio que necesita para vivir?",
+          "label": "En un estanque húmedo con hojas y juncos"
+        },
+        "3": {
+          "prompt": "Necesidades de las plantas: ¿Qué necesitan las plantas reales del ambiente para crecer sanas?",
+          "label": "Agua, luz del sol, aire y tierra"
+        },
+        "4": {
+          "prompt": "Ciclo de vida de la planta: ¿Cuál es el orden correcto en que crece una planta con flor?",
+          "label": "Semilla → raíz y brote → tallo y hojas → flor"
+        },
+        "5": {
+          "prompt": "Propiedades de los materiales: ¿Qué material es firme y no se deshace con la lluvia para hacer un puente?",
+          "label": "Tablas sólidas de madera de roble"
+        },
+        "6": {
+          "prompt": "Estaciones y luz del día: ¿En qué estación del año tenemos los días más largos y cálidos?",
+          "label": "El verano"
+        },
+        "7": {
+          "prompt": "Magia vs. Ciencia Real: En el cuento, Musgo hace brillar las flores cantando. En la CIENCIA REAL, ¿cómo forman semillas las flores?",
+          "label": "Las abejas y el viento llevan polen entre las flores"
+        },
+        "8": {
+          "prompt": "Magia vs. Ciencia Real: En el cuento, los cristales iluminan la cueva. En la CIENCIA REAL, ¿por qué vemos brillar la Luna?",
+          "label": "La luz del Sol ilumina la Luna y se refleja hacia nuestros ojos"
+        }
+      }
+    },
+    "workshop": {
+      "equation": "Diseño #{{a}}",
+      "item": {
+        "1": {
+          "prompt": "Taller de Puentes: El arroyo mide 8 losas lunares. ¿Qué par de tablas cubre las 8 losas sin espacios?",
+          "label": "Una tabla de 5 losas + una de 3 losas (o dos de 4 losas)"
+        },
+        "2": {
+          "prompt": "Taller de Puentes: El cañón mide 10 losas lunares. ¿Qué diseño cubre las 10 losas completas?",
+          "label": "Una tabla de 6 losas + una de 4 losas (o dos de 5 losas)"
+        },
+        "3": {
+          "prompt": "Taller de Hábitats: Diseña un hábitat para una rana del bosque. ¿Qué tres elementos debes incluir?",
+          "label": "Agua fresca del estanque, un tronco con sombra e insectos"
+        },
+        "4": {
+          "prompt": "Taller de Hábitats: Diseña un refugio seguro para el búho Pip. ¿Qué diseño funciona mejor?",
+          "label": "Un hueco alto y seco en el árbol con musgo suave"
+        },
+        "5": {
+          "prompt": "Taller de Torres: Construye una Torre Estelar estable usando tres figuras de abajo hacia arriba:",
+          "label": "Base cuadrada ancha → columna rectangular → techo triangular"
+        },
+        "6": {
+          "prompt": "Taller de Símbolos: ¿Cómo puedes formar un hexágono de 6 lados usando figuras más pequeñas?",
+          "label": "Uniendo 2 trapecios rojos o 6 triángulos iguales"
+        },
+        "7": {
+          "prompt": "Taller de Patrones: Crea un patrón repetitivo A-A-B de faroles a lo largo del sendero:",
+          "label": "Estrella, Estrella, Luna — Estrella, Estrella, Luna"
+        },
+        "8": {
+          "prompt": "Taller de Escenas: Construye una escena completa con personaje, lugar y una meta de ayuda:",
+          "label": "Aria y Pip en el Puente del Barranco midiendo tablas para ayudar a Luma"
+        }
+      }
+    }
+  },
+  "workshop": {
+    "reflection": {
+      "whatHelped": "¿Qué te ayudó a resolverlo?",
+      "anotherWay": "¿Podrías intentarlo de otra manera?",
+      "bridgeWork": "¿Por qué crees que ese diseño funcionará?",
+      "cardCountOn": "Conté paso a paso hacia adelante",
+      "cardMakeTen": "Agrupé de diez en diez o formé un diez",
+      "cardVisual": "Usé el dibujo, las fichas o las pistas del cuento",
+      "cardTalked": "expliqué mi plan en voz alta",
+      "thankYou": "¡Gracias por compartir tu estrategia! Todo gran aprendiz reflexiona sobre cómo piensa."
     }
   },
   "feedback": {
@@ -280,30 +574,65 @@
         "hint2": "Cuenta solo los cristales azules brillantes que quedan.",
         "hint3": "Magia guiada: ¡{{a}} menos {{b}} deja {{answer}}! Toca {{answer}}."
       },
+      "unknown-number-equations": {
+        "hint1": "Piensa en una balanza: ¡ambos lados del signo '=' deben tener exactamente el mismo valor!",
+        "hint2": "Cuenta desde la parte conocida hasta el total en la recta numérica para hallar el número oculto.",
+        "hint3": "Magia guiada: ¡el número desconocido que equilibra la ecuación es {{answer}}! Toca {{answer}}."
+      },
       "tens-and-ones": {
         "hint1": "Cuenta cada bolsa morada de diez en diez (10, 20…), y luego suma los cristales sueltos.",
         "hint2": "{{a}} bolsas de diez son {{tensValue}}, más {{b}} unidades sueltas.",
         "hint3": "Magia guiada: ¡{{tensValue}} + {{b}} es {{answer}}! Toca {{answer}}."
       },
       "compare-lengths": {
-        "hint1": "Alinea las tablas de losas lunares desde la izquierda para comparar su largo.",
-        "hint2": "Cuenta cada losa lunar a lo largo del puente una por una.",
+        "hint1": "Alinea las tablas de losas lunares desde la izquierda sin espacios ni superposiciones.",
+        "hint2": "Cuenta cada losa lunar del mismo tamaño a lo largo del puente una por una.",
         "hint3": "Magia guiada: ¡el largo es de {{answer}} losas lunares! Toca {{answer}}."
       },
       "compose-shapes": {
-        "hint1": "Cuenta primero los {{a}} triángulos celestes y luego suma los {{b}} diamantes solares.",
-        "hint2": "Mira todas las piezas del símbolo alineadas y cuenta cada una.",
-        "hint3": "Magia guiada: ¡{{a}} triángulos y {{b}} diamantes forman {{answer}} piezas! Toca {{answer}}."
+        "hint1": "Observa los atributos (lados rectos y esquinas cerradas) de los {{a}} triángulos y {{b}} diamantes.",
+        "hint2": "Mira todas las piezas compuestas del símbolo alineadas y cuenta cada una.",
+        "hint3": "Magia guiada: ¡{{a}} piezas y {{b}} piezas forman {{answer}} piezas! Toca {{answer}}."
       },
       "phonics-words": {
-        "hint1": "Pronuncia los sonidos despacio: {{sounds}}.",
-        "hint2": "Une los sonidos en voz alta: {{sounds}}.",
+        "hint1": "Señala cada ficha de letra y pronuncia los sonidos despacio: {{sounds}}.",
+        "hint2": "Une los sonidos de izquierda a derecha en voz alta: {{sounds}}.",
         "hint3": "Magia guiada: ¡los sonidos {{sounds}} forman {{answer}}! Toca {{answer}}."
       },
       "star-patterns": {
         "hint1": "Observa cuánto suben los números de las estrellas en cada paso: +{{step}}.",
         "hint2": "Empieza en {{c}} en la línea estelar y cuenta {{step}} más.",
         "hint3": "Magia guiada: ¡{{c}} + {{step}} llega a la estrella {{answer}}! Toca {{answer}}."
+      },
+      "reading-comprehension": {
+        "hint1": "Vuelve a leer o escuchar el pasaje del cuento arriba y busca quién hizo la acción y por qué.",
+        "hint2": "Revisa los detalles del principio, el medio y el final en el recuadro del cuento.",
+        "hint3": "Magia guiada: ¡el cuento muestra \"{{answer}}\"! Toca {{answer}}."
+      },
+      "vocabulary-oral": {
+        "hint1": "Escucha cómo usa la palabra el personaje del Bosque Lunar dentro de la oración.",
+        "hint2": "Piensa si las palabras pertenecen a la misma categoría o tienen significados parecidos.",
+        "hint3": "Magia guiada: ¡el significado correcto es \"{{answer}}\"! Toca {{answer}}."
+      },
+      "spelling-writing": {
+        "hint1": "Cuenta cada sonido de la palabra o revisa que la oración empiece con letra mayúscula.",
+        "hint2": "Ordena las fichas de letras del primer al último sonido y termina la oración con punto.",
+        "hint3": "Magia guiada: ¡la entrada correcta del Diario de Runas es \"{{answer}}\"! Toca {{answer}}."
+      },
+      "logical-reasoning": {
+        "hint1": "Descarta cualquier opción que no cumpla una de las pistas del mago.",
+        "hint2": "Prueba tu idea paso a paso desde la primera acción hasta la última.",
+        "hint3": "Magia guiada: ¡la solución lógica es \"{{answer}}\"! Toca {{answer}}."
+      },
+      "science-nature": {
+        "hint1": "Recuerda: los seres vivos reales crecen y necesitan agua, aire y energía, a diferencia de las piedras o la magia.",
+        "hint2": "Observa qué ocurre en la naturaleza real y elige la explicación científica.",
+        "hint3": "Magia guiada: ¡la respuesta de ciencia real es \"{{answer}}\"! Toca {{answer}}."
+      },
+      "creative-construction": {
+        "hint1": "Revisa la meta del taller: ¿qué ancho tiene el puente o qué necesita la criatura en su hábitat?",
+        "hint2": "Combina las piezas de construcción para que la base sea firme y cumpla cada requisito.",
+        "hint3": "Magia guiada: ¡un diseño que funciona en el taller es \"{{answer}}\"! Toca {{answer}}."
       }
     },
     "notThat": "No es {{value}}. Prueba otro.",
@@ -363,6 +692,30 @@
     },
     "fallenStar": {
       "name": "Pluma de Estrella Fugaz"
+    },
+    "storykeeperLeaf": {
+      "name": "Hoja Plateada del Guardián de Cuentos"
+    },
+    "natureSprout": {
+      "name": "Brote Vivo de la Naturaleza"
+    },
+    "alchemyVial": {
+      "name": "Frasco de Alquimia Equilibrado"
+    },
+    "echoGlossary": {
+      "name": "Cristal de Palabras de la Caverna"
+    },
+    "goldenQuill": {
+      "name": "Pluma del Escriba de Runas"
+    },
+    "wizardCompass": {
+      "name": "Brújula Lógica del Mago"
+    },
+    "builderBlueprint": {
+      "name": "Plano del Maestro Constructor"
+    },
+    "starlightBadge": {
+      "name": "Emblema Estelar Independiente"
     }
   },
   "settings": {
@@ -378,12 +731,41 @@
     "gateAnswer": "Respuesta",
     "gateSubmit": "Continuar",
     "gateWrong": "No es correcto. Pide ayuda a un adulto.",
-    "heading": "Adultos",
-    "privacyHeading": "Privacidad",
+    "heading": "Adultos — Panel de Evidencia y Aprendizaje",
+    "privacyHeading": "Privacidad y Garantía de Datos Locales",
     "privacy": "Este juego guarda el progreso solo en este navegador y en este dispositivo. No tiene cuentas, anuncios, chat ni rastreo, y no envía nada por internet.",
-    "progressHeading": "Progreso de aprendizaje",
+    "progressHeading": "Resumen de Aprendizaje Académico",
     "noProgress": "Todavía no se ha jugado ninguna misión.",
     "objectiveRow": "{{standard}}: {{independent}} resueltos sin ayuda, {{supported}} con ayuda",
+    "evidenceSummaryRow": "{{standard}} ({{ncStandard}}) · Etapa: {{stage}} · Estado: {{status}} · {{sampleNote}}",
+    "readingModalityNote": "Modalidad de comprensión lectora: {{independentRead}} leídos de forma independiente, {{listened}} completados con narración en voz alta (registrados por separado).",
+    "legacyMigrationNote": "Nota: Las actividades de una versión anterior se marcan como 'legacy-unverified' hasta registrar nueva evidencia independiente.",
+    "confidenceHeading": "Cómo Funcionan el Dominio y las Evaluaciones (Y Qué No Determina Este Juego)",
+    "confidenceBody": "El dominio provisional requiere al menos 5 aciertos independientes en ítems nuevos (hipótesis de 85% de precisión) en 3+ familias de tareas y 2+ representaciones, sin revelar respuestas. El dominio retenido requiere repaso espaciado y transferencia. Estos son indicadores curriculares del juego, no evaluaciones clínicas, puntajes de CI ni clasificaciones escolares.",
+    "recommendationsHeading": "Actividades Fuera de Pantalla Recomendadas para Adultos y Niños",
+    "recommendReason": {
+      "needsSupport": "Sugerido porque los intentos recientes usaron pistas o mostraron una confusión específica:",
+      "practicing": "Sugerido para fortalecer una habilidad que está en práctica activa:",
+      "nextSkill": "Sugerido como un excelente siguiente paso fundamental:"
+    },
+    "offline": {
+      "addWithin20": "Junten dos grupos pequeños de objetos cotidianos (cucharas, monedas o bloques) hasta 20 y practiquen 'formar un diez' primero.",
+      "subtractWithin20": "Empiecen con 12–15 fichas, escondan algunas bajo un vaso y pregunten cómo ayuda la suma a descubrir cuántas están ocultas.",
+      "unknownEquations": "Jueguen al 'Vaso Misterioso': muestren 10 botones en total, pongan 6 en la mesa y pregunten '¿6 más cuántos en el vaso forman 10?'",
+      "tensAndOnes": "Agrupen 10 palillos o crayones con una liga para mostrar 1 decena, luego formen números como 34 y compárenlos con 43.",
+      "compareLengths": "Elijan 3 objetos de casa (lápiz, cuchara y libro), ordénenlos del más corto al más largo y mídanlos con clips sin dejar espacios.",
+      "composeShapes": "Recorten cuadrados y triángulos de papel para armar hexágonos o torres, y doblen un círculo de papel en 2 mitades iguales y 4 cuartos iguales.",
+      "phonicsWords": "Escriban sílabas y letras en tarjetas (l, u, n, a, s, o, r) y practiquen unirlas en voz alta para formar palabras.",
+      "starPatterns": "Cuenten pasos en voz alta de 2 en 2, de 5 en 5 y de 10 en 10 mientras caminan juntos.",
+      "readingComprehension": "Después de leer un cuento corto juntos, pregunten '¿Qué pasó primero, después y al final?' y '¿Por qué hizo eso el personaje?'",
+      "vocabularyOral": "Elijan una palabra descriptiva del cuento de hoy (como 'resistente' o 'frágil') y busquen 3 cosas en casa que coincidan.",
+      "spellingWriting": "Inviten al niño o niña a escribir una oración corta en papel, revisando que empiece con mayúscula y termine con punto.",
+      "logicalReasoning": "Jueguen al 'Veo, Veo con Pistas' ('No es redondo y no es azul...') y pidan que expliquen cómo descartaron opciones.",
+      "scienceNature": "Salgan 5 minutos a observar una planta viva (necesita agua, aire y sol) y compárenla con una piedra no viva.",
+      "creativeConstruction": "Denle 10 bloques o vasos para construir un puente entre dos libros y pregunten por qué su diseño se mantiene firme."
+    },
+    "exportJson": "Exportar informe local de aprendizaje (JSON)",
+    "exported": "Informe de aprendizaje copiado / descargado localmente.",
     "erase": "Borrar todo el progreso de este dispositivo",
     "eraseConfirm": "¿Borrar todo el progreso? No se puede deshacer.",
     "erased": "Progreso borrado."

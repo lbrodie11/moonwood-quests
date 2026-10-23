@@ -168,6 +168,36 @@ export function spawnChallengeStage(
     return { crystals, stageProps };
   }
 
+  if (challenge.operator === "unknown-equation") {
+    const [a = 0, b = 0, structureCode = 1] = challenge.operands;
+    const knownCount = Math.min(12, a);
+    placeGroup(scene, reduced, crystals, {
+      count: knownCount,
+      centerX: POOL_LEFT_X,
+      texture: "crystal-blue",
+      labelFor: (i) => String(i + 1),
+      showCounts,
+    });
+
+    // Draw an alchemy mystery vessel on the right side for the unknown quantity `?`
+    const vesselBox = scene.add.graphics();
+    vesselBox.lineStyle(3, PALETTE.astraGold, 0.9);
+    vesselBox.strokeRoundedRect(POOL_RIGHT_X - 54, POOL_TOP_Y - 28, 108, 68, 10);
+    const eqText =
+      structureCode === 1
+        ? `${a} + ? = ${b}`
+        : structureCode === 2
+          ? `? + ${a} = ${b}`
+          : structureCode === 3
+            ? `${a} - ? = ${b}`
+            : `${a} = ? - ${b}`;
+    const vesselLabel = scene.add
+      .text(POOL_RIGHT_X, POOL_TOP_Y + 6, eqText, LABEL_STYLE)
+      .setOrigin(0.5);
+    stageProps.push(vesselBox, vesselLabel);
+    return { crystals, stageProps };
+  }
+
   if (challenge.operator === "-") {
     // Draw the whole starting pool of `whole` crystals together without pre-isolating
     // the remainder, so the child performs subtraction rather than counting a pre-split answer.
@@ -226,7 +256,7 @@ export function spawnChallengeStage(
       return { crystals, stageProps };
     }
 
-    // Missing plank comparison (1.MD.A.1): align the full span of `a` moon-tiles
+    // Missing plank comparison (1.MD.A.1 & 1.MD.A.2): align the full span of `a` moon-tiles
     // above the known plank of `b` moon-tiles from the same left edge, with an
     // un-subdivided gap box so the picture does not pre-count `a - b` for the child.
     const tileGap = Math.min(36, 680 / Math.max(1, a));
@@ -272,7 +302,6 @@ export function spawnChallengeStage(
       crystals.push({ image, label, countable: false });
     }
 
-    // Dashed/outlined mystery span for the missing plank section (no individual tiles inside!)
     const gapStartX = leftEdge + b * tileGap - tileGap * 0.4;
     const gapWidth = Math.max(40, (a - b) * tileGap);
     const gapBox = scene.add.graphics();
@@ -288,7 +317,6 @@ export function spawnChallengeStage(
 
   if (challenge.operator === "shapes") {
     const [a = 0, b = 0] = challenge.operands;
-    // Draw composite star-sigil frames around the two groups of geometric shards
     const frame = scene.add.graphics();
     frame.lineStyle(3, PALETTE.astraGold, 0.55);
     frame.strokeCircle(POOL_LEFT_X, POOL_TOP_Y + 24, 118);
@@ -312,12 +340,22 @@ export function spawnChallengeStage(
     return { crystals, stageProps };
   }
 
-  if (challenge.operator === "phonics") {
-    const [targetWordId = 1] = challenge.operands;
-    const targetIcon = t(`challenge.phonics.word.${targetWordId}.icon`);
-    const targetSounds = t(`challenge.phonics.word.${targetWordId}.sounds`);
+  if (
+    challenge.operator === "phonics" ||
+    challenge.operator === "comprehension" ||
+    challenge.operator === "vocabulary" ||
+    challenge.operator === "spelling" ||
+    challenge.operator === "reasoning" ||
+    challenge.operator === "science" ||
+    challenge.operator === "workshop"
+  ) {
+    const [targetId = 1] = challenge.operands;
+    const isPhonics = challenge.operator === "phonics";
+    const targetIcon = isPhonics ? t(`challenge.phonics.word.${targetId}.icon`) : "✨";
+    const targetSounds = isPhonics
+      ? t(`challenge.phonics.word.${targetId}.sounds`)
+      : (challenge.meta?.interactiveTiles ?? []).join(" · ");
 
-    // Picture clue badge in the center arch (icon only; choice scrolls show words only!)
     const clueBadge = scene.add
       .text(GATE.x, 225, targetIcon, {
         fontFamily: "system-ui, sans-serif",
@@ -327,26 +365,28 @@ export function spawnChallengeStage(
     const hintTextProp = scene.add
       .text(GATE.x, 268, targetSounds, {
         ...LABEL_STYLE,
-        fontSize: "20px",
+        fontSize: "18px",
         color: "#ffe680",
       })
       .setOrigin(0.5)
-      .setVisible(false);
+      .setVisible(!isPhonics && targetSounds.length > 0);
     stageProps.push(clueBadge, hintTextProp);
 
     const positions = [210, 480, 750];
-    challenge.choices.forEach((wordId, idx) => {
+    challenge.choices.forEach((choiceId, idx) => {
       const x = positions[idx] ?? 480;
       const y = 345;
       const image = scene.add.image(x, y, "story-scroll").setScale(reduced ? 1.15 : 0);
-      const wordText = t(`challenge.phonics.word.${wordId}.word`);
+      const rawText = isPhonics
+        ? t(`challenge.phonics.word.${choiceId}.word`)
+        : `#${choiceId}`;
       const label = scene.add
-        .text(x, y + 40, wordText, LABEL_STYLE)
+        .text(x, y + 40, rawText, LABEL_STYLE)
         .setOrigin(0.5)
         .setVisible(true);
 
       image.setInteractive({ useHandCursor: true }).on("pointerdown", () => {
-        onSelectChoice(wordId);
+        onSelectChoice(choiceId);
       });
       void animate(scene, reduced, {
         targets: image,
@@ -355,7 +395,7 @@ export function spawnChallengeStage(
         delay: idx * 60,
         ease: "Back.easeOut",
       });
-      crystals.push({ image, label, countable: true, choiceValue: wordId });
+      crystals.push({ image, label, countable: true, choiceValue: choiceId });
     });
     return { crystals, stageProps, hintTextProp };
   }
@@ -445,9 +485,18 @@ export async function animateChallengeHint(
     return;
   }
 
-  // Level 2 & 3: For phonics or pattern, highlight the scrolls/stars in place;
-  // for manipulative-based challenges, align the countable items into one row.
-  if (challenge.operator !== "phonics" && challenge.operator !== "pattern") {
+  const scrollOperators = new Set([
+    "phonics",
+    "pattern",
+    "comprehension",
+    "vocabulary",
+    "spelling",
+    "reasoning",
+    "science",
+    "workshop",
+  ]);
+
+  if (!scrollOperators.has(challenge.operator)) {
     const countableItems = crystals.filter((c) => c.countable);
     const n = countableItems.length;
     const gap = Math.min(44, 780 / Math.max(1, n));

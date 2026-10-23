@@ -11,9 +11,12 @@ const STEPS_BY_DIFFICULTY: Readonly<Record<Difficulty, readonly number[]>> = {
 };
 
 /**
- * Starfall Tower (1.NBT.A.1):
+ * Starfall Tower (1.NBT.A.1 counting sequences & pattern enrichment):
  * Identify the skip-counting pattern rule in a glowing constellation sequence
  * (`s1 → s2 → s3 → ?`) by 1s, 2s, 5s, or 10s and find the next star number.
+ *
+ * Distinct from `unknown-number-equations` (`1.OA.D.8`), which assesses missing
+ * numbers in three-number addition/subtraction equations.
  */
 export function createStarPatterns(rng: RandomSource, difficulty: Difficulty): ChallengeSpec {
   const steps = STEPS_BY_DIFFICULTY[difficulty];
@@ -23,6 +26,7 @@ export function createStarPatterns(rng: RandomSource, difficulty: Difficulty): C
   const second = first + step;
   const third = first + step * 2;
   const answer = first + step * 3;
+  const itemFamily = `step-by-${step}-sequence`;
 
   return {
     objectiveId: "star-patterns",
@@ -41,5 +45,15 @@ export function createStarPatterns(rng: RandomSource, difficulty: Difficulty): C
         Math.max(1, third + (step - 1)),
       ],
     }),
+    meta: {
+      itemFamily,
+      standardCode: "1.NBT.A.1",
+      targetBlueprint: `${first} (+${step}) -> ${second} (+${step}) -> ${third} (+${step}) -> ${answer}`,
+      distractorErrors: {
+        [third + 1]: "counted-by-ones-instead-of-step-rule",
+        [answer + step]: "jumped-two-steps-ahead",
+        [Math.max(1, answer - 1)]: "off-by-one-in-skip-count",
+      },
+    },
   };
 }

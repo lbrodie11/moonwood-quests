@@ -36,6 +36,176 @@ export const RAW_QUESTS: readonly unknown[] = [
   starfallCrown,
 ];
 
+/**
+ * Always-open regional learning sanctuaries, workshops, and low-stress independent
+ * checks integrated into the four regions of Moonwood (Phases 5–10 & 12).
+ * Children can visit these at any time without being locked out by campaign progress.
+ */
+export const SANCTUARY_ACTIVITIES: readonly QuestDefinition[] = [
+  {
+    id: "storykeeper-hollow",
+    status: "playable",
+    regionId: "whispering-woods",
+    guideId: "moss",
+    titleKey: "quest.storykeeperHollow.title",
+    introKey: "quest.storykeeperHollow.intro",
+    sceneKey: "ForestQuest",
+    objectiveIds: ["reading-comprehension"],
+    recommendedMinutes: 6,
+    phases: [
+      { kind: "guided", count: 1, difficultyCap: 1 },
+      { kind: "independent", count: 2 },
+      { kind: "mini-boss", count: 1, difficultyFloor: 2 },
+    ],
+    rewards: [{ id: "story.storykeeper-leaf", kind: "story", nameKey: "reward.storykeeperLeaf.name" }],
+    unlocks: [],
+    map: { x: 155, y: 470 },
+    isSanctuary: true,
+  },
+  {
+    id: "naturekeeper-glade",
+    status: "playable",
+    regionId: "whispering-woods",
+    guideId: "moss",
+    titleKey: "quest.naturekeeperGlade.title",
+    introKey: "quest.naturekeeperGlade.intro",
+    sceneKey: "ForestQuest",
+    objectiveIds: ["science-nature"],
+    recommendedMinutes: 6,
+    phases: [
+      { kind: "guided", count: 1, difficultyCap: 1 },
+      { kind: "independent", count: 2 },
+      { kind: "mini-boss", count: 1, difficultyFloor: 2 },
+    ],
+    rewards: [{ id: "cosmetic.nature-sprout", kind: "cosmetic", nameKey: "reward.natureSprout.name" }],
+    unlocks: [],
+    map: { x: 265, y: 465 },
+    isSanctuary: true,
+  },
+  {
+    id: "equation-alchemy",
+    status: "playable",
+    regionId: "crystal-caves",
+    guideId: "bramble",
+    titleKey: "quest.equationAlchemy.title",
+    introKey: "quest.equationAlchemy.intro",
+    sceneKey: "ForestQuest",
+    objectiveIds: ["unknown-number-equations"],
+    recommendedMinutes: 6,
+    phases: [
+      { kind: "guided", count: 1, difficultyCap: 1 },
+      { kind: "independent", count: 2 },
+      { kind: "mini-boss", count: 1, difficultyFloor: 2 },
+    ],
+    rewards: [{ id: "cosmetic.alchemy-vial", kind: "cosmetic", nameKey: "reward.alchemyVial.name" }],
+    unlocks: [],
+    map: { x: 220, y: 125 },
+    isSanctuary: true,
+  },
+  {
+    id: "creature-cavern",
+    status: "playable",
+    regionId: "crystal-caves",
+    guideId: "bramble",
+    titleKey: "quest.creatureCavern.title",
+    introKey: "quest.creatureCavern.intro",
+    sceneKey: "ForestQuest",
+    objectiveIds: ["vocabulary-oral"],
+    recommendedMinutes: 6,
+    phases: [
+      { kind: "guided", count: 1, difficultyCap: 1 },
+      { kind: "independent", count: 2 },
+      { kind: "mini-boss", count: 1, difficultyFloor: 2 },
+    ],
+    rewards: [{ id: "story.echo-glossary", kind: "story", nameKey: "reward.echoGlossary.name" }],
+    unlocks: [],
+    map: { x: 465, y: 135 },
+    isSanctuary: true,
+  },
+  {
+    id: "rune-journal-desk",
+    status: "playable",
+    regionId: "enchanted-library",
+    guideId: "luma",
+    titleKey: "quest.runeJournalDesk.title",
+    introKey: "quest.runeJournalDesk.intro",
+    sceneKey: "ForestQuest",
+    objectiveIds: ["spelling-writing"],
+    recommendedMinutes: 6,
+    phases: [
+      { kind: "guided", count: 1, difficultyCap: 1 },
+      { kind: "independent", count: 2 },
+      { kind: "mini-boss", count: 1, difficultyFloor: 2 },
+    ],
+    rewards: [{ id: "cosmetic.golden-quill", kind: "cosmetic", nameKey: "reward.goldenQuill.name" }],
+    unlocks: [],
+    map: { x: 685, y: 475 },
+    isSanctuary: true,
+  },
+  {
+    id: "wizards-workshop",
+    status: "playable",
+    regionId: "starfall-tower",
+    guideId: "astra",
+    titleKey: "quest.wizardsWorkshop.title",
+    introKey: "quest.wizardsWorkshop.intro",
+    sceneKey: "ForestQuest",
+    objectiveIds: ["logical-reasoning"],
+    recommendedMinutes: 6,
+    phases: [
+      { kind: "guided", count: 1, difficultyCap: 1 },
+      { kind: "independent", count: 2 },
+      { kind: "mini-boss", count: 1, difficultyFloor: 2 },
+    ],
+    rewards: [{ id: "cosmetic.wizard-compass", kind: "cosmetic", nameKey: "reward.wizardCompass.name" }],
+    unlocks: [],
+    map: { x: 655, y: 120 },
+    isSanctuary: true,
+  },
+  {
+    id: "moonwood-workshop",
+    status: "playable",
+    regionId: "starfall-tower",
+    guideId: "astra",
+    titleKey: "quest.moonwoodWorkshop.title",
+    introKey: "quest.moonwoodWorkshop.intro",
+    sceneKey: "ForestQuest",
+    objectiveIds: ["creative-construction"],
+    recommendedMinutes: 6,
+    phases: [
+      { kind: "guided", count: 1, difficultyCap: 1 },
+      { kind: "independent", count: 2 },
+      { kind: "mini-boss", count: 1, difficultyFloor: 2 },
+    ],
+    rewards: [{ id: "cosmetic.builder-blueprint", kind: "cosmetic", nameKey: "reward.builderBlueprint.name" }],
+    unlocks: [],
+    map: { x: 785, y: 115 },
+    isSanctuary: true,
+  },
+  {
+    id: "starlight-check",
+    status: "playable",
+    regionId: "starfall-tower",
+    guideId: "astra",
+    titleKey: "quest.starlightCheck.title",
+    introKey: "quest.starlightCheck.intro",
+    sceneKey: "ForestQuest",
+    objectiveIds: [
+      "add-within-20",
+      "unknown-number-equations",
+      "tens-and-ones",
+      "phonics-words",
+    ],
+    recommendedMinutes: 5,
+    phases: [{ kind: "independent", count: 4 }],
+    rewards: [{ id: "story.starlight-badge", kind: "story", nameKey: "reward.starlightBadge.name" }],
+    unlocks: [],
+    map: { x: 890, y: 245 },
+    assessmentMode: "independent-check",
+    isSanctuary: true,
+  },
+];
+
 export function loadQuests(raw: readonly unknown[] = RAW_QUESTS): QuestDefinition[] {
   return raw.map((entry, i) => {
     const result = QuestSchema.safeParse(entry);
@@ -44,6 +214,16 @@ export function loadQuests(raw: readonly unknown[] = RAW_QUESTS): QuestDefinitio
     }
     return result.data;
   });
+}
+
+export function findQuestOrSanctuary(
+  questId: string,
+  campaignQuests: readonly QuestDefinition[],
+): QuestDefinition | undefined {
+  return (
+    campaignQuests.find((q) => q.id === questId) ??
+    SANCTUARY_ACTIVITIES.find((s) => s.id === questId)
+  );
 }
 
 /** The first quest is always available; the rest unlock through play. */

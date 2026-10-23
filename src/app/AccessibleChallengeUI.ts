@@ -24,8 +24,33 @@ export class AccessibleChallengeUI {
     "data-testid": "leave-quest",
   });
   private readonly prompt = el("p", { id: "challenge-prompt", className: "challenge-prompt" });
+  private readonly assessmentBanner = el("p", {
+    className: "assessment-banner",
+    "data-testid": "assessment-banner",
+    hidden: true,
+  });
+  private readonly passageBox = el("div", {
+    className: "story-passage-box",
+    "data-testid": "story-passage",
+    hidden: true,
+  });
+  private readonly tileTray = el("div", {
+    className: "interactive-tile-tray",
+    "data-testid": "interactive-tiles",
+    hidden: true,
+  });
   private readonly equation = el("p", { className: "challenge-equation", "data-testid": "equation" });
   private readonly choices = el("div", { className: "choices", role: "group", "aria-labelledby": "challenge-prompt" });
+  private readonly reflectionTray = el("div", {
+    className: "strategy-reflection-tray",
+    "data-testid": "strategy-reflection",
+    hidden: true,
+  });
+  private readonly parentGuideTip = el("p", {
+    className: "parent-guide-tip",
+    "data-testid": "parent-guide-tip",
+    hidden: true,
+  });
   private readonly feedback = el("p", {
     className: "feedback",
     role: "status",
@@ -38,13 +63,14 @@ export class AccessibleChallengeUI {
   private questTitleKey = "";
   private questIntroKey = "";
   private shouldFocusFirstChoice = false;
+  private currentModality: "independent-reading" | "listening" = "independent-reading";
 
   constructor(
     private readonly bridge: GameBridge,
     private readonly onPrompt: (text: string) => void,
   ) {
     this.hintButton.addEventListener("click", () => {
-      if (this.current) {
+      if (this.current && !this.current.isAssessment) {
         this.bridge.emit("requestHint", { challengeId: this.current.challengeId });
       }
     });
@@ -56,10 +82,15 @@ export class AccessibleChallengeUI {
       { className: "challenge-panel", "aria-labelledby": "quest-title", "data-testid": "challenge-panel" },
       el("header", { className: "challenge-header" }, this.title, this.progress, this.pips, this.hintButton, this.backButton),
       this.intro,
+      this.assessmentBanner,
+      this.passageBox,
       this.prompt,
+      this.tileTray,
       this.equation,
       this.choices,
       this.feedback,
+      this.reflectionTray,
+      this.parentGuideTip,
     );
   }
 
@@ -74,9 +105,11 @@ export class AccessibleChallengeUI {
   show(challenge: ChallengePresentation): void {
     const focusWasInside = this.root.contains(document.activeElement) || this.shouldFocusFirstChoice;
     this.current = challenge;
+    this.currentModality = "independent-reading";
     this.feedback.textContent = "";
     this.feedback.dataset.kind = "";
     this.renderText();
+    this.renderDomainExtras();
     this.renderChoices();
     if (focusWasInside || challenge.index > 1) {
       this.choices.querySelector<HTMLButtonElement>("button:not(:disabled)")?.focus();
@@ -137,6 +170,7 @@ export class AccessibleChallengeUI {
     if (this.questIntroKey) this.intro.textContent = t(this.questIntroKey);
     if (this.current) {
       this.renderText();
+      this.renderDomainExtras();
       this.renderChoices();
     }
   }
@@ -195,6 +229,17 @@ export class AccessibleChallengeUI {
 
     if (c.operator === "tens-ones") {
       this.equation.textContent = t("challenge.placeValue.equation", { a, b });
+    } else if (c.operator === "unknown-equation") {
+      const [, , structureCode = 1] = c.operands;
+      const eqKey =
+        structureCode === 2
+          ? "challenge.unknownEquation.equationFirst"
+          : structureCode === 3
+            ? "challenge.unknownEquation.equationSub"
+            : structureCode === 4
+              ? "challenge.unknownEquation.equationRev"
+              : "challenge.unknownEquation.equationSecond";
+      this.equation.textContent = t(eqKey, { a, b });
     } else if (c.operator === "length") {
       const eqKey = c.promptKey.includes("missing")
         ? "challenge.length.missingEquation"
@@ -210,11 +255,22 @@ export class AccessibleChallengeUI {
       this.equation.textContent = t("challenge.phonics.equation", {
         icon: t(`challenge.phonics.word.${wordId}.icon`),
       });
+    } else if (
+      c.operator === "comprehension" ||
+      c.operator === "vocabulary" ||
+      c.operator === "spelling" ||
+      c.operator === "reasoning" ||
+      c.operator === "science" ||
+      c.operator === "workshop"
+    ) {
+      const std = c.meta?.standardCode ?? "✦";
+      this.equation.textContent = `✦ ${std}`;
     } else {
       this.equation.textContent = `${a} ${c.operator} ${b} = ?`;
     }
 
     this.progress.textContent = t("ui.progress", { current: c.index, total: c.total });
+    this.hintButton.hidden = Boolean(c.isAssessment);
     clear(this.hintButton);
     this.hintButton.append(
       el("span", { "aria-hidden": "true", className: "tool-icon" }, "💡"),
@@ -229,6 +285,148 @@ export class AccessibleChallengeUI {
     clear(this.pips);
     for (let i = 1; i <= c.total; i++) {
       this.pips.append(el("span", { className: i < c.index ? "pip lit" : i === c.index ? "pip current" : "pip" }));
+    }
+  }
+
+  private renderDomainExtras(): void {
+    const c = this.current;
+    if (!c) return;
+
+    // 1. Assessment mode banner (hints disabled)
+    if (c.isAssessment) {
+      this.assessmentBanner.hidden = false;
+      this.assessmentBanner.textContent = `⭐ ${t("ui.assessmentBanner")}`;
+    } else {
+      this.assessmentBanner.hidden = true;
+      this.assessmentBanner.textContent = "";
+    }
+
+    // 2. Story passage & Reading vs. Listening modality controls
+    clear(this.passageBox);
+    if (c.meta?.passageKey) {
+      this.passageBox.hidden = false;
+      const passageText = t(c.meta.passageKey);
+      const readBtn = el(
+        "button",
+        {
+          type: "button",
+          className:
+            this.currentModality === "independent-reading"
+              ? "tool subtle modality-active"
+              : "tool subtle",
+          "data-testid": "read-myself-btn",
+        },
+        `📖 ${t("ui.readMyself")}`,
+      );
+      const listenBtn = el(
+        "button",
+        {
+          type: "button",
+          className:
+            this.currentModality === "listening" ? "tool subtle modality-active" : "tool subtle",
+          "data-testid": "listen-story-btn",
+        },
+        `🔊 ${t("ui.listenStory")}`,
+      );
+
+      readBtn.addEventListener("click", () => {
+        this.currentModality = "independent-reading";
+        this.bridge.emit("setModality", {
+          challengeId: c.challengeId,
+          modality: "independent-reading",
+        });
+        readBtn.className = "tool subtle modality-active";
+        listenBtn.className = "tool subtle";
+      });
+      listenBtn.addEventListener("click", () => {
+        this.currentModality = "listening";
+        this.bridge.emit("setModality", {
+          challengeId: c.challengeId,
+          modality: "listening",
+        });
+        listenBtn.className = "tool subtle modality-active";
+        readBtn.className = "tool subtle";
+        this.onPrompt(`${passageText} ${this.promptText()}`);
+      });
+
+      this.passageBox.append(
+        el("p", { className: "passage-text", "data-testid": "passage-text" }, passageText),
+        el("div", { className: "modality-actions" }, readBtn, listenBtn),
+      );
+    } else {
+      this.passageBox.hidden = true;
+    }
+
+    // 3. Interactive letter/word/workshop tiles
+    clear(this.tileTray);
+    if (c.meta?.interactiveTiles?.length) {
+      this.tileTray.hidden = false;
+      for (const tileLabel of c.meta.interactiveTiles) {
+        const tileBtn = el(
+          "button",
+          {
+            type: "button",
+            className: "tool subtle interactive-tile",
+          },
+          `🔹 ${tileLabel}`,
+        );
+        tileBtn.addEventListener("click", () => {
+          tileBtn.classList.toggle("tile-selected");
+        });
+        this.tileTray.append(tileBtn);
+      }
+    } else {
+      this.tileTray.hidden = true;
+    }
+
+    // 4. Non-graded strategy reflection cards
+    clear(this.reflectionTray);
+    if (c.meta?.reflectionPromptKey) {
+      this.reflectionTray.hidden = false;
+      const reflectionStatus = el("p", {
+        className: "reflection-thanks",
+        "data-testid": "reflection-thanks",
+      });
+      const cardKeys = [
+        "workshop.reflection.cardCountOn",
+        "workshop.reflection.cardMakeTen",
+        "workshop.reflection.cardVisual",
+        "workshop.reflection.cardTalked",
+      ] as const;
+      const cardRow = el(
+        "div",
+        { className: "reflection-cards" },
+        ...cardKeys.map((key) => {
+          const btn = el(
+            "button",
+            {
+              type: "button",
+              className: "tool subtle reflection-card",
+            },
+            `💭 ${t(key)}`,
+          );
+          btn.addEventListener("click", () => {
+            reflectionStatus.textContent = t("workshop.reflection.thankYou");
+          });
+          return btn;
+        }),
+      );
+      this.reflectionTray.append(
+        el("p", { className: "reflection-heading" }, `🧭 ${t(c.meta.reflectionPromptKey)}`),
+        cardRow,
+        reflectionStatus,
+      );
+    } else {
+      this.reflectionTray.hidden = true;
+    }
+
+    // 5. Grown-up / companion guidance tip
+    if (c.meta?.parentGuideKey) {
+      this.parentGuideTip.hidden = false;
+      this.parentGuideTip.textContent = `💡 ${t(c.meta.parentGuideKey)}`;
+    } else {
+      this.parentGuideTip.hidden = true;
+      this.parentGuideTip.textContent = "";
     }
   }
 

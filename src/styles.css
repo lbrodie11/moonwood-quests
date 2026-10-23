@@ -337,6 +337,28 @@ button.danger {
   border-color: var(--mana-gold);
 }
 
+.sanctuaries-section {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 2px solid var(--night-600);
+}
+
+.sanctuaries-heading {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+  color: var(--mana-gold);
+}
+
+.sanctuaries-subheading {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.sanctuary-card {
+  background: var(--night-800);
+}
+
 /* ------------------------------------------------------------- challenge */
 
 .challenge-header {
@@ -441,6 +463,90 @@ button.danger {
 
 .feedback[data-kind="correct"] {
   color: var(--leaf);
+}
+
+.assessment-banner {
+  margin: 8px 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--night-800);
+  border: 2px solid var(--mana-gold);
+  color: var(--moon);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.story-passage-box {
+  margin: 10px 0;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: var(--night-800);
+  border: 2px solid var(--mana-blue);
+}
+
+.passage-text {
+  margin: 0 0 10px;
+  font-size: 1.05rem;
+  color: var(--moon);
+}
+
+.modality-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tool.modality-active {
+  border-color: var(--mana-gold);
+  background: var(--night-600);
+}
+
+.interactive-tile-tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 12px;
+}
+
+.interactive-tile.tile-selected {
+  border-color: var(--mana-gold);
+  background: var(--night-600);
+}
+
+.strategy-reflection-tray {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: var(--night-800);
+  border: 2px solid var(--night-600);
+}
+
+.reflection-heading {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--mana-gold);
+}
+
+.reflection-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.reflection-thanks {
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+  color: var(--leaf);
+}
+
+.parent-guide-tip {
+  margin: 12px 0 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--night-800);
+  color: var(--text-muted);
+  font-size: 0.88rem;
 }
 
 /* --------------------------------------------------------------- complete */

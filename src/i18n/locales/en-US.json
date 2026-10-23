@@ -22,10 +22,15 @@
     "continueAdventure": "Continue Adventure: {{title}}",
     "replayAdventure": "Replay Any Quest",
     "exploreHeading": "Explore Moonwood & Meet Friends",
+    "sanctuariesHeading": "Regional Learning Sanctuaries & Workshops",
     "talkTo": "Talk to {{name}}",
     "findTreasure": "Search for {{name}}",
     "treasureFound": "Found: {{name}} ✨",
-    "collectiblesCount": "{{found}} of {{total}} Star-Treasures found · {{quests}} of {{totalQuests}} Quests complete"
+    "collectiblesCount": "{{found}} of {{total}} Star-Treasures found · {{quests}} of {{totalQuests}} Quests complete",
+    "hearPassage": "Listen to story aloud",
+    "readIndependently": "I read the story myself",
+    "reflectionHeading": "Strategy Reflection (Optional — no wrong answers!)",
+    "assessmentNotice": "Starlight Independent Check: Try your best on your own! Hints are resting for this check."
   },
   "story": {
     "introTitle": "The Starlight of Moonwood",
@@ -45,19 +50,19 @@
   "region": {
     "whisperingWoods": {
       "title": "Whispering Woods",
-      "subtitle": "Addition & Number Sense"
+      "subtitle": "Addition, Stories & Nature Science"
     },
     "crystalCaves": {
       "title": "Crystal Caves",
-      "subtitle": "Tens, Ones & Subtraction"
+      "subtitle": "Place Value, Equations & Vocabulary"
     },
     "enchantedLibrary": {
       "title": "The Enchanted Library",
-      "subtitle": "Bridge Measuring & Story Words"
+      "subtitle": "Phonics, Measurement & Rune Journal"
     },
     "starfallTower": {
       "title": "Starfall Tower",
-      "subtitle": "Shapes, Patterns & Kingdom Finale"
+      "subtitle": "Geometry, Logic & Creative Workshop"
     }
   },
   "guide": {
@@ -67,11 +72,11 @@
     },
     "moss": {
       "name": "Moss the Forest Sprite",
-      "greeting": "The forest flowers hum when we combine blue and gold mana crystals together!"
+      "greeting": "The forest flowers hum when we combine mana crystals and explore real woodland nature!"
     },
     "bramble": {
       "name": "Bramble the Crystal Mole",
-      "greeting": "Down in the Crystal Caves, we pack gems into neat bags of ten so we never lose count!"
+      "greeting": "Down in the Crystal Caves, we pack gems into neat bags of ten and balance unknown equations!"
     },
     "luma": {
       "name": "Luma the Librarian Fox",
@@ -79,7 +84,7 @@
     },
     "astra": {
       "name": "Astra the Starlight Sprite",
-      "greeting": "Look up at the stars! Shapes and number patterns show how the constellations dance!"
+      "greeting": "Look up at the stars! Shapes, logic puzzles, and workshops show how the constellations dance!"
     }
   },
   "quest": {
@@ -131,6 +136,38 @@
       "title": "The Crown of Moonwood",
       "intro": "Use all your magic—numbers, tens, words, shapes, and patterns—to relight the Great Starlight Beacon!"
     },
+    "storykeeperHollow": {
+      "title": "Storykeeper Hollow",
+      "intro": "Read or listen to short Moonwood tales with Moss and answer story questions!"
+    },
+    "naturekeeperGlade": {
+      "title": "Naturekeeper Glade",
+      "intro": "Explore real plant life cycles, animal habitats, and how real science differs from forest magic!"
+    },
+    "equationAlchemy": {
+      "title": "Alchemist's Equation Forge",
+      "intro": "Find the missing number in Bramble's crystal equations to balance the forge!"
+    },
+    "creatureCavern": {
+      "title": "Creature Conversations",
+      "intro": "Chat with Moonwood friends to sort words, explore meanings, and share ideas!"
+    },
+    "runeJournalDesk": {
+      "title": "The Rune Journal",
+      "intro": "Build words with letter tiles, order sentences, and practice capital letters and periods!"
+    },
+    "wizardsWorkshop": {
+      "title": "The Wizard's Workshop",
+      "intro": "Use logical clues, plan steps, and reflect on your problem-solving strategies!"
+    },
+    "moonwoodWorkshop": {
+      "title": "Moonwood Builder's Workshop",
+      "intro": "Design bridges, creature habitats, and shape towers that meet the workshop goals!"
+    },
+    "starlightCheck": {
+      "title": "Starlight Independent Check",
+      "intro": "A calm, short check to see what you can solve all on your own without hints!"
+    },
     "complete": "The gate is open!"
   },
   "challenge": {
@@ -140,19 +177,29 @@
     "subtraction": {
       "spendMana": "Crystals you had: {{a}}. Crystals the spell used: {{b}}. How many are left?"
     },
+    "unknownEquation": {
+      "missingSecondAddend": "Equation Alchemy: {{a}} + ? = {{b}}. What missing number balances the equation?",
+      "missingFirstAddend": "Equation Alchemy: ? + {{a}} = {{b}}. What starting number balances the equation?",
+      "missingSubtrahend": "Equation Alchemy: {{a}} - ? = {{b}}. What missing number was subtracted?",
+      "reversedMissingMinuend": "Equation Alchemy: {{a}} = ? - {{b}}. What whole number starts the subtraction?",
+      "equationSecond": "{{a}} + ? = {{b}}",
+      "equationFirst": "? + {{a}} = {{b}}",
+      "equationSub": "{{a}} - ? = {{b}}",
+      "equationRev": "{{a}} = ? - {{b}}"
+    },
     "placeValue": {
       "countRunes": "Bags of ten: {{a}}. Loose crystals: {{b}}. How many crystals in all?",
       "equation": "{{a}} tens + {{b}} ones = ?"
     },
     "length": {
-      "joinPlanks": "First plank: {{a}} moon-tiles. Second plank: {{b}} moon-tiles. How many moon-tiles long is the bridge?",
-      "missingPlank": "The ravine is {{a}} moon-tiles wide. One plank covers {{b}} moon-tiles. How many more moon-tiles are needed?",
+      "joinPlanks": "First plank: {{a}} moon-tiles. Second plank: {{b}} moon-tiles laid end-to-end with no gaps. How many moon-tiles long is the bridge?",
+      "missingPlank": "The ravine reference span is {{a}} moon-tiles wide. One plank covers {{b}} moon-tiles with no overlap. How many more moon-tiles are needed?",
       "joinEquation": "{{a}} tiles + {{b}} tiles = ?",
       "missingEquation": "{{a}} tiles - {{b}} tiles = ?"
     },
     "shapes": {
-      "composeSigil": "Sky triangles: {{a}}. Sun diamonds: {{b}}. How many sigil pieces build the shape?",
-      "countSides": "First star sigil uses {{a}} sky triangles. Second star sigil uses {{b}} sun diamonds. How many sigil pieces in all?",
+      "composeSigil": "Sky triangles (3 straight sides): {{a}}. Sun rhombuses (4 equal sides): {{b}}. How many sigil pieces build the composite shape?",
+      "countSides": "First composite sigil uses {{a}} equal shares. Second composite sigil uses {{b}} equal shares. How many sigil pieces in all?",
       "equation": "{{a}} shards + {{b}} shards = ?"
     },
     "pattern": {
@@ -160,9 +207,11 @@
       "equation": "{{a}} → {{b}} → {{c}} → ?"
     },
     "phonics": {
-      "soundMatch": "Look at the picture clue {{icon}} ({{clue}}). Read the choices and pick the matching word!",
-      "buildWord": "Which story word means: {{icon}} {{clue}}?",
-      "storyClue": "Complete the story page: {{icon}} \"{{sentence}}\"",
+      "soundMatch": "Look at the picture clue {{icon}} ({{clue}}). Blend the sounds and pick the matching word!",
+      "buildWord": "Segment and build the word that means: {{icon}} {{clue}}!",
+      "storyClue": "Decode the word to complete the page: {{icon}} \"{{sentence}}\"",
+      "storySentence": "Connected reading: \"{{sentence}}\" ({{clue}}). Which decoded word fits the blank?",
+      "parentPronunciationGuide": "Grown-up pronunciation tip: Model pure phoneme sounds smoothly without adding 'uh' to consonants.",
       "equation": "{{icon}} = ?",
       "word": {
         "1": {
@@ -262,6 +311,251 @@
           "sentence": "The silver tower ___ rings out."
         }
       }
+    },
+    "comprehension": {
+      "equation": "Story #{{a}}",
+      "item": {
+        "1": {
+          "passage": "Pip the owl carried a small brass lantern to the wooden bridge so Moss could see the stepping stones.",
+          "prompt": "Why did Pip carry the brass lantern to the bridge?",
+          "label": "So Moss could see the stepping stones"
+        },
+        "2": {
+          "passage": "Bramble sorted his shiny purple gems into neat bags of ten before locking the cave vault.",
+          "prompt": "Who sorted the shiny gems into bags of ten?",
+          "label": "Bramble the crystal mole"
+        },
+        "3": {
+          "passage": "First, Luma dusted the book cover. Next, she opened the golden clasp. Last, she read the star poem.",
+          "prompt": "What did Luma do right after dusting the book cover?",
+          "label": "She opened the golden clasp"
+        },
+        "4": {
+          "passage": "First, Aria planted a tiny seed in soil. Next, she watered it each morning. Soon, a green sprout popped up.",
+          "prompt": "What happened first in Aria's garden story?",
+          "label": "Aria planted a tiny seed in soil"
+        },
+        "5": {
+          "passage": "Because a sudden rainstorm wet the wooden planks, the ravine bridge became slippery and Luma waited inside.",
+          "prompt": "Why did Luma wait inside instead of crossing the bridge?",
+          "label": "The rain made the bridge planks slippery"
+        },
+        "6": {
+          "passage": "The tower bell was silent because a sleepy squirrel had tucked pinecones inside the bell's rim.",
+          "prompt": "What caused the tower bell to stay silent?",
+          "label": "Pinecones were tucked inside the bell"
+        },
+        "7": {
+          "passage": "Astra put on her warm wool cloak,lit the hearth fire, and watched white flakes drift past the tower window.",
+          "prompt": "What season is it most likely in Astra's story?",
+          "label": "A snowy winter evening"
+        },
+        "8": {
+          "passage": "Moss packed a watering can, a trowel, and a packet of sunflower seeds before walking to the sunny clearing.",
+          "prompt": "What will Moss most likely do next at the sunny clearing?",
+          "label": "Plant and water the sunflower seeds"
+        }
+      }
+    },
+    "vocabulary": {
+      "equation": "Word #{{a}}",
+      "parentOralPrompt": "Grown-up oral language prompt: Invite your child to use this word in their own sentence out loud!",
+      "item": {
+        "1": {
+          "prompt": "Moss says the stone bridge is STURDY enough for a heavy minecart. What does STURDY mean?",
+          "label": "Strong and solid, not easy to break"
+        },
+        "2": {
+          "prompt": "Luma holds a FRAGILE glass lantern carefully with both hands. What does FRAGILE mean?",
+          "label": "Delicate and easy to break"
+        },
+        "3": {
+          "prompt": "Category Sort: Which group contains ONLY living woodland animals?",
+          "label": "Owl, frog, and fox"
+        },
+        "4": {
+          "prompt": "Category Sort: Which group contains ONLY weather and sky words?",
+          "label": "Raincloud, breeze, and sunshine"
+        },
+        "5": {
+          "prompt": "Shades of Meaning: Which word means almost the SAME as GLOWING?",
+          "label": "Shining brightly"
+        },
+        "6": {
+          "prompt": "Opposites (Antonyms): What is the opposite of an ANCIENT, very old tree?",
+          "label": "A young, newly sprouted sapling"
+        },
+        "7": {
+          "prompt": "Creature Conversation: Why do we say Bramble is CO-OPERATIVE when he shares his ten-packs?",
+          "label": "He works helpfully together with friends"
+        },
+        "8": {
+          "prompt": "Creature Conversation: If Aria OBSERVES the stars through the telescope, what is she doing?",
+          "label": "Watching carefully to notice details"
+        }
+      }
+    },
+    "spelling": {
+      "equation": "Rune #{{a}}",
+      "paperCompanionPrompt": "Paper & Pencil Companion: Grab a real pencil and paper to write this word or sentence yourself!",
+      "item": {
+        "1": {
+          "prompt": "Use the letter tiles [C] [A] [T] to spell the CVC word for a purring pet:",
+          "label": "CAT (C - A - T)"
+        },
+        "2": {
+          "prompt": "Use the letter tiles [S] [U] [N] to spell the word for morning daylight:",
+          "label": "SUN (S - U - N)"
+        },
+        "3": {
+          "prompt": "Blend the 4 letter tiles [F] [R] [O] [G] to spell the pond jumper:",
+          "label": "FROG (F - R - O - G)"
+        },
+        "4": {
+          "prompt": "Use the FLOSS rule tiles [B] [E] [LL] to spell what chimes in the tower:",
+          "label": "BELL (B - E - LL)"
+        },
+        "5": {
+          "prompt": "Sentence Order: Put the words [the] [sees] [Pip] [moon.] in the right order:",
+          "label": "Pip sees the moon."
+        },
+        "6": {
+          "prompt": "Sentence Order: Put the words [a] [Moss] [lantern.] [lights] in the right order:",
+          "label": "Moss lights a lantern."
+        },
+        "7": {
+          "prompt": "Writing Mechanics: Which sentence has a capital letter at the start and a period at the end?",
+          "label": "Luma reads a book."
+        },
+        "8": {
+          "prompt": "Story Starter: Which sentence best begins a story about finding a star-seed?",
+          "label": "One quiet night, Aria found a glowing seed."
+        }
+      }
+    },
+    "reasoning": {
+      "equation": "Logic #{{a}}",
+      "item": {
+        "1": {
+          "prompt": "Clue Deduction: The gate key is NOT round and NOT red. Which key opens the gate?",
+          "label": "The square blue key"
+        },
+        "2": {
+          "prompt": "Clue Deduction: Bramble's gem has 3 straight sides and is gold. Which gem is it?",
+          "label": "The gold triangle gem"
+        },
+        "3": {
+          "prompt": "Step Planning: To cross a dark ravine with a broken bridge, what is the best plan?",
+          "label": "First measure and place the plank, then light the lantern and cross"
+        },
+        "4": {
+          "prompt": "Step Planning: Luma wants to bake moonberry bread. What order makes sense?",
+          "label": "Mix the dough, bake it in the oven, then slice the warm bread"
+        },
+        "5": {
+          "prompt": "Testing an Idea: Aria tried a 4-tile plank on a 7-tile gap and it was too short. What should she try next?",
+          "label": "Add a 3-tile plank so 4 + 3 = 7 tiles"
+        },
+        "6": {
+          "prompt": "Rule Finder: Blue gems give 2 mana, gold gems give 5 mana. How can you make 7 mana with two gems?",
+          "label": "Use 1 blue gem (2) and 1 gold gem (5)"
+        },
+        "7": {
+          "prompt": "Choosing a Representation: Which tool makes it easiest to see why 8 + 5 equals 10 + 3?",
+          "label": "A ten-frame showing 8 plus 2 filling 10, with 3 left over"
+        },
+        "8": {
+          "prompt": "Strategy Check: If you forget 13 - 8, how can addition help you find the answer?",
+          "label": "Think: 8 plus what number makes 13? (8 + 5 = 13)"
+        }
+      }
+    },
+    "science": {
+      "equation": "Nature #{{a}}",
+      "familyHandsOnTip": "Hands-On Family Science: Look outside or in your kitchen together to spot one living plant and one nonliving stone or tool!",
+      "item": {
+        "1": {
+          "prompt": "Living vs. Nonliving: Which thing in Whispering Woods is LIVING because it grows and needs water?",
+          "label": "A green oak tree sprout"
+        },
+        "2": {
+          "prompt": "Animal Habitats: Where does a real pond frog find the water and shelter it needs to survive?",
+          "label": "In a damp pond with lily pads and reeds"
+        },
+        "3": {
+          "prompt": "Plant Needs: What do real green plants need from their environment to grow healthy leaves?",
+          "label": "Water, sunlight, air, and soil"
+        },
+        "4": {
+          "prompt": "Plant Life Cycle: What is the correct order of how a real flowering plant grows?",
+          "label": "Seed → roots and sprout → stem and leaves → flower"
+        },
+        "5": {
+          "prompt": "Material Properties: Which material is sturdy and does not dissolve in rain for building a bridge?",
+          "label": "Solid oak wood planks"
+        },
+        "6": {
+          "prompt": "Seasons & Daylight: During which season do we have the longest hours of warm daylight?",
+          "label": "Summer"
+        },
+        "7": {
+          "prompt": "Magic vs. Real Science: In our story, Moss makes flowers sparkle with a song. In REAL science, how do flowers make seeds?",
+          "label": "Bees and wind carry pollen between flowers"
+        },
+        "8": {
+          "prompt": "Magic vs. Real Science: In the story, floating crystals light the cave. In REAL science, why can we see the Moon at night?",
+          "label": "Sunlight shines on the Moon and reflects to our eyes"
+        }
+      }
+    },
+    "workshop": {
+      "equation": "Design #{{a}}",
+      "item": {
+        "1": {
+          "prompt": "Bridge Builder Workshop: The brook is 8 moon-tiles wide. Which pair of planks spans 8 tiles with no gaps?",
+          "label": "A 5-tile plank + a 3-tile plank (or two 4-tile planks)"
+        },
+        "2": {
+          "prompt": "Bridge Builder Workshop: The canyon is 10 moon-tiles wide. Which design spans all 10 tiles?",
+          "label": "A 6-tile plank + a 4-tile plank (or two 5-tile planks)"
+        },
+        "3": {
+          "prompt": "Creature Habitat Workshop: Design a cozy habitat for a woodland frog. What three parts must you include?",
+          "label": "Fresh pond water, a shady log shelter, and insects to eat"
+        },
+        "4": {
+          "prompt": "Creature Habitat Workshop: Design a safe roost for Pip the owl. What works best?",
+          "label": "A high dry tree hollow with soft moss and a view of the meadow"
+        },
+        "5": {
+          "prompt": "Tower Shape Workshop: Build a stable Starfall Tower using three shapes from bottom to top:",
+          "label": "Wide square base → tall rectangle pillar → pointed triangle roof"
+        },
+        "6": {
+          "prompt": "Sigil Mosaic Workshop: How can you compose a 6-sided hexagon sigil using smaller pattern blocks?",
+          "label": "Join 2 red trapezoids or 6 green equilateral triangles"
+        },
+        "7": {
+          "prompt": "Pattern Stone Workshop: Create an A-A-B repeating lantern pattern along the path:",
+          "label": "Star, Star, Moon — Star, Star, Moon"
+        },
+        "8": {
+          "prompt": "Story Scene Workshop: Build a complete adventure scene with a character, setting, and helpful goal:",
+          "label": "Aria and Pip at the Ravine Bridge measuring planks to help Luma cross"
+        }
+      }
+    }
+  },
+  "workshop": {
+    "reflection": {
+      "whatHelped": "What helped you solve that?",
+      "anotherWay": "Could you try another way?",
+      "bridgeWork": "Why do you think that design will work?",
+      "cardCountOn": "I counted on step by step",
+      "cardMakeTen": "I grouped by tens or made a ten",
+      "cardVisual": "I used the picture, tiles, or story clues",
+      "cardTalked": "I talked through my plan",
+      "thankYou": "Thank you for sharing your strategy! Every great wizard reflects on how they learn."
     }
   },
   "feedback": {
@@ -280,30 +574,65 @@
         "hint2": "Count only the bright blue crystals that are left.",
         "hint3": "Guided magic: {{a}} minus {{b}} leaves {{answer}}! Tap {{answer}}."
       },
+      "unknown-number-equations": {
+        "hint1": "Think of a balance scale: both sides of the '=' sign must have the exact same total!",
+        "hint2": "Count up from the known part to the whole on the number line to find the missing number.",
+        "hint3": "Guided magic: the unknown number that balances the equation is {{answer}}! Tap {{answer}}."
+      },
       "tens-and-ones": {
         "hint1": "Count each purple bag by tens (10, 20…), then count on the loose gold crystals.",
         "hint2": "{{a}} bags of ten make {{tensValue}}, plus {{b}} loose ones.",
         "hint3": "Guided magic: {{tensValue}} + {{b}} makes {{answer}}! Tap {{answer}}."
       },
       "compare-lengths": {
-        "hint1": "Line the moon-tile planks up from the left edge to compare their lengths.",
-        "hint2": "Count each moon-tile along the bridge span one by one.",
+        "hint1": "Line the moon-tile planks up from the left edge with no gaps or overlaps to compare their lengths.",
+        "hint2": "Count each equal-size moon-tile along the bridge span one by one.",
         "hint3": "Guided magic: the plank length is {{answer}} moon-tiles! Tap {{answer}}."
       },
       "compose-shapes": {
-        "hint1": "Count the {{a}} blue triangle shards first, then count on the {{b}} gold diamond shards.",
-        "hint2": "Look at all the sigil shards lined up together and count each piece.",
-        "hint3": "Guided magic: {{a}} triangles and {{b}} diamonds compose {{answer}} shards! Tap {{answer}}."
+        "hint1": "Look at the defining attributes (straight sides and closed corners) of the {{a}} triangles and {{b}} diamonds.",
+        "hint2": "Line up all the composite sigil pieces together and count each piece.",
+        "hint3": "Guided magic: {{a}} pieces and {{b}} pieces compose {{answer}} sigil pieces! Tap {{answer}}."
       },
       "phonics-words": {
-        "hint1": "Sound out the letters slowly: {{sounds}}.",
-        "hint2": "Blend the sounds together out loud: {{sounds}}.",
+        "hint1": "Point to each letter tile and sound out the phonemes slowly: {{sounds}}.",
+        "hint2": "Blend the phonemes smoothly together from left to right: {{sounds}}.",
         "hint3": "Guided magic: the sounds {{sounds}} blend into {{answer}}! Tap {{answer}}."
       },
       "star-patterns": {
         "hint1": "Find how much the star numbers jump each time: +{{step}}.",
         "hint2": "Start at {{c}} on the starlight number line and count up {{step}} more.",
         "hint3": "Guided magic: {{c}} + {{step}} reaches star {{answer}}! Tap {{answer}}."
+      },
+      "reading-comprehension": {
+        "hint1": "Re-read or listen to the story passage above and look for who did the action and why.",
+        "hint2": "Check the beginning, middle, and ending details in the story box.",
+        "hint3": "Guided magic: the story shows \"{{answer}}\"! Tap {{answer}}."
+      },
+      "vocabulary-oral": {
+        "hint1": "Listen to how the Moonwood character uses the word in the sentence.",
+        "hint2": "Think about whether the words belong in the same group or have similar meanings.",
+        "hint3": "Guided magic: the matching meaning is \"{{answer}}\"! Tap {{answer}}."
+      },
+      "spelling-writing": {
+        "hint1": "Tap each sound in the word or check that the sentence starts with a capital letter.",
+        "hint2": "Arrange the letter tiles in order from first sound to last sound, ending sentences with a period.",
+        "hint3": "Guided magic: the correct Rune Journal entry is \"{{answer}}\"! Tap {{answer}}."
+      },
+      "logical-reasoning": {
+        "hint1": "Cross out any choice that breaks one of the wizard's clues.",
+        "hint2": "Test your remaining idea step by step from first action to last action.",
+        "hint3": "Guided magic: the logical solution is \"{{answer}}\"! Tap {{answer}}."
+      },
+      "science-nature": {
+        "hint1": "Remember: real living things grow and need water, air, and energy, unlike nonliving stones or story magic.",
+        "hint2": "Observe what happens in real nature outdoors and match the scientific explanation.",
+        "hint3": "Guided magic: the real-world science answer is \"{{answer}}\"! Tap {{answer}}."
+      },
+      "creative-construction": {
+        "hint1": "Check the workshop goal: how wide is the bridge or what does the creature need in its habitat?",
+        "hint2": "Combine the building pieces so the base is sturdy and every requirement is met.",
+        "hint3": "Guided magic: a working workshop design is \"{{answer}}\"! Tap {{answer}}."
       }
     },
     "notThat": "Not {{value}}. Try another one.",
@@ -363,6 +692,30 @@
     },
     "fallenStar": {
       "name": "Feather of Starfall"
+    },
+    "storykeeperLeaf": {
+      "name": "Storykeeper's Silver Leaf"
+    },
+    "natureSprout": {
+      "name": "Naturekeeper's Living Sprout"
+    },
+    "alchemyVial": {
+      "name": "Balanced Alchemy Vial"
+    },
+    "echoGlossary": {
+      "name": "Cavern Word Crystal"
+    },
+    "goldenQuill": {
+      "name": "Rune Scribe's Feather"
+    },
+    "wizardCompass": {
+      "name": "Wizard's Logic Compass"
+    },
+    "builderBlueprint": {
+      "name": "Master Builder's Blueprint"
+    },
+    "starlightBadge": {
+      "name": "Starlight Independent Emblem"
     }
   },
   "settings": {
@@ -378,12 +731,41 @@
     "gateAnswer": "Answer",
     "gateSubmit": "Continue",
     "gateWrong": "That isn't right. Please ask a grown-up.",
-    "heading": "Grown-ups",
-    "privacyHeading": "Privacy",
+    "heading": "Grown-ups — Evidence & Learning Dashboard",
+    "privacyHeading": "Privacy & Local Data Guarantee",
     "privacy": "This game keeps progress only in this browser on this device. It has no accounts, ads, chat or tracking, and it sends nothing over the internet.",
-    "progressHeading": "Learning progress",
+    "progressHeading": "Academic Learning Overview",
     "noProgress": "No quests played yet.",
     "objectiveRow": "{{standard}}: {{independent}} solved alone, {{supported}} with help",
+    "evidenceSummaryRow": "{{standard}} ({{ncStandard}}) · Stage: {{stage}} · Status: {{status}} · {{sampleNote}}",
+    "readingModalityNote": "Reading Comprehension Modality: {{independentRead}} read independently, {{listened}} completed with audio narration (tracked separately).",
+    "legacyMigrationNote": "Note: Activity completions from an older save version are marked 'legacy-unverified' until new independent evidence is recorded.",
+    "confidenceHeading": "How Mastery & Assessments Work (And What This Game Cannot Determine)",
+    "confidenceBody": "Provisional mastery requires at least 5 independent unseen successes (85% accuracy hypothesis) across 3+ task families and 2+ representations, without Hint 3 answer revelation. Retained mastery requires delayed review and transfer checks. These are game-based curriculum indicators—not clinical assessments, IQ scores, or school grade rankings.",
+    "recommendationsHeading": "Recommended Offline Activities for Grown-Ups & Children",
+    "recommendReason": {
+      "needsSupport": "Suggested because recent attempts used hints or showed a specific misconception:",
+      "practicing": "Suggested to build fluency on a skill currently in practice:",
+      "nextSkill": "Suggested as a great next foundational step:"
+    },
+    "offline": {
+      "addWithin20": "Combine two small groups of household objects (spoons, coins, or blocks) up to 20 and practice 'making a ten' first.",
+      "subtractWithin20": "Start with 12–15 small counters, hide a few under a cup, and ask your child how addition helps figure out how many are hidden.",
+      "unknownEquations": "Play 'Mystery Cup': show 10 buttons in all, put 6 on the table, and ask '6 plus how many in the cup makes 10?'",
+      "tensAndOnes": "Bundle 10 toothpicks or crayons with a rubber band to show 1 ten, then build numbers like 34 and compare with 43.",
+      "compareLengths": "Pick 3 household items (a pencil, spoon, and book), order them shortest to longest, and measure them end-to-end with paperclips (no gaps!).",
+      "composeShapes": "Cut paper squares and triangles to build larger hexagons or towers, and fold a paper circle into 2 equal halves and 4 equal quarters.",
+      "phonicsWords": "Write letter tiles on index cards (s, a, t, m, p, f, r, o, g) and practice sliding sounds smoothly together without adding 'uh'.",
+      "starPatterns": "Count steps out loud by 2s, 5s, and 10s while walking or climbing stairs together.",
+      "readingComprehension": "After reading a short picture book together, ask 'What happened first, next, and last?' and 'Why did the character do that?'",
+      "vocabularyOral": "Pick a descriptive word from today's story (like 'sturdy' or 'fragile') and take turns finding 3 things in the room that fit.",
+      "spellingWriting": "Invite your child to write a 1-sentence note or label a drawing on paper, checking for a capital letter at the start and a period at the end.",
+      "logicalReasoning": "Play 'I Spy with Clues' ('It is not round, and it is not blue...') and ask your child to explain how they ruled out choices.",
+      "scienceNature": "Go on a 5-minute nature walk to compare a living plant (needs water, air, sunlight) with a nonliving pebble.",
+      "creativeConstruction": "Give your child 10 blocks or cups to build a bridge that spans between two books and ask why their design stays up."
+    },
+    "exportJson": "Export local learning report (JSON)",
+    "exported": "Learning report copied / downloaded locally.",
     "erase": "Erase all progress on this device",
     "eraseConfirm": "Erase all progress? This cannot be undone.",
     "erased": "Progress erased."

@@ -7,14 +7,18 @@ export type KeyValueStore = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 export const PROGRESS_KEY = "flg.progress.v1";
 
 /**
- * Migrates legacy (v0 or partial v1) save payloads to schemaVersion 1 while
- * rejecting unknown future versions (e.g. schemaVersion 99).
+ * Migrates legacy (v0, v1, or partial v2) save payloads while rejecting
+ * unknown future versions (e.g. schemaVersion 99).
+ *
+ * When a legacy v0/v1 save with objective attempts is migrated without an
+ * `evidenceLog`, `legacyMigratedFromV1` is preserved so the Parent Dashboard
+ * honestly reports legacy completions as unverified rather than validated mastery.
  */
 export function migrateRawProgress(raw: unknown): unknown {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return raw;
   const record = raw as Record<string, unknown>;
   const version = record.schemaVersion;
-  if (version !== undefined && version !== 0 && version !== 1) {
+  if (version !== undefined && version !== 0 && version !== 1 && version !== 2) {
     return raw;
   }
 
@@ -25,17 +29,51 @@ export function migrateRawProgress(raw: unknown): unknown {
       : {};
   const cleanedObjectives: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(rawObjectives)) {
-    if (validObjectives.has(k)) cleanedObjectives[k] = v;
+    if (validObjectives.has(k) && v && typeof v === "object") {
+      const m = v as Record<string, unknown>;
+      if (typeof m.objectiveId === "string" && typeof m.attempts === "number") {
+        cleanedObjectives[k] = {
+          objectiveId: m.objectiveId,
+          attempts: m.attempts,
+          independentSuccesses: typeof m.independentSuccesses === "number" ? m.independentSuccesses : 0,
+          supportedSuccesses: typeof m.supportedSuccesses === "number" ? m.supportedSuccesses : 0,
+          recentErrors: typeof m.recentErrors === "number" ? m.recentErrors : 0,
+          streak: typeof m.streak === "number" ? m.streak : 0,
+          nextDifficulty: typeof m.nextDifficulty === "number" ? m.nextDifficulty : 1,
+        };
+      }
+    }
   }
 
-  return {
-    schemaVersion: 1,
+  const hasLegacyObjectivesWithoutEvidence =
+    Object.keys(cleanedObjectives).length > 0 && !Array.isArray(record.evidenceLog);
+
+  const result: Record<string, unknown> = {
+    schemaVersion: 2,
     lastUpdated: typeof record.lastUpdated === "string" ? record.lastUpdated : new Date(0).toISOString(),
     unlockedQuestIds: Array.isArray(record.unlockedQuestIds) ? record.unlockedQuestIds : ["forest-gate"],
     completedQuestIds: Array.isArray(record.completedQuestIds) ? record.completedQuestIds : [],
     rewardIds: Array.isArray(record.rewardIds) ? record.rewardIds : [],
     objectives: cleanedObjectives,
   };
+
+  if (Array.isArray(record.evidenceLog)) {
+    result.evidenceLog = record.evidenceLog.slice(-250);
+  }
+  if (record.reviewSchedule && typeof record.reviewSchedule === "object" && !Array.isArray(record.reviewSchedule)) {
+    result.reviewSchedule = record.reviewSchedule;
+  }
+  if (Array.isArray(record.seenItemSignatures)) {
+    result.seenItemSignatures = record.seenItemSignatures.slice(-500);
+  }
+  if (Array.isArray(record.placedSkills)) {
+    result.placedSkills = record.placedSkills.filter((id) => validObjectives.has(String(id)));
+  }
+  if (record.legacyMigratedFromV1 === true || hasLegacyObjectivesWithoutEvidence) {
+    result.legacyMigratedFromV1 = true;
+  }
+
+  return result;
 }
 
 /**

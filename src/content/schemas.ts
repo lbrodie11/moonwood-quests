@@ -37,6 +37,15 @@ export type RegionId = z.infer<typeof RegionIdSchema>;
 export const GuideIdSchema = z.enum(["pip", "moss", "bramble", "luma", "astra"]);
 export type GuideId = z.infer<typeof GuideIdSchema>;
 
+export const AssessmentModeSchema = z.enum([
+  "standard",
+  "baseline",
+  "independent-check",
+  "mixed-review",
+  "delayed-retention",
+  "transfer-check",
+]);
+
 export const QuestSchema = z.object({
   id: z.string().regex(/^[a-z0-9-]+$/),
   status: z.enum(["playable", "planned"]),
@@ -54,6 +63,10 @@ export const QuestSchema = z.object({
   unlocks: z.array(z.string()),
   /** Position on the 960×540 world map. */
   map: z.object({ x: z.number().min(0).max(960), y: z.number().min(0).max(540) }),
+  /** Optional assessment mode (e.g. "independent-check" where hints are disabled). */
+  assessmentMode: AssessmentModeSchema.optional(),
+  /** True for always-open regional learning sanctuaries & workshops. */
+  isSanctuary: z.boolean().optional(),
 });
 
 export type QuestDefinition = z.infer<typeof QuestSchema>;

@@ -1,6 +1,20 @@
-import type { Challenge, ChallengeSpec } from "./challenge";
+import type {
+  AssessmentMode,
+  EvidenceRecord,
+  HintCategory,
+  ResponseModality,
+} from "./assessment/evidence";
+import type { Challenge, ChallengeSpec, LearningStage } from "./challenge";
+import { firstUnmetPrerequisite } from "./curriculum/skills";
 import { generatorFor } from "./generators";
-import { chooseRepresentation, initialMastery, recordAttempt, type LearningAttempt, type MasteryState } from "./mastery";
+import { createPhonicsWords } from "./generators/phonics";
+import {
+  chooseRepresentation,
+  initialMastery,
+  recordAttempt,
+  type LearningAttempt,
+  type MasteryState,
+} from "./mastery";
 import { clampDifficulty, type Difficulty, type ObjectiveId } from "./objectives";
 import type { RandomSource } from "./random";
 
@@ -11,6 +25,10 @@ export interface QuestPlan {
   id: string;
   objectiveIds: readonly ObjectiveId[];
   phases: readonly QuestPhase[];
+  assessmentMode?: AssessmentMode | undefined;
+  locale?: "en-US" | "es-US" | undefined;
+  seenItemSignatures?: readonly string[] | undefined;
+  placedSkills?: readonly ObjectiveId[] | undefined;
 }
 
 export interface QuestPhase {
@@ -18,27 +36,57 @@ export interface QuestPhase {
   count: number;
   difficultyFloor?: number | undefined;
   difficultyCap?: number | undefined;
+  stage?: LearningStage | undefined;
 }
 
 export type MasteryMap = Partial<Record<ObjectiveId, MasteryState>>;
 
 export type SubmitResult =
-  | { kind: "correct"; attempt: LearningAttempt; questComplete: boolean }
-  | { kind: "incorrect"; hintLevel: HintLevel; ruledOut: number }
+  | {
+      kind: "correct";
+      attempt: LearningAttempt;
+      questComplete: boolean;
+    }
+  | {
+      kind: "incorrect";
+      hintLevel: HintLevel;
+      ruledOut: number;
+      /** True when an independent assessment gently transitions after an error without revealing the answer. */
+      assessmentTransitioned?: boolean | undefined;
+      questComplete?: boolean | undefined;
+    }
   | { kind: "ignored" };
+
+const HINT_CATEGORY_BY_LEVEL: Readonly<Record<HintLevel, HintCategory>> = {
+  1: "rule-out",
+  2: "visual-demo",
+  3: "guided-solution",
+};
 
 /**
  * Runs one quest's sequence of challenges. Knows nothing about Phaser or the
  * DOM: a scene asks for `current`, renders it, and passes answers to `submit`.
- * Difficulty adapts between challenges using the mastery model.
+ *
+ * Records structured `EvidenceRecord` entries for both incorrect submissions
+ * (when they happen) and completed challenges, enforces prerequisite scaffolding,
+ * and supports hint-free independent/delayed assessments.
  */
 export class QuestRunner {
   private readonly steps: QuestPhase[];
   private readonly mastery: MasteryMap;
+  private readonly evidenceLog: EvidenceRecord[] = [];
+  private readonly seenSignatures: Set<string>;
+  private readonly assessmentMode: AssessmentMode;
+  private readonly locale: "en-US" | "es-US";
+
   private index = 0;
   private active: Challenge | null = null;
   private tries = 0;
   private hintsUsed = 0;
+  private hintCategories: HintCategory[] = [];
+  private currentErrorTags: string[] = [];
+  private currentUnseen = true;
+  private currentModality: ResponseModality = "visual-dom";
   private startedAt = 0;
   private lastSignature = "";
 
@@ -50,6 +98,9 @@ export class QuestRunner {
   ) {
     if (plan.objectiveIds.length === 0) throw new Error(`Quest "${plan.id}" has no objectives`);
     this.mastery = { ...mastery };
+    this.assessmentMode = plan.assessmentMode ?? "standard";
+    this.locale = plan.locale ?? "en-US";
+    this.seenSignatures = new Set(plan.seenItemSignatures ?? []);
     this.steps = plan.phases.flatMap((phase) => Array.from({ length: phase.count }, () => phase));
     this.active = this.steps.length > 0 ? this.createChallenge() : null;
   }
@@ -71,18 +122,41 @@ export class QuestRunner {
     return this.steps[this.index] ?? null;
   }
 
+  get recordedEvidence(): readonly EvidenceRecord[] {
+    return this.evidenceLog;
+  }
+
+  get knownItemSignatures(): readonly string[] {
+    return [...this.seenSignatures];
+  }
+
   masterySnapshot(): MasteryMap {
     return { ...this.mastery };
   }
 
   /**
+   * Allows the UI to record whether the child listened to full story narration
+   * (`"listening"`) vs. read independently (`"independent-reading"`).
+   */
+  setResponseModality(modality: ResponseModality): void {
+    this.currentModality = modality;
+  }
+
+  /**
    * Progressive 3-level hint request (1: gentle clue, 2: visual demonstration,
    * 3: guided solution) without requiring a wrong answer first.
+   * Disabled (`returns null`) during independent assessments (Phase 3.7).
    */
   requestHint(): HintLevel | null {
     if (!this.active) return null;
+    if (this.isIndependentAssessment()) return null;
     this.hintsUsed += 1;
-    return Math.min(3, this.hintsUsed) as HintLevel;
+    const level = Math.min(3, this.hintsUsed) as HintLevel;
+    const category = HINT_CATEGORY_BY_LEVEL[level];
+    if (!this.hintCategories.includes(category)) {
+      this.hintCategories.push(category);
+    }
+    return level;
   }
 
   submit(value: number): SubmitResult {
@@ -92,8 +166,38 @@ export class QuestRunner {
     this.tries += 1;
 
     if (value !== challenge.correctAnswer) {
+      const errorTag =
+        challenge.meta?.distractorErrors?.[value] ?? "general-calculation-or-decoding-error";
+      this.currentErrorTags.push(errorTag);
+
+      // During an independent check, do not reveal answers or hints; record the
+      // attempt as an unsuccessful independent check item and advance gently.
+      if (this.isIndependentAssessment()) {
+        const evidence = this.buildEvidenceRecord(challenge, false, true);
+        this.evidenceLog.push(evidence);
+        this.index += 1;
+        const questComplete = this.index >= this.steps.length;
+        this.active = questComplete ? null : this.createChallenge();
+        return {
+          kind: "incorrect",
+          hintLevel: 1,
+          ruledOut: value,
+          assessmentTransitioned: true,
+          questComplete,
+        };
+      }
+
       this.hintsUsed += 1;
       const hintLevel: HintLevel = Math.min(3, this.hintsUsed) as HintLevel;
+      const category = HINT_CATEGORY_BY_LEVEL[hintLevel];
+      if (!this.hintCategories.includes(category)) {
+        this.hintCategories.push(category);
+      }
+
+      // Record the intermediate incorrect submission immediately (Phase 3.4)
+      const incorrectEvidence = this.buildEvidenceRecord(challenge, false, false);
+      this.evidenceLog.push(incorrectEvidence);
+
       return { kind: "incorrect", hintLevel, ruledOut: value };
     }
 
@@ -105,13 +209,79 @@ export class QuestRunner {
       hintsUsed: this.hintsUsed,
       responseMs: Math.max(0, this.now() - this.startedAt),
       representation: challenge.representation,
+      itemFamily: challenge.meta?.itemFamily,
+      stage: challenge.stage,
+      errorClassifications: [...this.currentErrorTags],
+      locale: this.locale,
+      modality: this.currentModality,
     };
-    this.mastery[challenge.objectiveId] = recordAttempt(this.masteryFor(challenge.objectiveId), attempt);
+
+    // Never infer independent mastery if Hint 3 (answer revelation) was used
+    this.mastery[challenge.objectiveId] = recordAttempt(
+      this.masteryFor(challenge.objectiveId),
+      attempt,
+    );
+
+    const completedEvidence = this.buildEvidenceRecord(challenge, true, true);
+    this.evidenceLog.push(completedEvidence);
 
     this.index += 1;
     const questComplete = this.index >= this.steps.length;
     this.active = questComplete ? null : this.createChallenge();
     return { kind: "correct", attempt, questComplete };
+  }
+
+  private isIndependentAssessment(): boolean {
+    return (
+      this.assessmentMode === "baseline" ||
+      this.assessmentMode === "independent-check" ||
+      this.assessmentMode === "delayed-retention" ||
+      this.assessmentMode === "transfer-check"
+    );
+  }
+
+  private buildEvidenceRecord(
+    challenge: Challenge,
+    correct: boolean,
+    completed: boolean,
+  ): EvidenceRecord {
+    const nowMs = this.now();
+    const revealedAnswer = this.hintCategories.includes("guided-solution");
+    const listeningOnly =
+      challenge.objectiveId === "reading-comprehension" && this.currentModality === "listening";
+    const independent =
+      correct &&
+      this.tries === 1 &&
+      this.hintsUsed === 0 &&
+      !revealedAnswer &&
+      !listeningOnly;
+
+    return {
+      attemptId: `${challenge.id}:try${this.tries}:${nowMs}`,
+      skillId: challenge.objectiveId,
+      contentVersion: "2.0.0",
+      locale: this.locale,
+      itemId: challenge.id,
+      itemFamily: challenge.meta?.itemFamily ?? `${challenge.objectiveId}-default`,
+      timestamp: new Date(nowMs).toISOString(),
+      difficulty: challenge.difficulty,
+      stage: challenge.stage ?? "independent",
+      representation: challenge.representation,
+      modality: this.currentModality,
+      independent,
+      incorrectSubmissions: correct ? this.tries - 1 : this.tries,
+      hintsRequested: this.hintsUsed,
+      hintTypes: [...this.hintCategories],
+      errorClassifications: [...this.currentErrorTags],
+      unseenItem: this.currentUnseen,
+      isTransfer:
+        challenge.stage === "transfer" || this.assessmentMode === "transfer-check",
+      isRetention:
+        challenge.stage === "retention" || this.assessmentMode === "delayed-retention",
+      correct,
+      completed,
+      assessmentMode: this.assessmentMode,
+    };
   }
 
   private masteryFor(objectiveId: ObjectiveId): MasteryState {
@@ -122,24 +292,71 @@ export class QuestRunner {
     const phase = this.steps[this.index];
     if (!phase) throw new Error("No phase for challenge index");
 
-    const objectiveId = this.plan.objectiveIds[this.index % this.plan.objectiveIds.length] as ObjectiveId;
+    const requestedObjective = this.plan.objectiveIds[
+      this.index % this.plan.objectiveIds.length
+    ] as ObjectiveId;
+
+    // Prerequisite scaffolding: if a child enters a quest whose target skill has
+    // an unmet prerequisite during the guided phase:
+    // - If the prerequisite is part of this quest's objectiveIds, practice it first;
+    // - Otherwise, scaffold the target skill at Difficulty 1 with concrete representations
+    //   so the child always experiences the sanctuary/quest's authentic mechanic.
+    const unmetPrereq =
+      phase.kind === "guided"
+        ? firstUnmetPrerequisite(requestedObjective, this.mastery, this.plan.placedSkills ?? [])
+        : null;
+    const objectiveId =
+      unmetPrereq && this.plan.objectiveIds.includes(unmetPrereq)
+        ? unmetPrereq
+        : requestedObjective;
+
     const state = this.masteryFor(objectiveId);
-    const difficulty = this.difficultyFor(phase, state.nextDifficulty);
-    const generate = generatorFor(objectiveId);
+    const difficulty: Difficulty = unmetPrereq
+      ? 1
+      : this.difficultyFor(phase, state.nextDifficulty);
+    const langScope = this.locale === "es-US" ? "es" : "en";
+
+    const generate =
+      objectiveId === "phonics-words"
+        ? (rng: RandomSource, d: Difficulty) => createPhonicsWords(rng, d, langScope)
+        : generatorFor(objectiveId);
+
     let spec = generate(this.rng, difficulty);
     for (let retry = 0; retry < 4 && this.lastSignature === this.signatureOf(spec); retry++) {
       spec = generate(this.rng, difficulty);
     }
-    this.lastSignature = this.signatureOf(spec);
+    const sig = this.signatureOf(spec);
+    this.lastSignature = sig;
+    this.currentUnseen = !this.seenSignatures.has(sig);
+    this.seenSignatures.add(sig);
 
     this.tries = 0;
     this.hintsUsed = 0;
+    this.hintCategories = [];
+    this.currentErrorTags = [];
+    this.currentModality =
+      objectiveId === "reading-comprehension" ? "independent-reading" : "visual-dom";
     this.startedAt = this.now();
+
+    const stage: LearningStage =
+      phase.stage ??
+      (phase.kind === "guided"
+        ? this.index === 0
+          ? "modeling"
+          : "guided"
+        : phase.kind === "mini-boss"
+          ? "transfer"
+          : "independent");
 
     return {
       ...spec,
       id: `${this.plan.id}:${this.index}`,
-      representation: phase.kind === "guided" ? "objects" : chooseRepresentation(state, difficulty, objectiveId),
+      representation:
+        phase.kind === "guided"
+          ? "objects"
+          : chooseRepresentation(state, difficulty, objectiveId),
+      stage,
+      isAssessment: this.isIndependentAssessment(),
     };
   }
 

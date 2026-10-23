@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { REGIONS } from "../../content";
+import { findQuestOrSanctuary, REGIONS } from "../../content";
 import { isPlayable, questAvailability } from "../../content/availability";
 import type { GuideId } from "../../content/schemas";
 import { discoverTreasure } from "../../storage/progress";
@@ -383,7 +383,7 @@ export class WorldMapScene extends Phaser.Scene {
   }
 
   private startQuest(questId: string): void {
-    const quest = this.services.quests.find((q) => q.id === questId);
+    const quest = findQuestOrSanctuary(questId, this.services.quests);
     if (!quest || this.leaving) return;
     if (!isPlayable(questAvailability(quest, this.services.progress.current))) return;
 

@@ -1,4 +1,4 @@
-import type { Representation } from "./challenge";
+import type { LearningStage, Representation } from "./challenge";
 import { clampDifficulty, type Difficulty, type ObjectiveId } from "./objectives";
 
 /** Learning evidence for one challenge. Kept separate from any game score. */
@@ -11,6 +11,11 @@ export interface LearningAttempt {
   hintsUsed: number;
   responseMs: number;
   representation: Representation;
+  itemFamily?: string | undefined;
+  stage?: LearningStage | undefined;
+  errorClassifications?: readonly string[] | undefined;
+  locale?: "en-US" | "es-US" | undefined;
+  modality?: "visual-dom" | "canvas-manipulative" | "listening" | "independent-reading" | undefined;
 }
 
 export interface MasteryState {
@@ -26,8 +31,10 @@ export interface MasteryState {
 }
 
 /**
- * Design parameters, deliberately simple. Do not present these as calibrated
- * mastery scores; tune them with an elementary educator and playtest data.
+ * Design parameters for item-level difficulty adaptation.
+ * Do not conflate `nextDifficulty` with curriculum mastery (`evaluateSkillEvidence`
+ * in `src/learning/assessment/evidence.ts` evaluates mastery across distinct
+ * task families, unseen items, representations, transfer, and delayed retention).
  */
 export const MASTERY_RULES = {
   promoteAfterStreak: 3,
@@ -50,7 +57,10 @@ export function initialMastery(objectiveId: ObjectiveId): MasteryState {
 
 /** Pure reducer: returns a new state. */
 export function recordAttempt(state: MasteryState, attempt: LearningAttempt): MasteryState {
-  const independent = attempt.tries === 1 && attempt.hintsUsed === 0;
+  // Listening-only reading comprehension or Hint 3 answer revelation is never counted as independent
+  const listeningOnly =
+    attempt.objectiveId === "reading-comprehension" && attempt.modality === "listening";
+  const independent = attempt.tries === 1 && attempt.hintsUsed === 0 && !listeningOnly;
   const errors = attempt.tries - 1;
 
   let next: MasteryState = {
@@ -82,7 +92,11 @@ export function chooseRepresentation(
   if (difficulty === 1 || state.recentErrors >= MASTERY_RULES.objectsSupportAtErrors) {
     return "objects";
   }
-  if (objectiveId === "star-patterns" || objectiveId === "compare-lengths") {
+  if (
+    objectiveId === "star-patterns" ||
+    objectiveId === "compare-lengths" ||
+    objectiveId === "unknown-number-equations"
+  ) {
     return "number-line";
   }
   return "symbols";

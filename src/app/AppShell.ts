@@ -1,4 +1,4 @@
-import { FINAL_QUEST_ID, REGIONS } from "../content";
+import { FINAL_QUEST_ID, findQuestOrSanctuary, REGIONS, SANCTUARY_ACTIVITIES } from "../content";
 import { isPlayable, questAvailability, type QuestAvailability } from "../content/availability";
 import type { GuideId, QuestDefinition } from "../content/schemas";
 import type { GameBridge, GameEventMap, Screen } from "../game/bridge";
@@ -112,7 +112,7 @@ export class AppShell {
     this.screen = screen;
     if (screen === "quest" && questId) {
       this.activeQuestId = questId;
-      const quest = this.deps.quests.find((q) => q.id === questId);
+      const quest = findQuestOrSanctuary(questId, this.deps.quests);
       if (quest) this.challengeUI.setQuest(quest.titleKey, quest.introKey);
     }
     if (screen !== "quest") this.narrator.stop();
@@ -227,6 +227,17 @@ export class AppShell {
         card.className = `quest-card ${state}`;
         card.dataset.state = state;
         card.disabled = !isPlayable(state);
+        const statusSpan = card.querySelector<HTMLElement>(".quest-status");
+        if (statusSpan) statusSpan.textContent = t(STATUS_KEY[state]);
+      }
+    }
+
+    for (const sanctuary of SANCTUARY_ACTIVITIES) {
+      const card = this.panel.querySelector<HTMLButtonElement>(`[data-sanctuary="${sanctuary.id}"]`);
+      if (card) {
+        const state = questAvailability(sanctuary, progress);
+        card.className = `quest-card sanctuary-card ${state}`;
+        card.dataset.state = state;
         const statusSpan = card.querySelector<HTMLElement>(".quest-status");
         if (statusSpan) statusSpan.textContent = t(STATUS_KEY[state]);
       }
@@ -391,12 +402,60 @@ export class AppShell {
       list.append(el("li", {}, button));
     }
 
+    const sanctuaryList = el("ul", {
+      className: "quest-list sanctuary-list",
+      role: "list",
+      "data-testid": "sanctuary-list",
+    });
+    for (const sanctuary of SANCTUARY_ACTIVITIES) {
+      const state = questAvailability(sanctuary, progress);
+      const regionTitle = t(REGION_TITLE_KEY[sanctuary.regionId] ?? "region.whisperingWoods.title");
+      const emblem = el("img", {
+        className: "quest-emblem",
+        src: `/assets/emblems/${sanctuary.regionId}.svg`,
+        alt: "",
+        width: 28,
+        height: 28,
+      });
+      const button = el(
+        "button",
+        {
+          type: "button",
+          className: `quest-card sanctuary-card ${state}`,
+          "data-sanctuary": sanctuary.id,
+          "data-region": sanctuary.regionId,
+          "data-state": state,
+        },
+        el(
+          "span",
+          { className: "quest-region-header" },
+          emblem,
+          el("span", { className: "quest-region-tag" }, regionTitle),
+        ),
+        el("span", { className: "quest-name" }, t(sanctuary.titleKey)),
+        el("span", { className: "quest-status" }, t(STATUS_KEY[state])),
+      );
+      button.addEventListener("click", () =>
+        this.deps.bridge.emit("startQuest", { questId: sanctuary.id }),
+      );
+      sanctuaryList.append(el("li", {}, button));
+    }
+
+    const sanctuariesSection = el(
+      "div",
+      { className: "sanctuaries-section", "data-testid": "sanctuaries-section" },
+      el("h3", { className: "sanctuaries-heading" }, t("map.sanctuariesHeading")),
+      el("p", { className: "sanctuaries-subheading" }, t("map.sanctuariesSubheading")),
+      sanctuaryList,
+    );
+
     return el(
       "section",
       { "aria-labelledby": "map-heading" },
       storyBanner,
       el("h2", { id: "map-heading" }, t("map.heading")),
       list,
+      sanctuariesSection,
       explorerBar,
     );
   }
@@ -404,7 +463,7 @@ export class AppShell {
   private renderComplete(): HTMLElement {
     const progress = this.deps.progress.current;
     const targetQuestId = this.completedQuestId || this.activeQuestId;
-    const quest = this.deps.quests.find((q) => q.id === targetQuestId);
+    const quest = findQuestOrSanctuary(targetQuestId, this.deps.quests);
     const back = el("button", { type: "button", className: "primary", "data-testid": "back-to-map" }, t("ui.backToMap"));
     back.addEventListener("click", () => this.deps.bridge.emit("returnToMap", {}));
 
