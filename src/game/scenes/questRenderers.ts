@@ -170,7 +170,7 @@ export function spawnChallengeStage(
 
   if (challenge.operator === "unknown-equation") {
     const [a = 0, b = 0, structureCode = 1] = challenge.operands;
-    const knownCount = Math.min(12, a);
+    const knownCount = Math.min(20, a);
     placeGroup(scene, reduced, crystals, {
       count: knownCount,
       centerX: POOL_LEFT_X,
@@ -351,10 +351,19 @@ export function spawnChallengeStage(
   ) {
     const [targetId = 1] = challenge.operands;
     const isPhonics = challenge.operator === "phonics";
-    const targetIcon = isPhonics ? t(`challenge.phonics.word.${targetId}.icon`) : "✨";
-    const targetSounds = isPhonics
-      ? t(`challenge.phonics.word.${targetId}.sounds`)
-      : (challenge.meta?.interactiveTiles ?? []).join(" · ");
+    const isStoryPhonics = isPhonics && challenge.promptKey.includes("story");
+    const targetIcon = isPhonics
+      ? isStoryPhonics
+        ? "📖"
+        : t(`challenge.phonics.word.${targetId}.icon`)
+      : "✨";
+    const rawSounds = isPhonics ? t(`challenge.phonics.word.${targetId}.sounds`) : "";
+    const elkoninBoxes = isPhonics
+      ? rawSounds
+          .split("-")
+          .map(() => "▢")
+          .join(" ")
+      : "";
 
     const clueBadge = scene.add
       .text(GATE.x, 225, targetIcon, {
@@ -363,13 +372,13 @@ export function spawnChallengeStage(
       })
       .setOrigin(0.5);
     const hintTextProp = scene.add
-      .text(GATE.x, 268, targetSounds, {
+      .text(GATE.x, 268, elkoninBoxes, {
         ...LABEL_STYLE,
         fontSize: "18px",
         color: "#ffe680",
       })
       .setOrigin(0.5)
-      .setVisible(!isPhonics && targetSounds.length > 0);
+      .setVisible(false);
     stageProps.push(clueBadge, hintTextProp);
 
     const positions = [210, 480, 750];
@@ -379,7 +388,7 @@ export function spawnChallengeStage(
       const image = scene.add.image(x, y, "story-scroll").setScale(reduced ? 1.15 : 0);
       const rawText = isPhonics
         ? t(`challenge.phonics.word.${choiceId}.word`)
-        : `#${choiceId}`;
+        : String(idx + 1);
       const label = scene.add
         .text(x, y + 40, rawText, LABEL_STYLE)
         .setOrigin(0.5)

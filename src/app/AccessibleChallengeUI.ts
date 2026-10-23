@@ -1,5 +1,6 @@
 import type { ChallengePresentation, GameBridge, GameEventMap } from "../game/bridge";
-import { t } from "../i18n";
+import { currentLanguage, t } from "../i18n";
+import { getWordAudioEntry } from "../learning/literacy/audioRegistry";
 import { clear, el } from "./dom";
 
 /**
@@ -115,10 +116,13 @@ export class AccessibleChallengeUI {
       this.choices.querySelector<HTMLButtonElement>("button:not(:disabled)")?.focus();
       this.shouldFocusFirstChoice = false;
     }
-    this.onPrompt(this.promptText());
+    this.onPrompt(this.spokenPromptText());
   }
 
   handleFeedback(feedback: GameEventMap["feedback"]): void {
+    if (this.current?.meta?.reflectionPromptKey) {
+      this.reflectionTray.hidden = false;
+    }
     if (feedback.kind === "correct") {
       const focusWasInChoices = this.choices.contains(document.activeElement);
       this.feedback.dataset.kind = "correct";
@@ -195,6 +199,26 @@ export class AccessibleChallengeUI {
     return t(c.promptKey, { a, b });
   }
 
+  /**
+   * Produces TTS-safe narration text using `PHONEME_AUDIO_REGISTRY` so browser
+   * speech synthesis never reads raw hyphenated phoneme strings like "M - OO - N" aloud.
+   */
+  spokenPromptText(): string {
+    const c = this.current;
+    if (!c) return "";
+    if (c.operator === "phonics") {
+      const [wordId = 1] = c.operands;
+      const audioEntry = getWordAudioEntry(wordId, currentLanguage());
+      return t(c.promptKey, {
+        icon: "",
+        sounds: audioEntry.ttsSafeText,
+        clue: t(`challenge.phonics.word.${wordId}.clue`),
+        sentence: t(`challenge.phonics.word.${wordId}.sentence`),
+      });
+    }
+    return this.promptText();
+  }
+
   private formatObjectiveHint(level: 1 | 2 | 3, answerLabel: string): string {
     const c = this.current;
     if (!c) {
@@ -252,8 +276,9 @@ export class AccessibleChallengeUI {
       this.equation.textContent = t("challenge.pattern.equation", { a, b, c: third });
     } else if (c.operator === "phonics") {
       const [wordId = 1] = c.operands;
+      const isStoryPhonics = c.promptKey.includes("story");
       this.equation.textContent = t("challenge.phonics.equation", {
-        icon: t(`challenge.phonics.word.${wordId}.icon`),
+        icon: isStoryPhonics ? "📖" : t(`challenge.phonics.word.${wordId}.icon`),
       });
     } else if (
       c.operator === "comprehension" ||
@@ -263,8 +288,7 @@ export class AccessibleChallengeUI {
       c.operator === "science" ||
       c.operator === "workshop"
     ) {
-      const std = c.meta?.standardCode ?? "✦";
-      this.equation.textContent = `✦ ${std}`;
+      this.equation.textContent = t(`challenge.${c.operator}.equation`, { a: c.index });
     } else {
       this.equation.textContent = `${a} ${c.operator} ${b} = ?`;
     }
@@ -379,10 +403,10 @@ export class AccessibleChallengeUI {
       this.tileTray.hidden = true;
     }
 
-    // 4. Non-graded strategy reflection cards
+    // 4. Non-graded strategy reflection cards (remain hidden until after an answer is submitted)
     clear(this.reflectionTray);
+    this.reflectionTray.hidden = true;
     if (c.meta?.reflectionPromptKey) {
-      this.reflectionTray.hidden = false;
       const reflectionStatus = el("p", {
         className: "reflection-thanks",
         "data-testid": "reflection-thanks",
@@ -416,14 +440,18 @@ export class AccessibleChallengeUI {
         cardRow,
         reflectionStatus,
       );
-    } else {
-      this.reflectionTray.hidden = true;
     }
 
-    // 5. Grown-up / companion guidance tip
+    // 5. Grown-up / companion guidance tip (enriched with phoneme audio registry tips on phonics items)
     if (c.meta?.parentGuideKey) {
       this.parentGuideTip.hidden = false;
-      this.parentGuideTip.textContent = `💡 ${t(c.meta.parentGuideKey)}`;
+      if (c.operator === "phonics") {
+        const [wordId = 1] = c.operands;
+        const audioEntry = getWordAudioEntry(wordId, currentLanguage());
+        this.parentGuideTip.textContent = `💡 ${t(c.meta.parentGuideKey)} (${audioEntry.ipa}: ${audioEntry.parentPronunciationTip})`;
+      } else {
+        this.parentGuideTip.textContent = `💡 ${t(c.meta.parentGuideKey)}`;
+      }
     } else {
       this.parentGuideTip.hidden = true;
       this.parentGuideTip.textContent = "";

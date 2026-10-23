@@ -164,7 +164,7 @@ export const OBJECTIVES: Readonly<Record<ObjectiveId, ObjectiveInfo>> = {
   },
   "science-nature": {
     id: "science-nature",
-    standard: "1-LS1-1",
+    standard: "K-LS1-1 / 1-ESS1-2",
     ncStandard: "LS.1.1",
     domain: "science-knowledge",
     mechanic: "naturekeeper-quests",

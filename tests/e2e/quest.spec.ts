@@ -369,15 +369,18 @@ test("regional sanctuaries, Storykeeper reading vs. listening modality, assessme
   await expect(page.getByTestId("quest-complete")).toContainText("Balanced Alchemy Vial");
   await page.getByTestId("back-to-map").click();
 
-  // 3. Enter Storykeeper Hollow and verify reading vs. listening modality & non-graded strategy reflection
+  // 3. Enter Storykeeper Hollow and verify reading vs. listening modality & post-attempt strategy reflection
   await page.locator('[data-sanctuary="storykeeper-hollow"]').click();
   await expect(page.getByTestId("story-passage")).toBeVisible();
+  await expect(page.getByTestId("equation")).toHaveText("Story #1");
+  await expect(page.getByTestId("strategy-reflection")).toBeHidden();
   await page.getByTestId("listen-story-btn").click();
   await expect(page.getByTestId("listen-story-btn")).toHaveClass(/modality-active/);
   await page.getByTestId("read-myself-btn").click();
   await expect(page.getByTestId("read-myself-btn")).toHaveClass(/modality-active/);
 
-  // Non-graded strategy reflection card responds with positive acknowledgement
+  // Strategy reflection tray appears only after an attempt/hint submission
+  await page.getByTestId("ask-hint").click();
   await expect(page.getByTestId("strategy-reflection")).toBeVisible();
   await page.locator(".reflection-card").first().click();
   await expect(page.getByTestId("reflection-thanks")).toContainText("Thank you for sharing your strategy");

@@ -33,8 +33,6 @@ const FAMILY_BY_ID: Readonly<Record<ReasoningItemId, string>> = {
 export function createLogicalReasoning(rng: RandomSource, difficulty: Difficulty): ChallengeSpec {
   const pool = POOLS_BY_DIFFICULTY[difficulty];
   const itemId = pool[randomInt(rng, 0, pool.length - 1)] ?? 1;
-  const distractor1 = ((itemId % 8) + 1) as ReasoningItemId;
-  const distractor2 = (((itemId + 3) % 8) + 1) as ReasoningItemId;
 
   return {
     objectiveId: "logical-reasoning",
@@ -42,20 +40,20 @@ export function createLogicalReasoning(rng: RandomSource, difficulty: Difficulty
     promptKey: `challenge.reasoning.item.${itemId}.prompt`,
     operator: "reasoning",
     operands: [itemId, difficulty],
-    correctAnswer: itemId,
-    choiceKeyPrefix: "challenge.reasoning.item",
-    choices: buildChoices(rng, itemId, {
+    correctAnswer: 1,
+    choiceKeyPrefix: `challenge.reasoning.item.${itemId}.choice`,
+    choices: buildChoices(rng, 1, {
       min: 1,
-      max: 8,
-      likelyErrors: [distractor1, distractor2],
+      max: 3,
+      likelyErrors: [2, 3],
     }),
     meta: {
       itemFamily: FAMILY_BY_ID[itemId],
       standardCode: "MP.1",
       reflectionPromptKey: "workshop.reflection.whatHelped",
       distractorErrors: {
-        [distractor1]: "ignored-negative-clue-constraint",
-        [distractor2]: "reversed-step-order",
+        2: "ignored-negative-clue-constraint",
+        3: "reversed-step-order",
       },
     },
   };

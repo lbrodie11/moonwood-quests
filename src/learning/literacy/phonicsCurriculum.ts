@@ -16,6 +16,7 @@ export type PhonicsPatternCategory =
   | "r-controlled"
   | "es-silaba-abierta"
   | "es-silaba-trabada-cvc"
+  | "es-hiato-h-muda"
   | "es-grupo-consonantico-digrafo";
 
 export interface PhonicsWordEntry {
@@ -228,7 +229,7 @@ export const PHONICS_WORD_BANK: Readonly<Record<number, PhonicsWordEntry>> = {
     esSyllables: ["BÚ", "HO"],
     esPhonemes: ["/b/", "/u/", "/o/"],
     esGraphemeTiles: ["B", "Ú", "H", "O"],
-    esPattern: "es-grupo-consonantico-digrafo",
+    esPattern: "es-hiato-h-muda",
     esLessonUnit: "es-unit-3-digrafos",
     esDecodableSentence: "El búho sabio mira el bosque.",
   },
@@ -260,7 +261,7 @@ export const ENGLISH_PHONICS_UNITS: readonly PhonicsLessonUnit[] = [
     taughtGraphemes: ["c", "a", "t", "s", "u", "n", "f", "o", "x", "g", "e", "m"],
     heartWords: ["the", "a", "is", "in", "on"],
     wordIds: [10, 11, 9, 8],
-    mechanics: ["sound-recognition", "sound-blending", "phoneme-segmentation"],
+    mechanics: ["sound-recognition", "sound-blending"],
   },
   {
     id: "unit-2-blends-floss",
@@ -270,8 +271,8 @@ export const ENGLISH_PHONICS_UNITS: readonly PhonicsLessonUnit[] = [
     difficulty: 2,
     taughtGraphemes: ["b", "ll", "fr", "r", "st", "ar"],
     heartWords: ["the", "a", "is", "in", "on", "to", "at"],
-    wordIds: [12, 4, 2, 10, 11],
-    mechanics: ["sound-blending", "phoneme-segmentation", "word-building"],
+    wordIds: [12, 4, 2],
+    mechanics: ["phoneme-segmentation", "word-building"],
   },
   {
     id: "unit-3-vowel-teams",
@@ -281,8 +282,8 @@ export const ENGLISH_PHONICS_UNITS: readonly PhonicsLessonUnit[] = [
     difficulty: 3,
     taughtGraphemes: ["m", "oo", "tr", "ee", "k"],
     heartWords: ["the", "a", "is", "in", "on", "to", "by", "over"],
-    wordIds: [1, 5, 6, 4, 12],
-    mechanics: ["word-building", "decoding"],
+    wordIds: [1, 5, 6],
+    mechanics: ["decoding"],
   },
   {
     id: "unit-4-connected",
@@ -292,8 +293,8 @@ export const ENGLISH_PHONICS_UNITS: readonly PhonicsLessonUnit[] = [
     difficulty: 4,
     taughtGraphemes: ["ow", "l", "cr", "n"],
     heartWords: ["the", "a", "is", "in", "on", "to", "by", "over", "said"],
-    wordIds: [3, 7, 1, 5, 6, 2],
-    mechanics: ["decoding", "connected-reading"],
+    wordIds: [3, 7],
+    mechanics: ["connected-reading"],
   },
 ];
 
@@ -307,7 +308,7 @@ export const SPANISH_PHONICS_UNITS: readonly PhonicsLessonUnit[] = [
     taughtGraphemes: ["a", "e", "i", "o", "u", "l", "n", "g", "t", "r", "m"],
     heartWords: ["el", "la", "en"],
     wordIds: [1, 10, 4, 8],
-    mechanics: ["sound-recognition", "sound-blending", "phoneme-segmentation"],
+    mechanics: ["sound-recognition", "sound-blending"],
   },
   {
     id: "es-unit-2-trabadas",
@@ -317,19 +318,19 @@ export const SPANISH_PHONICS_UNITS: readonly PhonicsLessonUnit[] = [
     difficulty: 2,
     taughtGraphemes: ["s", "b", "c", "p", "á"],
     heartWords: ["el", "la", "en", "por", "da"],
-    wordIds: [11, 5, 12, 1, 10],
-    mechanics: ["sound-blending", "phoneme-segmentation", "word-building"],
+    wordIds: [11, 5, 12],
+    mechanics: ["phoneme-segmentation", "word-building"],
   },
   {
     id: "es-unit-3-digrafos",
     locale: "es",
-    title: "Unidad 3: Dígrafos (rr, h muda) y Grupos Consonánticos (br)",
+    title: "Unidad 3: Dígrafos (rr), Hiato con H Muda (búho) y Grupos Consonánticos (br)",
     prerequisites: ["es-unit-2-trabadas"],
     difficulty: 3,
     taughtGraphemes: ["z", "rr", "h", "ú", "br"],
     heartWords: ["el", "la", "en", "por", "lee"],
-    wordIds: [9, 3, 6, 11, 5],
-    mechanics: ["word-building", "decoding"],
+    wordIds: [9, 3, 6],
+    mechanics: ["decoding"],
   },
   {
     id: "es-unit-4-oraciones",
@@ -339,8 +340,8 @@ export const SPANISH_PHONICS_UNITS: readonly PhonicsLessonUnit[] = [
     difficulty: 4,
     taughtGraphemes: ["tr", "ll"],
     heartWords: ["el", "la", "una", "en", "arriba"],
-    wordIds: [2, 7, 9, 3, 6],
-    mechanics: ["decoding", "connected-reading"],
+    wordIds: [2, 7],
+    mechanics: ["connected-reading"],
   },
 ];
 
@@ -364,6 +365,24 @@ export function validatePhonicsCurriculum(): { valid: boolean; errors: string[] 
     }
     if (!entry.esDecodableSentence.toUpperCase().includes(entry.esWord)) {
       errors.push(`Spanish decodable sentence for ${entry.esWord} does not contain target word`);
+    }
+  }
+
+  for (const unit of ENGLISH_PHONICS_UNITS) {
+    for (const wid of unit.wordIds) {
+      const entry = PHONICS_WORD_BANK[wid];
+      if (entry?.enLessonUnit !== unit.id) {
+        errors.push(`English word ${wid} (${entry?.enWord}) has enLessonUnit=${entry?.enLessonUnit}, not ${unit.id}`);
+      }
+    }
+  }
+
+  for (const unit of SPANISH_PHONICS_UNITS) {
+    for (const wid of unit.wordIds) {
+      const entry = PHONICS_WORD_BANK[wid];
+      if (entry?.esLessonUnit !== unit.id) {
+        errors.push(`Spanish word ${wid} (${entry?.esWord}) has esLessonUnit=${entry?.esLessonUnit}, not ${unit.id}`);
+      }
     }
   }
 

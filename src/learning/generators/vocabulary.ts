@@ -33,8 +33,6 @@ const FAMILY_BY_ID: Readonly<Record<VocabularyItemId, string>> = {
 export function createVocabularyOral(rng: RandomSource, difficulty: Difficulty): ChallengeSpec {
   const pool = POOLS_BY_DIFFICULTY[difficulty];
   const itemId = pool[randomInt(rng, 0, pool.length - 1)] ?? 1;
-  const distractor1 = ((itemId % 8) + 1) as VocabularyItemId;
-  const distractor2 = (((itemId + 3) % 8) + 1) as VocabularyItemId;
 
   return {
     objectiveId: "vocabulary-oral",
@@ -42,20 +40,20 @@ export function createVocabularyOral(rng: RandomSource, difficulty: Difficulty):
     promptKey: `challenge.vocabulary.item.${itemId}.prompt`,
     operator: "vocabulary",
     operands: [itemId, difficulty],
-    correctAnswer: itemId,
-    choiceKeyPrefix: "challenge.vocabulary.item",
-    choices: buildChoices(rng, itemId, {
+    correctAnswer: 1,
+    choiceKeyPrefix: `challenge.vocabulary.item.${itemId}.choice`,
+    choices: buildChoices(rng, 1, {
       min: 1,
-      max: 8,
-      likelyErrors: [distractor1, distractor2],
+      max: 3,
+      likelyErrors: [2, 3],
     }),
     meta: {
       itemFamily: FAMILY_BY_ID[itemId],
       standardCode: "L.1.5",
       parentGuideKey: "challenge.vocabulary.parentOralPrompt",
       distractorErrors: {
-        [distractor1]: "category-or-attribute-mismatch",
-        [distractor2]: "opposite-meaning-confusion",
+        2: "category-or-attribute-mismatch",
+        3: "opposite-meaning-confusion",
       },
     },
   };

@@ -29,6 +29,7 @@ export interface QuestPlan {
   locale?: "en-US" | "es-US" | undefined;
   seenItemSignatures?: readonly string[] | undefined;
   placedSkills?: readonly ObjectiveId[] | undefined;
+  dueReviewSkills?: readonly ObjectiveId[] | undefined;
 }
 
 export interface QuestPhase {
@@ -173,7 +174,7 @@ export class QuestRunner {
       // During an independent check, do not reveal answers or hints; record the
       // attempt as an unsuccessful independent check item and advance gently.
       if (this.isIndependentAssessment()) {
-        const evidence = this.buildEvidenceRecord(challenge, false, true);
+        const evidence = this.buildEvidenceRecord(challenge, false, true, [errorTag]);
         this.evidenceLog.push(evidence);
         this.index += 1;
         const questComplete = this.index >= this.steps.length;
@@ -195,7 +196,8 @@ export class QuestRunner {
       }
 
       // Record the intermediate incorrect submission immediately (Phase 3.4)
-      const incorrectEvidence = this.buildEvidenceRecord(challenge, false, false);
+      // with ONLY the single errorTag for this specific wrong submission so errors are never double-counted.
+      const incorrectEvidence = this.buildEvidenceRecord(challenge, false, false, [errorTag]);
       this.evidenceLog.push(incorrectEvidence);
 
       return { kind: "incorrect", hintLevel, ruledOut: value };
@@ -222,7 +224,7 @@ export class QuestRunner {
       attempt,
     );
 
-    const completedEvidence = this.buildEvidenceRecord(challenge, true, true);
+    const completedEvidence = this.buildEvidenceRecord(challenge, true, true, []);
     this.evidenceLog.push(completedEvidence);
 
     this.index += 1;
@@ -244,6 +246,7 @@ export class QuestRunner {
     challenge: Challenge,
     correct: boolean,
     completed: boolean,
+    stepErrorTags: readonly string[] = [],
   ): EvidenceRecord {
     const nowMs = this.now();
     const revealedAnswer = this.hintCategories.includes("guided-solution");
@@ -272,7 +275,7 @@ export class QuestRunner {
       incorrectSubmissions: correct ? this.tries - 1 : this.tries,
       hintsRequested: this.hintsUsed,
       hintTypes: [...this.hintCategories],
-      errorClassifications: [...this.currentErrorTags],
+      errorClassifications: [...stepErrorTags],
       unseenItem: this.currentUnseen,
       isTransfer:
         challenge.stage === "transfer" || this.assessmentMode === "transfer-check",
@@ -292,9 +295,14 @@ export class QuestRunner {
     const phase = this.steps[this.index];
     if (!phase) throw new Error("No phase for challenge index");
 
-    const requestedObjective = this.plan.objectiveIds[
-      this.index % this.plan.objectiveIds.length
-    ] as ObjectiveId;
+    const dueInQuest = (this.plan.dueReviewSkills ?? []).filter((id) =>
+      this.plan.objectiveIds.includes(id),
+    );
+    const requestedObjective = (
+      dueInQuest.length > 0 && this.index < dueInQuest.length
+        ? dueInQuest[this.index]
+        : this.plan.objectiveIds[this.index % this.plan.objectiveIds.length]
+    ) as ObjectiveId;
 
     // Prerequisite scaffolding: if a child enters a quest whose target skill has
     // an unmet prerequisite during the guided phase:
@@ -338,15 +346,18 @@ export class QuestRunner {
       objectiveId === "reading-comprehension" ? "independent-reading" : "visual-dom";
     this.startedAt = this.now();
 
+    const isDueForReview = Boolean(this.plan.dueReviewSkills?.includes(objectiveId));
     const stage: LearningStage =
       phase.stage ??
-      (phase.kind === "guided"
-        ? this.index === 0
-          ? "modeling"
-          : "guided"
-        : phase.kind === "mini-boss"
-          ? "transfer"
-          : "independent");
+      (isDueForReview || this.assessmentMode === "delayed-retention"
+        ? "retention"
+        : phase.kind === "guided"
+          ? this.index === 0
+            ? "modeling"
+            : "guided"
+          : phase.kind === "mini-boss"
+            ? "transfer"
+            : "independent");
 
     return {
       ...spec,

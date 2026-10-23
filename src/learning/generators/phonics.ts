@@ -19,9 +19,9 @@ export const STORY_WORD_IDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 export type StoryWordId = (typeof STORY_WORD_IDS)[number];
 
 const PROMPT_KEY_BY_MECHANIC: Readonly<Record<PhonicsMechanic, string>> = {
-  "sound-recognition": "challenge.phonics.soundMatch",
+  "sound-recognition": "challenge.phonics.soundRecognition",
   "sound-blending": "challenge.phonics.soundMatch",
-  "phoneme-segmentation": "challenge.phonics.buildWord",
+  "phoneme-segmentation": "challenge.phonics.segmentWord",
   "word-building": "challenge.phonics.buildWord",
   decoding: "challenge.phonics.storyClue",
   "connected-reading": "challenge.phonics.storySentence",
@@ -54,7 +54,6 @@ export function createPhonicsWords(
   // Choose phonetically plausible distractors from the same or prior units
   const distractor1 = ((wordId % 12) + 1) as StoryWordId;
   const distractor2 = (((wordId + 2) % 12) + 1) as StoryWordId;
-  const tiles = languageScope === "es" ? entry.esGraphemeTiles : entry.enGraphemeTiles;
 
   return {
     objectiveId: "phonics-words",
@@ -71,10 +70,14 @@ export function createPhonicsWords(
     }),
     meta: {
       itemFamily: mechanic,
-      standardCode: mechanic === "sound-recognition" || mechanic === "sound-blending" || mechanic === "phoneme-segmentation" ? "RF.1.2" : "RF.1.3",
+      standardCode:
+        mechanic === "sound-recognition" ||
+        mechanic === "sound-blending" ||
+        mechanic === "phoneme-segmentation"
+          ? "RF.1.2"
+          : "RF.1.3",
       phonicsMechanic: mechanic,
       languageScope,
-      interactiveTiles: tiles,
       targetBlueprint: `${unit.id}:${mechanic}:${languageScope === "es" ? entry.esWord : entry.enWord}`,
       parentGuideKey: "challenge.phonics.parentPronunciationGuide",
       distractorErrors: {

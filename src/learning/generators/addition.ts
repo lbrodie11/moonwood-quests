@@ -31,7 +31,7 @@ export function additionFact(rng: RandomSource, difficulty: Difficulty): [number
   return [a, sum - a];
 }
 
-function classifyAdditionStrategy(a: number, b: number, difficulty: Difficulty): {
+function classifyAdditionProblemStructure(a: number, b: number, difficulty: Difficulty): {
   itemFamily: string;
   standardCode: string;
   targetBlueprint: string;
@@ -39,31 +39,29 @@ function classifyAdditionStrategy(a: number, b: number, difficulty: Difficulty):
   const sum = a + b;
   if (difficulty === 1 || sum <= 10) {
     return {
-      itemFamily: "fluency-within-10",
+      itemFamily: "within-10-sum",
       standardCode: "1.OA.C.6",
       targetBlueprint: `ten-frame:${a}+${b}=${sum}`,
     };
   }
   if (a === b || Math.abs(a - b) === 1) {
     return {
-      itemFamily: "doubles-near-doubles",
+      itemFamily: "doubles-and-near-doubles-fact",
       standardCode: "1.OA.C.6",
       targetBlueprint: `doubles:${Math.min(a, b)}+${Math.min(a, b)}${a === b ? "" : "+1"}`,
     };
   }
-  if (difficulty >= 3 && sum > 10 && Math.max(a, b) < 10) {
-    const needForTen = 10 - a;
-    const remainder = b - needForTen;
+  if (a === 10 || b === 10) {
     return {
-      itemFamily: "make-ten-addition",
-      standardCode: "1.OA.B.3",
-      targetBlueprint: `make-ten:${a}+${needForTen}=10, 10+${remainder}=${sum}`,
+      itemFamily: "ten-plus-ones-fact",
+      standardCode: "1.OA.C.6",
+      targetBlueprint: `ten-plus:${a}+${b}=${sum}`,
     };
   }
   return {
-    itemFamily: "counting-on-addition",
+    itemFamily: "crossing-10-teen-sum",
     standardCode: "1.OA.C.6",
-    targetBlueprint: `count-on:start-${Math.max(a, b)}-jump-${Math.min(a, b)}`,
+    targetBlueprint: `bridge-ten:${a}+${b}=${sum}`,
   };
 }
 
@@ -72,7 +70,7 @@ export function createAddition(rng: RandomSource, difficulty: Difficulty): Chall
   const [a, b] = additionFact(rng, difficulty);
   const answer = a + b;
   const wrongDiff = Math.abs(a - b);
-  const strategy = classifyAdditionStrategy(a, b, difficulty);
+  const structure = classifyAdditionProblemStructure(a, b, difficulty);
 
   return {
     objectiveId: "add-within-20",
@@ -87,9 +85,9 @@ export function createAddition(rng: RandomSource, difficulty: Difficulty): Chall
       likelyErrors: [answer - 1, answer + 1, wrongDiff],
     }),
     meta: {
-      itemFamily: strategy.itemFamily,
-      standardCode: strategy.standardCode,
-      targetBlueprint: strategy.targetBlueprint,
+      itemFamily: structure.itemFamily,
+      standardCode: structure.standardCode,
+      targetBlueprint: structure.targetBlueprint,
       reflectionPromptKey: "workshop.reflection.whatHelped",
       distractorErrors: {
         [answer - 1]: "off-by-one",
@@ -106,14 +104,13 @@ export function createSubtraction(rng: RandomSource, difficulty: Difficulty): Ch
   const whole = a + b;
   const wrongSum = Math.min(20, whole + a);
   const itemFamily =
-    difficulty === 1
-      ? "take-from-within-10"
-      : difficulty === 2
-        ? "think-addition-for-subtraction"
-        : difficulty === 3
-          ? "decompose-to-ten-subtraction"
-          : "compare-difference-within-20";
-  const standardCode = difficulty === 2 ? "1.OA.B.4" : "1.OA.C.6";
+    whole <= 10
+      ? "within-10-subtraction"
+      : a === 10 || b === 10
+        ? "teen-minus-ten-or-ones"
+        : whole > 10 && b < 10
+          ? "crossing-10-subtraction"
+          : "within-20-difference";
 
   return {
     objectiveId: "subtract-within-20",
@@ -129,8 +126,8 @@ export function createSubtraction(rng: RandomSource, difficulty: Difficulty): Ch
     }),
     meta: {
       itemFamily,
-      standardCode,
-      targetBlueprint: `think-addition:${a}+${b}=${whole}`,
+      standardCode: "1.OA.C.6",
+      targetBlueprint: `subtract:${whole}-${a}=${b}`,
       reflectionPromptKey: "workshop.reflection.anotherWay",
       distractorErrors: {
         [b - 1]: "off-by-one",

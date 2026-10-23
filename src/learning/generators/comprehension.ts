@@ -38,8 +38,6 @@ export function createReadingComprehension(
 ): ChallengeSpec {
   const pool = POOLS_BY_DIFFICULTY[difficulty];
   const itemId = pool[randomInt(rng, 0, pool.length - 1)] ?? 1;
-  const distractor1 = ((itemId % 8) + 1) as ComprehensionItemId;
-  const distractor2 = (((itemId + 2) % 8) + 1) as ComprehensionItemId;
 
   return {
     objectiveId: "reading-comprehension",
@@ -47,12 +45,12 @@ export function createReadingComprehension(
     promptKey: `challenge.comprehension.item.${itemId}.prompt`,
     operator: "comprehension",
     operands: [itemId, difficulty],
-    correctAnswer: itemId,
-    choiceKeyPrefix: "challenge.comprehension.item",
-    choices: buildChoices(rng, itemId, {
+    correctAnswer: 1,
+    choiceKeyPrefix: `challenge.comprehension.item.${itemId}.choice`,
+    choices: buildChoices(rng, 1, {
       min: 1,
-      max: 8,
-      likelyErrors: [distractor1, distractor2],
+      max: 3,
+      likelyErrors: [2, 3],
     }),
     meta: {
       itemFamily: FAMILY_BY_ID[itemId],
@@ -60,8 +58,8 @@ export function createReadingComprehension(
       passageKey: `challenge.comprehension.item.${itemId}.passage`,
       reflectionPromptKey: "workshop.reflection.whatHelped",
       distractorErrors: {
-        [distractor1]: "confused-story-detail-or-sequence",
-        [distractor2]: "reversed-cause-and-effect",
+        2: "confused-story-detail-or-sequence",
+        3: "reversed-cause-and-effect",
       },
     },
   };

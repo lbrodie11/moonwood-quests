@@ -33,8 +33,6 @@ const FAMILY_BY_ID: Readonly<Record<ScienceItemId, string>> = {
 export function createScienceNature(rng: RandomSource, difficulty: Difficulty): ChallengeSpec {
   const pool = POOLS_BY_DIFFICULTY[difficulty];
   const itemId = pool[randomInt(rng, 0, pool.length - 1)] ?? 1;
-  const distractor1 = ((itemId % 8) + 1) as ScienceItemId;
-  const distractor2 = (((itemId + 2) % 8) + 1) as ScienceItemId;
 
   return {
     objectiveId: "science-nature",
@@ -42,20 +40,20 @@ export function createScienceNature(rng: RandomSource, difficulty: Difficulty): 
     promptKey: `challenge.science.item.${itemId}.prompt`,
     operator: "science",
     operands: [itemId, difficulty],
-    correctAnswer: itemId,
-    choiceKeyPrefix: "challenge.science.item",
-    choices: buildChoices(rng, itemId, {
+    correctAnswer: 1,
+    choiceKeyPrefix: `challenge.science.item.${itemId}.choice`,
+    choices: buildChoices(rng, 1, {
       min: 1,
-      max: 8,
-      likelyErrors: [distractor1, distractor2],
+      max: 3,
+      likelyErrors: [2, 3],
     }),
     meta: {
       itemFamily: FAMILY_BY_ID[itemId],
-      standardCode: "1-LS1-1",
+      standardCode: itemId >= 5 && itemId <= 6 ? "1-ESS1-2" : "K-LS1-1",
       parentGuideKey: "challenge.science.familyHandsOnTip",
       distractorErrors: {
-        [distractor1]: "confused-story-magic-with-real-plant-need",
-        [distractor2]: "misclassified-nonliving-as-living",
+        2: "confused-story-magic-with-real-plant-need",
+        3: "misclassified-nonliving-as-living",
       },
     },
   };

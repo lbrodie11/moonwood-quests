@@ -28,10 +28,7 @@ export function createCompareLengths(rng: RandomSource, difficulty: Difficulty):
 
   if (difficulty <= 2) {
     const itemFamily =
-      difficulty === 1 ? "measure-end-to-end-unit-tiles" : "order-three-objects-by-length";
-    const standardCode = difficulty === 1 ? "1.MD.A.2" : "1.MD.A.1";
-    const thirdReference = Math.max(1, Math.min(firstPlank, secondPlank) - 1);
-    const orderedPlanks = [thirdReference, Math.min(firstPlank, secondPlank), Math.max(firstPlank, secondPlank)];
+      difficulty === 1 ? "join-unit-planks-within-8" : "join-unit-planks-within-12";
 
     return {
       objectiveId: "compare-lengths",
@@ -47,9 +44,8 @@ export function createCompareLengths(rng: RandomSource, difficulty: Difficulty):
       }),
       meta: {
         itemFamily,
-        standardCode,
-        interactiveTiles: orderedPlanks.map((len) => `plank-${len}`),
-        targetBlueprint: `end-to-end-no-gaps:${firstPlank}+${secondPlank}=${span} (ordered:${orderedPlanks.join("<")})`,
+        standardCode: "1.MD.A.2",
+        targetBlueprint: `end-to-end-no-gaps:${firstPlank}+${secondPlank}=${span}`,
         reflectionPromptKey: "workshop.reflection.bridgeWork",
         distractorErrors: {
           [span - 1]: "gap-or-overlap-miscount",
@@ -62,9 +58,8 @@ export function createCompareLengths(rng: RandomSource, difficulty: Difficulty):
 
   const itemFamily =
     difficulty === 3
-      ? "indirect-length-comparison-via-reference"
-      : "identify-invalid-gap-or-overlap-measurement";
-  const standardCode = difficulty === 3 ? "1.MD.A.1" : "1.MD.A.2";
+      ? "missing-plank-span-within-16"
+      : "missing-plank-span-within-20";
 
   return {
     objectiveId: "compare-lengths",
@@ -80,8 +75,7 @@ export function createCompareLengths(rng: RandomSource, difficulty: Difficulty):
     }),
     meta: {
       itemFamily,
-      standardCode,
-      interactiveTiles: [`reference-span-${span}`, `known-plank-${firstPlank}`, `unit-tile-1`],
+      standardCode: "1.MD.A.2",
       targetBlueprint: `align-left-no-gaps:span-${span}-minus-plank-${firstPlank}=missing-${secondPlank}`,
       reflectionPromptKey: "workshop.reflection.bridgeWork",
       distractorErrors: {

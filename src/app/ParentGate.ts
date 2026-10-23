@@ -206,7 +206,23 @@ export class ParentGate {
           activity: t(r.activityKey),
         })),
       };
-      status.dataset.exportPayload = JSON.stringify(report);
+      const serialized = JSON.stringify(report, null, 2);
+      status.dataset.exportPayload = serialized;
+      try {
+        const blob = new Blob([serialized], { type: "application/json" });
+        const objectUrl = URL.createObjectURL(blob);
+        const downloadLink = el("a", {
+          href: objectUrl,
+          download: "moonwood-learning-report.json",
+        });
+        downloadLink.style.display = "none";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        downloadLink.remove();
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+      } catch {
+        // Fallback when Blob/createObjectURL is unavailable in restricted environments
+      }
       status.textContent = t("parent.exported");
     });
 

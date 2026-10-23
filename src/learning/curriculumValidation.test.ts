@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
+import { loadQuests } from "../content";
 import en from "../i18n/locales/en-US.json";
 import es from "../i18n/locales/es-US.json";
+import { completeQuest, pruneEvidenceLogBySkill } from "../storage/progress";
+import { emptyProgress } from "../storage/ProgressRepository";
 import {
   advanceReviewSchedule,
   buildParentRecommendations,
@@ -301,15 +304,21 @@ describe("Phase 3 — Evidence Engine, Mastery Honesty, and Spaced Review", () =
     expect(summary.classification).toBe("legacy-unverified");
   });
 
-  it("advances spaced review intervals [0, 1, 3, 7, 14] and handles clock drift & long absences safely", () => {
+  it("advances spaced review intervals [0, 1, 3, 7, 14] across separate days without collapsing in one sitting", () => {
     expect(REVIEW_INTERVAL_DAYS).toEqual([0, 1, 3, 7, 14]);
     const t0 = new Date("2026-10-01T12:00:00.000Z");
     const s1 = advanceReviewSchedule(undefined, "add-within-20", true, t0);
     expect(s1.stageIndex).toBe(1);
 
-    // Backwards local clock jump does not crash or produce NaN
+    // Same-day repeat (or backwards local clock jump) does not collapse intervals in one sitting
+    const sameDay = new Date("2026-10-01T12:05:00.000Z");
+    expect(advanceReviewSchedule(s1, "add-within-20", true, sameDay).stageIndex).toBe(1);
     const backwards = new Date("2026-09-25T12:00:00.000Z");
-    const s2 = advanceReviewSchedule(s1, "add-within-20", true, backwards);
+    expect(advanceReviewSchedule(s1, "add-within-20", true, backwards).stageIndex).toBe(1);
+
+    // Next-day review advances to stage 2 (3-day interval)
+    const nextDay = new Date("2026-10-02T14:00:00.000Z");
+    const s2 = advanceReviewSchedule(s1, "add-within-20", true, nextDay);
     expect(s2.stageIndex).toBe(2);
 
     // Long absence (> 30 days) caps stage at 2 for gentle review refresh
@@ -318,6 +327,124 @@ describe("Phase 3 — Evidence Engine, Mastery Honesty, and Spaced Review", () =
 
     const due = getDueReviewSkills({ "add-within-20": s3 }, new Date("2026-11-20T12:00:00.000Z"));
     expect(due).toContain("add-within-20");
+  });
+
+  it("does not double-count a single wrong submission as a repeated misconception (Bug 1 regression)", () => {
+    const plan: QuestPlan = {
+      id: "whispering-gate",
+      objectiveIds: ["add-within-20"],
+      phases: [
+        { kind: "guided", count: 2 },
+        { kind: "independent", count: 3 },
+        { kind: "mini-boss", count: 1 },
+      ],
+    };
+    const runner = new QuestRunner(plan, {}, mulberry32(101));
+
+    // Make 1 wrong submission on the first item, then solve all 6 items correctly
+    const first = runner.current!;
+    const wrong = first.choices.find((c) => c !== first.correctAnswer)!;
+    expect(runner.submit(wrong).kind).toBe("incorrect");
+    expect(runner.submit(first.correctAnswer).kind).toBe("correct");
+
+    while (runner.current) {
+      expect(runner.submit(runner.current.correctAnswer).kind).toBe("correct");
+    }
+
+    const summary = evaluateSkillEvidence("add-within-20", runner.recordedEvidence);
+    const totalMisconceptionCount = Object.values(summary.detectedMisconceptions).reduce(
+      (sum, n) => sum + n,
+      0,
+    );
+    expect(totalMisconceptionCount).toBe(1);
+    expect(summary.classification).not.toBe("needs-support");
+  });
+
+  it("advances spaced review by only one stage per completed quest session (Bug 2 regression)", () => {
+    const plan: QuestPlan = {
+      id: "whispering-gate",
+      objectiveIds: ["add-within-20"],
+      phases: [
+        { kind: "guided", count: 2 },
+        { kind: "independent", count: 3 },
+        { kind: "mini-boss", count: 1 },
+      ],
+    };
+    const runner = new QuestRunner(plan, {}, mulberry32(202));
+    while (runner.current) {
+      runner.submit(runner.current.correctAnswer);
+    }
+
+    const questDef = loadQuests()[0]!;
+
+    const updated = completeQuest(
+      emptyProgress("whispering-gate", new Date("2026-10-23T11:00:00.000Z")),
+      questDef,
+      runner.masterySnapshot(),
+      new Date("2026-10-23T12:00:00.000Z"),
+      runner.recordedEvidence,
+      runner.knownItemSignatures,
+    );
+    expect(updated.reviewSchedule?.["add-within-20"]?.stageIndex).toBe(1);
+  });
+
+  it("supports delayed-retention assessment mode and records isRetention evidence", () => {
+    const retentionPlan: QuestPlan = {
+      id: "starlight-check",
+      objectiveIds: ["add-within-20"],
+      assessmentMode: "delayed-retention",
+      dueReviewSkills: ["add-within-20"],
+      phases: [{ kind: "independent", count: 2 }],
+    };
+    const runner = new QuestRunner(retentionPlan, {}, mulberry32(77));
+    while (runner.current) {
+      runner.submit(runner.current.correctAnswer);
+    }
+    expect(runner.recordedEvidence.every((r) => r.isRetention && r.stage === "retention")).toBe(true);
+  });
+
+  it("prunes evidence log per skill while preserving earlier skills and transfer/retention milestones (Bug 9 regression)", () => {
+    const earlySkillRecords: EvidenceRecord[] = [
+      makeRecord({
+        attemptId: "early-transfer",
+        skillId: "add-within-20",
+        itemId: "add-t",
+        isTransfer: true,
+      }),
+      makeRecord({
+        attemptId: "early-retention",
+        skillId: "add-within-20",
+        itemId: "add-r",
+        isRetention: true,
+      }),
+    ];
+    const noisySkillRecords: EvidenceRecord[] = Array.from({ length: 80 }, (_, i) =>
+      makeRecord({
+        attemptId: `sub-${i}`,
+        skillId: "subtract-within-20",
+        itemId: `sub:${i}`,
+      }),
+    );
+    const pruned = pruneEvidenceLogBySkill([...earlySkillRecords, ...noisySkillRecords], 30);
+    expect(pruned.filter((r) => r.skillId === "add-within-20")).toHaveLength(2);
+    expect(pruned.filter((r) => r.skillId === "subtract-within-20")).toHaveLength(30);
+  });
+
+  it("ensures spelling prompts never reveal the target letters in order and item 7 has a single valid choice (Bugs 3 & 4 regression)", () => {
+    for (let itemId = 1; itemId <= 4; itemId++) {
+      const promptEn = lookupKey(en, `challenge.spelling.item.${itemId}.prompt`) as string;
+      const answerEn = lookupKey(en, `challenge.spelling.item.${itemId}.choice.1.label`) as string;
+      expect(promptEn.toUpperCase()).not.toContain(`[${answerEn[0]}]`);
+      expect(promptEn.toUpperCase()).not.toContain(answerEn.toUpperCase());
+    }
+    // Item 7: only choice 1 starts with an uppercase letter AND ends with a period
+    const c1 = lookupKey(en, "challenge.spelling.item.7.choice.1.label") as string;
+    const c2 = lookupKey(en, "challenge.spelling.item.7.choice.2.label") as string;
+    const c3 = lookupKey(en, "challenge.spelling.item.7.choice.3.label") as string;
+    const isCapitalAndPeriod = (s: string) => /^[A-Z].*\.$/.test(s);
+    expect(isCapitalAndPeriod(c1)).toBe(true);
+    expect(isCapitalAndPeriod(c2)).toBe(false);
+    expect(isCapitalAndPeriod(c3)).toBe(false);
   });
 
   it("disables hints and advances calmly on wrong submissions during independent-check assessments", () => {

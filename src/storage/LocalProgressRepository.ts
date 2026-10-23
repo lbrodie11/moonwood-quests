@@ -58,7 +58,7 @@ export function migrateRawProgress(raw: unknown): unknown {
   };
 
   if (Array.isArray(record.evidenceLog)) {
-    result.evidenceLog = record.evidenceLog.slice(-250);
+    result.evidenceLog = record.evidenceLog.slice(-600);
   }
   if (record.reviewSchedule && typeof record.reviewSchedule === "object" && !Array.isArray(record.reviewSchedule)) {
     result.reviewSchedule = record.reviewSchedule;

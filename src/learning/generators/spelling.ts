@@ -13,17 +13,6 @@ const POOLS_BY_DIFFICULTY: Readonly<Record<Difficulty, readonly SpellingItemId[]
   4: [7, 8],
 };
 
-const TILES_BY_ID: Readonly<Record<SpellingItemId, readonly string[]>> = {
-  1: ["C", "A", "T"],
-  2: ["S", "U", "N"],
-  3: ["F", "R", "O", "G"],
-  4: ["B", "E", "LL"],
-  5: ["Pip", "sees", "the", "moon."],
-  6: ["Moss", "lights", "a", "lantern."],
-  7: ["Capital letter", "Spaces", "Period (.)"],
-  8: ["Beginning", "Middle", "Ending"],
-};
-
 const FAMILY_BY_ID: Readonly<Record<SpellingItemId, string>> = {
   1: "letter-tile-encoding",
   2: "letter-tile-encoding",
@@ -44,8 +33,6 @@ const FAMILY_BY_ID: Readonly<Record<SpellingItemId, string>> = {
 export function createSpellingWriting(rng: RandomSource, difficulty: Difficulty): ChallengeSpec {
   const pool = POOLS_BY_DIFFICULTY[difficulty];
   const itemId = pool[randomInt(rng, 0, pool.length - 1)] ?? 1;
-  const distractor1 = ((itemId % 8) + 1) as SpellingItemId;
-  const distractor2 = (((itemId + 2) % 8) + 1) as SpellingItemId;
 
   return {
     objectiveId: "spelling-writing",
@@ -53,21 +40,20 @@ export function createSpellingWriting(rng: RandomSource, difficulty: Difficulty)
     promptKey: `challenge.spelling.item.${itemId}.prompt`,
     operator: "spelling",
     operands: [itemId, difficulty],
-    correctAnswer: itemId,
-    choiceKeyPrefix: "challenge.spelling.item",
-    choices: buildChoices(rng, itemId, {
+    correctAnswer: 1,
+    choiceKeyPrefix: `challenge.spelling.item.${itemId}.choice`,
+    choices: buildChoices(rng, 1, {
       min: 1,
-      max: 8,
-      likelyErrors: [distractor1, distractor2],
+      max: 3,
+      likelyErrors: [2, 3],
     }),
     meta: {
       itemFamily: FAMILY_BY_ID[itemId],
       standardCode: itemId <= 4 ? "RF.1.3" : "L.1.2",
-      interactiveTiles: TILES_BY_ID[itemId],
       parentGuideKey: "challenge.spelling.paperCompanionPrompt",
       distractorErrors: {
-        [distractor1]: "vowel-or-letter-order-inversion",
-        [distractor2]: "missing-capital-or-end-punctuation",
+        2: "vowel-or-letter-order-inversion",
+        3: "missing-capital-or-end-punctuation",
       },
     },
   };

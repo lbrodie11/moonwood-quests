@@ -207,9 +207,11 @@
       "equation": "{{a}} → {{b}} → {{c}} → ?"
     },
     "phonics": {
+      "soundRecognition": "Escucha los sonidos inicial y final de {{icon}} ({{clue}}). ¿Qué palabra tiene esos sonidos?",
       "soundMatch": "Mira la pista {{icon}} ({{clue}}). ¡Une los sonidos y elige la palabra correcta!",
-      "buildWord": "¡Separa en sílabas y forma la palabra que significa: {{icon}} {{clue}}!",
-      "storyClue": "Lee la palabra para completar la página: {{icon}} \"{{sentence}}\"",
+      "segmentWord": "Cuenta cada sonido o sílaba de {{icon}} ({{clue}}). ¿Qué palabra tiene esas letras en orden?",
+      "buildWord": "¡Forma la palabra que significa {{icon}} ({{clue}}) uniendo cada sonido en orden!",
+      "storyClue": "Lee la oración del cuento y elige la palabra que completa el espacio: \"{{sentence}}\"",
       "storySentence": "Lectura conectada: \"{{sentence}}\" ({{clue}}). ¿Qué palabra completa la oración?",
       "parentPronunciationGuide": "Consejo para adultos: Modele los sonidos de cada letra y sílaba con claridad.",
       "equation": "{{icon}} = ?",
@@ -318,42 +320,82 @@
         "1": {
           "passage": "Pip el búho llevó un pequeño farol de bronce al puente de madera para que Musgo pudiera ver las piedras del camino.",
           "prompt": "¿Por qué llevó Pip el farol de bronce al puente?",
-          "label": "Para que Musgo pudiera ver las piedras del camino"
+          "label": "Para que Musgo pudiera ver las piedras del camino",
+          "choice": {
+            "1": { "label": "Para que Musgo pudiera ver las piedras del camino" },
+            "2": { "label": "Para cambiar el farol por gemas moradas" },
+            "3": { "label": "Porque el puente de madera estaba cerrado" }
+          }
         },
         "2": {
           "passage": "Zarza guardó sus brillantes gemas moradas en bolsas de diez antes de cerrar la bóveda de la cueva.",
           "prompt": "¿Quién guardó las gemas brillantes en bolsas de diez?",
-          "label": "Zarza el topo de cristal"
+          "label": "Zarza el topo de cristal",
+          "choice": {
+            "1": { "label": "Zarza el topo de cristal" },
+            "2": { "label": "Pip el búho nocturno" },
+            "3": { "label": "Una ardilla dormilona del bosque" }
+          }
         },
         "3": {
           "passage": "Primero, Luma limpió la portada del libro. Después, abrió el broche dorado. Al final, leyó el poema estelar.",
           "prompt": "¿Qué hizo Luma justo después de limpiar la portada del libro?",
-          "label": "Abrió el broche dorado"
+          "label": "Abrió el broche dorado",
+          "choice": {
+            "1": { "label": "Abrió el broche dorado" },
+            "2": { "label": "Cerró la biblioteca y se fue a dormir" },
+            "3": { "label": "Limpió la portada del libro por primera vez" }
+          }
         },
         "4": {
           "passage": "Primero, Aria plantó una pequeña semilla en la tierra. Luego, la regó cada mañana. Pronto brotó un tallo verde.",
           "prompt": "¿Qué pasó primero en el cuento del jardín de Aria?",
-          "label": "Aria plantó una pequeña semilla en la tierra"
+          "label": "Aria plantó una pequeña semilla en la tierra",
+          "choice": {
+            "1": { "label": "Aria plantó una pequeña semilla en la tierra" },
+            "2": { "label": "Primero brotó un tallo verde muy alto" },
+            "3": { "label": "Aria cosechó una canasta de manzanas" }
+          }
         },
         "5": {
           "passage": "Como una lluvia repentina mojó las tablas de madera, el puente quedó resbaloso y Luma esperó adentro.",
           "prompt": "¿Por qué esperó Luma adentro en lugar de cruzar el puente?",
-          "label": "La lluvia dejó resbalosas las tablas del puente"
+          "label": "La lluvia dejó resbalosas las tablas del puente",
+          "choice": {
+            "1": { "label": "La lluvia dejó resbalosas las tablas del puente" },
+            "2": { "label": "El sol calentó demasiado las piedras" },
+            "3": { "label": "Luma olvidó dónde estaba la biblioteca" }
+          }
         },
         "6": {
           "passage": "La campana de la torre estaba en silencio porque una ardilla dormilona había guardado piñas dentro de la campana.",
           "prompt": "¿Qué causó que la campana de la torre permaneciera en silencio?",
-          "label": "Había piñas guardadas dentro de la campana"
+          "label": "Había piñas guardadas dentro de la campana",
+          "choice": {
+            "1": { "label": "Había piñas guardadas dentro de la campana" },
+            "2": { "label": "El viento se llevó la campana al río" },
+            "3": { "label": "Nadie sabía subir las escaleras de la torre" }
+          }
         },
         "7": {
           "passage": "Astra se puso su capa tibia de lana, encendió la chimenea y miró caer copos blancos por la ventana.",
           "prompt": "¿En qué estación del año ocurre probablemente el cuento de Astra?",
-          "label": "Una noche nevada de invierno"
+          "label": "Una noche nevada de invierno",
+          "choice": {
+            "1": { "label": "Una noche nevada de invierno" },
+            "2": { "label": "Una tarde calurosa de verano" },
+            "3": { "label": "Una mañana tibia de primavera con flores" }
+          }
         },
         "8": {
           "passage": "Musgo preparó una regadera, una pala pequeña y semillas de girasol antes de caminar hacia el claro soleado.",
           "prompt": "¿Qué hará Musgo probablemente al llegar al claro soleado?",
-          "label": "Plantar y regar las semillas de girasol"
+          "label": "Plantar y regar las semillas de girasol",
+          "choice": {
+            "1": { "label": "Plantar y regar las semillas de girasol" },
+            "2": { "label": "Hacer un muñeco de nieve en la cueva" },
+            "3": { "label": "Guardar la regadera bajo llave en la bóveda" }
+          }
         }
       }
     },
@@ -363,35 +405,75 @@
       "item": {
         "1": {
           "prompt": "Musgo dice que el puente de piedra es RESISTENTE para el vagón pesado. ¿Qué significa RESISTENTE?",
-          "label": "Fuerte y firme, que no se rompe fácilmente"
+          "label": "Fuerte y firme, que no se rompe fácilmente",
+          "choice": {
+            "1": { "label": "Fuerte y firme, que no se rompe fácilmente" },
+            "2": { "label": "Blando y tembloroso como la gelatina" },
+            "3": { "label": "Tan pequeño que cabe en un bolsillo" }
+          }
         },
         "2": {
           "prompt": "Luma sostiene un farol de vidrio FRÁGIL con mucho cuidado. ¿Qué significa FRÁGIL?",
-          "label": "Delicado y fácil de quebrarse"
+          "label": "Delicado y fácil de quebrarse",
+          "choice": {
+            "1": { "label": "Delicado y fácil de quebrarse" },
+            "2": { "label": "Pesado y hecho de hierro macizo" },
+            "3": { "label": "Ruidoso como la campana de la torre" }
+          }
         },
         "3": {
           "prompt": "Clasificación: ¿Cuál grupo contiene SOLO animales vivos del bosque?",
-          "label": "Búho, rana y zorro"
+          "label": "Búho, rana y zorro",
+          "choice": {
+            "1": { "label": "Búho, rana y zorro" },
+            "2": { "label": "Farol, piedra y tabla de madera" },
+            "3": { "label": "Búho, llave de bronce y puente de piedra" }
+          }
         },
         "4": {
           "prompt": "Clasificación: ¿Cuál grupo contiene SOLO palabras del clima y del cielo?",
-          "label": "Nube de lluvia, brisa y luz del sol"
+          "label": "Nube de lluvia, brisa y luz del sol",
+          "choice": {
+            "1": { "label": "Nube de lluvia, brisa y luz del sol" },
+            "2": { "label": "Pala, estante de libros y vagón" },
+            "3": { "label": "Nube de lluvia, gema morada y capa de lana" }
+          }
         },
         "5": {
           "prompt": "Matices de significado: ¿Qué palabra significa casi lo MISMO que RESPLANDECIENTE?",
-          "label": "Que brilla con mucha luz"
+          "label": "Que brilla con mucha luz",
+          "choice": {
+            "1": { "label": "Que brilla con mucha luz" },
+            "2": { "label": "Escondido en la oscuridad" },
+            "3": { "label": "Congelado como el hielo" }
+          }
         },
         "6": {
           "prompt": "Opuestos (Antónimos): ¿Cuál es el opuesto de un árbol ANTIGUO y muy viejo?",
-          "label": "Un arbolito joven recién brotado"
+          "label": "Un arbolito joven recién brotado",
+          "choice": {
+            "1": { "label": "Un arbolito joven recién brotado" },
+            "2": { "label": "Un roble gigante aún más viejo" },
+            "3": { "label": "Un puente pesado de piedra" }
+          }
         },
         "7": {
           "prompt": "Conversación: ¿Por qué decimos que Zarza es COOPERATIVO cuando comparte sus bolsas de diez?",
-          "label": "Porque ayuda y trabaja en equipo con sus amigos"
+          "label": "Porque ayuda y trabaja en equipo con sus amigos",
+          "choice": {
+            "1": { "label": "Porque ayuda y trabaja en equipo con sus amigos" },
+            "2": { "label": "Porque esconde todos los cristales para él solo" },
+            "3": { "label": "Porque duerme todo el día en la cueva" }
+          }
         },
         "8": {
           "prompt": "Conversación: Si Aria OBSERVA las estrellas por el telescopio, ¿qué está haciendo?",
-          "label": "Mirando con mucha atención para notar detalles"
+          "label": "Mirando con mucha atención para notar detalles",
+          "choice": {
+            "1": { "label": "Mirando con mucha atención para notar detalles" },
+            "2": { "label": "Cerrando los ojos para tomar una siesta" },
+            "3": { "label": "Corriendo rápido por el puente" }
+          }
         }
       }
     },
@@ -400,36 +482,76 @@
       "paperCompanionPrompt": "Compañero de Papel y Lápiz: ¡Toma un lápiz y papel real para escribir esta palabra u oración!",
       "item": {
         "1": {
-          "prompt": "Usa las fichas [G] [A] [T] [O] para formar la palabra de la mascota que ronronea:",
-          "label": "GATO (G - A - T - O)"
+          "prompt": "Escucha las dos sílabas de la mascota que ronronea (🐱). ¿Cuál palabra tiene las letras en el orden correcto?",
+          "label": "GATO",
+          "choice": {
+            "1": { "label": "GATO" },
+            "2": { "label": "GTAO" },
+            "3": { "label": "TOGA" }
+          }
         },
         "2": {
-          "prompt": "Usa las fichas [S] [O] [L] para formar la palabra del astro que ilumina el día:",
-          "label": "SOL (S - O - L)"
+          "prompt": "Escucha los tres sonidos del astro que ilumina el día (☀️). ¿Cuál escritura es la correcta?",
+          "label": "SOL",
+          "choice": {
+            "1": { "label": "SOL" },
+            "2": { "label": "SLO" },
+            "3": { "label": "OSL" }
+          }
         },
         "3": {
-          "prompt": "Une las fichas [R] [A] [N] [A] para formar la palabra de quien salta en el estanque:",
-          "label": "RANA (R - A - N - A)"
+          "prompt": "Une las dos sílabas de quien salta en el estanque (🐸). ¿Cuál palabra está bien escrita?",
+          "label": "RANA",
+          "choice": {
+            "1": { "label": "RANA" },
+            "2": { "label": "RNA" },
+            "3": { "label": "ARNA" }
+          }
         },
         "4": {
-          "prompt": "Usa las fichas [L] [U] [N] [A] para formar lo que brilla de noche:",
-          "label": "LUNA (L - U - N - A)"
+          "prompt": "Une las dos sílabas de lo que brilla de noche en el cielo (🌙):",
+          "label": "LUNA",
+          "choice": {
+            "1": { "label": "LUNA" },
+            "2": { "label": "LNUA" },
+            "3": { "label": "ULNA" }
+          }
         },
         "5": {
           "prompt": "Orden de la oración: Ordena las palabras [la] [ve] [Pip] [luna.] correctamente:",
-          "label": "Pip ve la luna."
+          "label": "Pip ve la luna.",
+          "choice": {
+            "1": { "label": "Pip ve la luna." },
+            "2": { "label": "La luna ve Pip." },
+            "3": { "label": "Ve Pip luna la." }
+          }
         },
         "6": {
           "prompt": "Orden de la oración: Ordena las palabras [un] [Musgo] [farol.] [enciende] correctamente:",
-          "label": "Musgo enciende un farol."
+          "label": "Musgo enciende un farol.",
+          "choice": {
+            "1": { "label": "Musgo enciende un farol." },
+            "2": { "label": "Enciende Musgo farol un." },
+            "3": { "label": "Un farol enciende Musgo." }
+          }
         },
         "7": {
-          "prompt": "Escritura: ¿Cuál oración empieza con letra mayúscula y termina con un punto?",
-          "label": "Luma lee un libro."
+          "prompt": "Escritura: ¿Cuál oración tiene TANTO letra mayúscula al principio COMO un punto al final?",
+          "label": "Luma lee un libro.",
+          "choice": {
+            "1": { "label": "Luma lee un libro." },
+            "2": { "label": "luma lee un libro." },
+            "3": { "label": "Luma lee un libro" }
+          }
         },
         "8": {
           "prompt": "Inicio de cuento: ¿Cuál oración comienza mejor un cuento sobre una semilla estelar?",
-          "label": "Una noche tranquila, Aria encontró una semilla brillante."
+          "label": "Una noche tranquila, Aria encontró una semilla brillante.",
+          "choice": {
+            "1": { "label": "Una noche tranquila, Aria encontró una semilla brillante." },
+            "2": { "label": "Y así terminó para siempre el largo viaje." },
+            "3": { "label": "semilla brillante encontró Aria" }
+          }
         }
       }
     },
@@ -438,35 +560,75 @@
       "item": {
         "1": {
           "prompt": "Deducción por pistas: La llave de la puerta NO es redonda y NO es roja. ¿Cuál llave abre la puerta?",
-          "label": "La llave cuadrada y azul"
+          "label": "La llave cuadrada y azul",
+          "choice": {
+            "1": { "label": "La llave cuadrada y azul" },
+            "2": { "label": "La llave redonda y azul" },
+            "3": { "label": "La llave cuadrada y roja" }
+          }
         },
         "2": {
           "prompt": "Deducción por pistas: La gema de Zarza tiene 3 lados rectos y es dorada. ¿Cuál gema es?",
-          "label": "La gema triangular dorada"
+          "label": "La gema triangular dorada",
+          "choice": {
+            "1": { "label": "La gema triangular dorada" },
+            "2": { "label": "La gema cuadrada dorada (4 lados)" },
+            "3": { "label": "La gema triangular morada" }
+          }
         },
         "3": {
           "prompt": "Planificar pasos: Para cruzar un barranco oscuro con el puente roto, ¿cuál es el mejor plan?",
-          "label": "Primero medir y colocar la tabla, luego encender el farol y cruzar"
+          "label": "Primero medir y colocar la tabla, luego encender el farol y cruzar",
+          "choice": {
+            "1": { "label": "Primero medir y colocar la tabla, luego encender el farol y cruzar" },
+            "2": { "label": "Cruzar el barranco antes de poner la tabla de madera" },
+            "3": { "label": "Apagar el farol y tirar la tabla al río" }
+          }
         },
         "4": {
           "prompt": "Planificar pasos: Luma quiere hornear pan de bayas. ¿Qué orden tiene sentido?",
-          "label": "Mezclar la masa, hornearla y luego cortar el pan tibio"
+          "label": "Mezclar la masa, hornearla y luego cortar el pan tibio",
+          "choice": {
+            "1": { "label": "Mezclar la masa, hornearla y luego cortar el pan tibio" },
+            "2": { "label": "Cortar el pan primero y después mezclar la harina" },
+            "3": { "label": "Hornear el molde vacío antes de preparar la masa" }
+          }
         },
         "5": {
           "prompt": "Probar una idea: Aria probó una tabla de 4 losas en un espacio de 7 losas y quedó corta. ¿Qué debe hacer?",
-          "label": "Añadir una tabla de 3 losas para que 4 + 3 = 7 losas"
+          "label": "Añadir una tabla de 3 losas para que 4 + 3 = 7 losas",
+          "choice": {
+            "1": { "label": "Añadir una tabla de 3 losas para que 4 + 3 = 7 losas" },
+            "2": { "label": "Usar una tabla aún más corta de 2 losas" },
+            "3": { "label": "Quitar 1 losa para que mida solo 3 losas" }
+          }
         },
         "6": {
           "prompt": "Regla oculta: Las gemas azules dan 2 de magia y las doradas dan 5. ¿Cómo logras 7 de magia con dos gemas?",
-          "label": "Usar 1 gema azul (2) y 1 gema dorada (5)"
+          "label": "Usar 1 gema azul (2) y 1 gema dorada (5)",
+          "choice": {
+            "1": { "label": "Usar 1 gema azul (2) y 1 gema dorada (5)" },
+            "2": { "label": "Usar 2 gemas azules (2 + 2 = 4)" },
+            "3": { "label": "Usar 2 gemas doradas (5 + 5 = 10)" }
+          }
         },
         "7": {
           "prompt": "Elegir representación: ¿Qué herramienta muestra mejor por qué 8 + 5 es igual a 10 + 3?",
-          "label": "Un tablero de diez donde 8 más 2 completan 10 y quedan 3"
+          "label": "Un tablero de diez donde 8 más 2 completan 10 y quedan 3",
+          "choice": {
+            "1": { "label": "Un tablero de diez donde 8 más 2 completan 10 y quedan 3" },
+            "2": { "label": "Una página de cuento sin números ni fichas" },
+            "3": { "label": "Un dado que solo llega del 1 al 6" }
+          }
         },
         "8": {
           "prompt": "Estrategia: Si olvidas cuánto es 13 - 8, ¿cómo te ayuda la suma a encontrar la respuesta?",
-          "label": "Pensar: ¿8 más qué número forma 13? (8 + 5 = 13)"
+          "label": "Pensar: ¿8 más qué número forma 13? (8 + 5 = 13)",
+          "choice": {
+            "1": { "label": "Pensar: ¿8 más qué número forma 13? (8 + 5 = 13)" },
+            "2": { "label": "Sumar 13 + 8 para obtener 21" },
+            "3": { "label": "Adivinar cualquier número sin comprobar el total" }
+          }
         }
       }
     },
@@ -476,35 +638,75 @@
       "item": {
         "1": {
           "prompt": "Vivo o no vivo: ¿Qué elemento del Bosque Susurrante es un SER VIVO porque crece y necesita agua?",
-          "label": "Un brote verde de roble"
+          "label": "Un brote verde de roble",
+          "choice": {
+            "1": { "label": "Un brote verde de roble" },
+            "2": { "label": "Una piedra gris y lisa del río" },
+            "3": { "label": "Un farol de bronce en un poste" }
+          }
         },
         "2": {
           "prompt": "Hábitats animales: ¿Dónde encuentra una rana real el agua y el refugio que necesita para vivir?",
-          "label": "En un estanque húmedo con hojas y juncos"
+          "label": "En un estanque húmedo con hojas y juncos",
+          "choice": {
+            "1": { "label": "En un estanque húmedo con hojas y juncos" },
+            "2": { "label": "En una duna de arena seca del desierto" },
+            "3": { "label": "Dentro de un estante de libros cerrado" }
+          }
         },
         "3": {
           "prompt": "Necesidades de las plantas: ¿Qué necesitan las plantas reales del ambiente para crecer sanas?",
-          "label": "Agua, luz del sol, aire y tierra"
+          "label": "Agua, luz del sol, aire y tierra",
+          "choice": {
+            "1": { "label": "Agua, luz del sol, aire y tierra" },
+            "2": { "label": "Solo oscuridad y canicas de vidrio" },
+            "3": { "label": "Capas de lana tibia y llaves de bronce" }
+          }
         },
         "4": {
           "prompt": "Ciclo de vida de la planta: ¿Cuál es el orden correcto en que crece una planta con flor?",
-          "label": "Semilla → raíz y brote → tallo y hojas → flor"
+          "label": "Semilla → raíz y brote → tallo y hojas → flor",
+          "choice": {
+            "1": { "label": "Semilla → raíz y brote → tallo y hojas → flor" },
+            "2": { "label": "Flor → semilla → tallo alto → brote pequeño" },
+            "3": { "label": "Hojas → piedra seca → semilla → raíz" }
+          }
         },
         "5": {
           "prompt": "Propiedades de los materiales: ¿Qué material es firme y no se deshace con la lluvia para hacer un puente?",
-          "label": "Tablas sólidas de madera de roble"
+          "label": "Tablas sólidas de madera de roble",
+          "choice": {
+            "1": { "label": "Tablas sólidas de madera de roble" },
+            "2": { "label": "Hojas delgadas de papel de seda" },
+            "3": { "label": "Terrones de azúcar que se derriten en el agua" }
+          }
         },
         "6": {
           "prompt": "Estaciones y luz del día: ¿En qué estación del año tenemos los días más largos y cálidos?",
-          "label": "El verano"
+          "label": "El verano",
+          "choice": {
+            "1": { "label": "El verano" },
+            "2": { "label": "El invierno" },
+            "3": { "label": "La medianoche" }
+          }
         },
         "7": {
           "prompt": "Magia vs. Ciencia Real: En el cuento, Musgo hace brillar las flores cantando. En la CIENCIA REAL, ¿cómo forman semillas las flores?",
-          "label": "Las abejas y el viento llevan polen entre las flores"
+          "label": "Las abejas y el viento llevan polen entre las flores",
+          "choice": {
+            "1": { "label": "Las abejas y el viento llevan polen entre las flores" },
+            "2": { "label": "Los duendes tocan cada pétalo con una varita de cristal" },
+            "3": { "label": "Las flores convierten piedras en semillas al cantar" }
+          }
         },
         "8": {
           "prompt": "Magia vs. Ciencia Real: En el cuento, los cristales iluminan la cueva. En la CIENCIA REAL, ¿por qué vemos brillar la Luna?",
-          "label": "La luz del Sol ilumina la Luna y se refleja hacia nuestros ojos"
+          "label": "La luz del Sol ilumina la Luna y se refleja hacia nuestros ojos",
+          "choice": {
+            "1": { "label": "La luz del Sol ilumina la Luna y se refleja hacia nuestros ojos" },
+            "2": { "label": "Los búhos cuelgan faroles de bronce en la Luna cada noche" },
+            "3": { "label": "La Luna está hecha de leña encendida" }
+          }
         }
       }
     },
@@ -513,35 +715,75 @@
       "item": {
         "1": {
           "prompt": "Taller de Puentes: El arroyo mide 8 losas lunares. ¿Qué par de tablas cubre las 8 losas sin espacios?",
-          "label": "Una tabla de 5 losas + una de 3 losas (o dos de 4 losas)"
+          "label": "Una tabla de 5 losas + una de 3 losas (o dos de 4 losas)",
+          "choice": {
+            "1": { "label": "Una tabla de 5 losas + una de 3 losas (8 losas)" },
+            "2": { "label": "Una tabla de 4 losas + una de 2 losas (6 losas)" },
+            "3": { "label": "Una tabla de 3 losas + una de 2 losas (5 losas)" }
+          }
         },
         "2": {
           "prompt": "Taller de Puentes: El cañón mide 10 losas lunares. ¿Qué diseño cubre las 10 losas completas?",
-          "label": "Una tabla de 6 losas + una de 4 losas (o dos de 5 losas)"
+          "label": "Una tabla de 6 losas + una de 4 losas (o dos de 5 losas)",
+          "choice": {
+            "1": { "label": "Una tabla de 6 losas + una de 4 losas (10 losas)" },
+            "2": { "label": "Una tabla de 5 losas + una de 3 losas (8 losas)" },
+            "3": { "label": "Dos tablas de 3 losas (6 losas)" }
+          }
         },
         "3": {
           "prompt": "Taller de Hábitats: Diseña un hábitat para una rana del bosque. ¿Qué tres elementos debes incluir?",
-          "label": "Agua fresca del estanque, un tronco con sombra e insectos"
+          "label": "Agua fresca del estanque, un tronco con sombra e insectos",
+          "choice": {
+            "1": { "label": "Agua fresca del estanque, un tronco con sombra e insectos" },
+            "2": { "label": "Arena seca, una estufa caliente y rejas de hierro" },
+            "3": { "label": "Solo piedra seca sin agua ni alimento" }
+          }
         },
         "4": {
           "prompt": "Taller de Hábitats: Diseña un refugio seguro para el búho Pip. ¿Qué diseño funciona mejor?",
-          "label": "Un hueco alto y seco en el árbol con musgo suave"
+          "label": "Un hueco alto y seco en el árbol con musgo suave",
+          "choice": {
+            "1": { "label": "Un hueco alto y seco en el árbol con musgo suave" },
+            "2": { "label": "Una cueva bajo el agua en el fondo del estanque" },
+            "3": { "label": "Una vía ruidosa de vagones bajo tierra" }
+          }
         },
         "5": {
           "prompt": "Taller de Torres: Construye una Torre Estelar estable usando tres figuras de abajo hacia arriba:",
-          "label": "Base cuadrada ancha → columna rectangular → techo triangular"
+          "label": "Base cuadrada ancha → columna rectangular → techo triangular",
+          "choice": {
+            "1": { "label": "Base cuadrada ancha → columna rectangular → techo triangular" },
+            "2": { "label": "Triángulo en punta abajo → cuadrado ancho en equilibrio" },
+            "3": { "label": "Esfera rodante abajo → columna alta encima" }
+          }
         },
         "6": {
           "prompt": "Taller de Símbolos: ¿Cómo puedes formar un hexágono de 6 lados usando figuras más pequeñas?",
-          "label": "Uniendo 2 trapecios rojos o 6 triángulos iguales"
+          "label": "Uniendo 2 trapecios rojos o 6 triángulos iguales",
+          "choice": {
+            "1": { "label": "Uniendo 2 trapecios o 6 triángulos iguales" },
+            "2": { "label": "Usando 1 círculo y 1 óvalo curvo" },
+            "3": { "label": "Uniendo 2 cuadrados para hacer un rectángulo de 4 lados" }
+          }
         },
         "7": {
           "prompt": "Taller de Patrones: Crea un patrón repetitivo A-A-B de faroles a lo largo del sendero:",
-          "label": "Estrella, Estrella, Luna — Estrella, Estrella, Luna"
+          "label": "Estrella, Estrella, Luna — Estrella, Estrella, Luna",
+          "choice": {
+            "1": { "label": "Estrella, Estrella, Luna — Estrella, Estrella, Luna" },
+            "2": { "label": "Estrella, Luna, Estrella — Estrella, Luna, Estrella" },
+            "3": { "label": "Estrella, Estrella, Estrella — Estrella, Estrella, Estrella" }
+          }
         },
         "8": {
           "prompt": "Taller de Escenas: Construye una escena completa con personaje, lugar y una meta de ayuda:",
-          "label": "Aria y Pip en el Puente del Barranco midiendo tablas para ayudar a Luma"
+          "label": "Aria y Pip en el Puente del Barranco midiendo tablas para ayudar a Luma",
+          "choice": {
+            "1": { "label": "Aria y Pip en el Puente del Barranco midiendo tablas para ayudar a Luma" },
+            "2": { "label": "Una pared vacía sin personajes y sin ninguna acción" },
+            "3": { "label": "Una lista de números sueltos sin lugar ni meta" }
+          }
         }
       }
     }

@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import { findQuestOrSanctuary } from "../../content";
 import type { QuestDefinition } from "../../content/schemas";
 import { currentLanguage } from "../../i18n";
+import { getDueReviewSkills } from "../../learning/adaptation/spacedReview";
 import { QuestRunner, type HintLevel } from "../../learning/session";
 import { completeQuest, updateMastery } from "../../storage/progress";
 import type { GameEventMap } from "../bridge";
@@ -66,13 +67,19 @@ export class ForestQuestScene extends Phaser.Scene {
     this.quest = quest;
     this.audio = new AudioSystem(() => this.services.settings().sound);
     const progress = this.services.progress.current;
+    const dueReviewSkills = getDueReviewSkills(progress.reviewSchedule ?? {});
+    const effectiveAssessmentMode =
+      quest.assessmentMode === "independent-check" && dueReviewSkills.length > 0
+        ? "delayed-retention"
+        : (quest.assessmentMode ?? "standard");
     this.runner = new QuestRunner(
       {
         ...quest,
-        assessmentMode: quest.assessmentMode ?? "standard",
+        assessmentMode: effectiveAssessmentMode,
         locale: currentLanguage(),
         seenItemSignatures: progress.seenItemSignatures,
         placedSkills: progress.placedSkills,
+        dueReviewSkills,
       },
       progress.objectives,
       this.services.rngForQuest(quest.id),

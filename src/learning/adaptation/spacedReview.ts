@@ -36,15 +36,23 @@ export function advanceReviewSchedule(
 ): ReviewScheduleEntry {
   const nowMs = now.getTime();
   const prevMs = previous ? Date.parse(previous.lastPracticedIso) : nowMs;
+  const rawDeltaMs = Number.isFinite(prevMs) ? nowMs - prevMs : 0;
   // Guard against backwards local system clocks or invalid timestamps
-  const safeElapsedMs = Number.isFinite(prevMs) ? Math.max(0, nowMs - prevMs) : 0;
+  const safeElapsedMs = Math.max(0, rawDeltaMs);
   const longAbsence = safeElapsedMs > 30 * DAY_MS;
+  const sameDayRepeat =
+    previous !== undefined &&
+    previous.stageIndex >= 1 &&
+    safeElapsedMs < 0.5 * DAY_MS;
 
   let nextStageIndex: 0 | 1 | 2 | 3 | 4 = previous?.stageIndex ?? 0;
 
   if (!independentSuccess) {
     // Gentle step back by 1 interval for extra review — never resets to zero punitively
     nextStageIndex = Math.max(0, nextStageIndex - 1) as 0 | 1 | 2 | 3 | 4;
+  } else if (sameDayRepeat) {
+    // Prevent a single sitting or same-day repeat from collapsing the multi-day review ladder
+    nextStageIndex = previous.stageIndex;
   } else if (longAbsence) {
     // Returning after a long absence refreshes from at most stage 2 (3 days)
     nextStageIndex = Math.min(2, nextStageIndex + 1) as 0 | 1 | 2 | 3 | 4;

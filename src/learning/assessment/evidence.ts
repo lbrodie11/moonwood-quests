@@ -133,8 +133,10 @@ export function evaluateSkillEvidence(
   let independentReadingCount = 0;
 
   for (const r of relevant) {
-    for (const err of r.errorClassifications) {
-      misconceptions[err] = (misconceptions[err] ?? 0) + 1;
+    if (!r.correct) {
+      for (const err of r.errorClassifications) {
+        misconceptions[err] = (misconceptions[err] ?? 0) + 1;
+      }
     }
   }
 

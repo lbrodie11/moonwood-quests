@@ -26,16 +26,16 @@ export const LEARNING_STAGES: readonly LearningStage[] = [
 
 const ITEM_FAMILIES_BY_OBJECTIVE: Readonly<Record<ObjectiveId, readonly string[]>> = {
   "add-within-20": [
-    "fluency-within-10",
-    "counting-on-addition",
-    "doubles-near-doubles",
-    "make-ten-addition",
+    "within-10-sum",
+    "doubles-and-near-doubles-fact",
+    "ten-plus-ones-fact",
+    "crossing-10-teen-sum",
   ],
   "subtract-within-20": [
-    "take-from-within-10",
-    "think-addition-for-subtraction",
-    "decompose-to-ten-subtraction",
-    "compare-difference-within-20",
+    "within-10-subtraction",
+    "teen-minus-ten-or-ones",
+    "crossing-10-subtraction",
+    "within-20-difference",
   ],
   "unknown-number-equations": [
     "missing-second-addend",
@@ -51,16 +51,16 @@ const ITEM_FAMILIES_BY_OBJECTIVE: Readonly<Record<ObjectiveId, readonly string[]
     "extended-bundle-count-above-99",
   ],
   "compare-lengths": [
-    "measure-end-to-end-unit-tiles",
-    "order-three-objects-by-length",
-    "indirect-length-comparison-via-reference",
-    "identify-invalid-gap-or-overlap-measurement",
+    "join-unit-planks-within-8",
+    "join-unit-planks-within-12",
+    "missing-plank-span-within-16",
+    "missing-plank-span-within-20",
   ],
   "compose-shapes": [
-    "identify-defining-vs-nondefining-attributes",
-    "compose-2d-composite-shape",
-    "partition-halves-and-fourths",
-    "interactive-sigil-tile-placement",
+    "compose-triangles-and-rhombuses",
+    "compose-triangles-and-squares",
+    "compose-multi-piece-sigil",
+    "compose-symmetric-star-sigil",
   ],
   "phonics-words": [
     "sound-recognition",
@@ -195,6 +195,18 @@ export function validateSkillGraph(): { valid: boolean; errors: string[] } {
     }
     if (def.standards.length === 0) {
       errors.push(`Skill ${id} has no mapped standards`);
+    }
+    for (const std of def.standards) {
+      for (const taskType of std.supportedTaskTypes) {
+        const coveredBySomeLinkedSkill = std.skillsAddressed.some((linkedId) =>
+          SKILLS_GRAPH[linkedId]?.itemFamilies.includes(taskType),
+        );
+        if (!coveredBySomeLinkedSkill) {
+          errors.push(
+            `Standard ${std.id} taskType '${taskType}' is not present in any linked skill's itemFamilies`,
+          );
+        }
+      }
     }
     for (const prereq of def.prerequisites) {
       if (!validIds.has(prereq)) {

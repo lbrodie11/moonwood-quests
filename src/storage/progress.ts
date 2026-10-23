@@ -7,8 +7,47 @@ import type { PlayerProgress } from "./ProgressRepository";
 
 const union = (a: readonly string[], b: readonly string[]) => [...new Set([...a, ...b])];
 
-const MAX_EVIDENCE_RECORDS = 250;
+const MAX_EVIDENCE_PER_SKILL = 40;
 const MAX_SEEN_SIGNATURES = 500;
+
+/**
+ * Retains up to `MAX_EVIDENCE_PER_SKILL` records per skill so practicing one
+ * skill never evicts another skill's mastery, transfer, or retention evidence.
+ */
+export function pruneEvidenceLogBySkill<
+  T extends {
+    attemptId: string;
+    skillId: ObjectiveId;
+    isTransfer: boolean;
+    isRetention: boolean;
+  },
+>(records: readonly T[], maxPerSkill: number = MAX_EVIDENCE_PER_SKILL): T[] {
+  const bySkill = new Map<ObjectiveId, T[]>();
+  for (const r of records) {
+    const list = bySkill.get(r.skillId) ?? [];
+    list.push(r);
+    bySkill.set(r.skillId, list);
+  }
+
+  const keptIds = new Set<string>();
+  for (const list of bySkill.values()) {
+    if (list.length <= maxPerSkill) {
+      for (const r of list) keptIds.add(r.attemptId);
+      continue;
+    }
+    // Always preserve transfer & retention evidence records for this skill
+    const milestoneRecords = list.filter((r) => r.isTransfer || r.isRetention);
+    for (const r of milestoneRecords.slice(-10)) {
+      keptIds.add(r.attemptId);
+    }
+    const tail = list.slice(-maxPerSkill);
+    for (const r of tail) {
+      keptIds.add(r.attemptId);
+    }
+  }
+
+  return records.filter((r) => keptIds.has(r.attemptId));
+}
 
 function mergeEvidenceAndSchedule(
   progress: PlayerProgress,
@@ -32,6 +71,7 @@ function mergeEvidenceAndSchedule(
 
   const seenAttemptIds = new Set(existingLog.map((e) => e.attemptId));
   const mergedLog = [...existingLog];
+  const skillOutcomesInBatch = new Map<ObjectiveId, boolean>();
 
   for (const record of newEvidence ?? []) {
     if (!seenAttemptIds.has(record.attemptId)) {
@@ -42,20 +82,29 @@ function mergeEvidenceAndSchedule(
         errorClassifications: [...record.errorClassifications],
       });
       if (record.completed) {
-        existingSchedules[record.skillId] = advanceReviewSchedule(
-          existingSchedules[record.skillId],
+        const prevOutcome = skillOutcomesInBatch.get(record.skillId) ?? true;
+        skillOutcomesInBatch.set(
           record.skillId,
-          record.independent && record.correct,
-          now,
+          prevOutcome && record.independent && record.correct,
         );
       }
     }
   }
 
+  // Advance spaced review schedule at most once per skill per session batch
+  for (const [skillId, allIndependent] of skillOutcomesInBatch.entries()) {
+    existingSchedules[skillId] = advanceReviewSchedule(
+      existingSchedules[skillId],
+      skillId,
+      allIndependent,
+      now,
+    );
+  }
+
   const mergedSigs = union(existingSigs, newSignatures ?? []).slice(-MAX_SEEN_SIGNATURES);
 
   return {
-    evidenceLog: mergedLog.slice(-MAX_EVIDENCE_RECORDS),
+    evidenceLog: pruneEvidenceLogBySkill(mergedLog),
     reviewSchedule: existingSchedules,
     seenItemSignatures: mergedSigs,
   };

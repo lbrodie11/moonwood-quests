@@ -24,17 +24,6 @@ const FAMILY_BY_ID: Readonly<Record<WorkshopItemId, string>> = {
   8: "pattern-stone-mosaic",
 };
 
-const TILES_BY_ID: Readonly<Record<WorkshopItemId, readonly string[]>> = {
-  1: ["Plank 4 + Plank 4", "Plank 5 + Plank 3", "Plank 6 + Plank 2"],
-  2: ["Plank 5 + Plank 5", "Plank 6 + Plank 4", "Plank 7 + Plank 3"],
-  3: ["Pond Water", "Hollow Log Shelter", "Leafy Shade"],
-  4: ["Dry Moss Bed", "High Tree Branch", "Moonberry Bush"],
-  5: ["Square Base", "Rectangle Pillar", "Triangle Roof"],
-  6: ["Two Trapezoids -> Hexagon", "Four Squares -> Big Square", "Two Triangles -> Rhombus"],
-  7: ["Blue - Gold - Blue - Gold", "Star - Star - Moon - Star - Star - Moon"],
-  8: ["Turn North -> East -> North", "Bridge -> Lantern -> Gate"],
-};
-
 /**
  * Moonwood Workshop (1.G.A.2, MP.1, Engineering Design):
  * Open-ended creative construction with engineering constraints (multiple valid
@@ -47,8 +36,6 @@ export function createCreativeConstruction(
 ): ChallengeSpec {
   const pool = POOLS_BY_DIFFICULTY[difficulty];
   const itemId = pool[randomInt(rng, 0, pool.length - 1)] ?? 1;
-  const distractor1 = ((itemId % 8) + 1) as WorkshopItemId;
-  const distractor2 = (((itemId + 2) % 8) + 1) as WorkshopItemId;
 
   return {
     objectiveId: "creative-construction",
@@ -56,21 +43,20 @@ export function createCreativeConstruction(
     promptKey: `challenge.workshop.item.${itemId}.prompt`,
     operator: "workshop",
     operands: [itemId, difficulty],
-    correctAnswer: itemId,
-    choiceKeyPrefix: "challenge.workshop.item",
-    choices: buildChoices(rng, itemId, {
+    correctAnswer: 1,
+    choiceKeyPrefix: `challenge.workshop.item.${itemId}.choice`,
+    choices: buildChoices(rng, 1, {
       min: 1,
-      max: 8,
-      likelyErrors: [distractor1, distractor2],
+      max: 3,
+      likelyErrors: [2, 3],
     }),
     meta: {
       itemFamily: FAMILY_BY_ID[itemId],
       standardCode: "1.G.A.2",
-      interactiveTiles: TILES_BY_ID[itemId],
       reflectionPromptKey: "workshop.reflection.bridgeWork",
       distractorErrors: {
-        [distractor1]: "constraint-mismatch",
-        [distractor2]: "unstable-base-or-missing-shelter",
+        2: "constraint-mismatch",
+        3: "unstable-base-or-missing-shelter",
       },
     },
   };
