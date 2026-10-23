@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="A gentle fantasy maths adventure for ages 6–7. No ads, no accounts, no tracking." />
+    <meta name="theme-color" content="#101a33" />
+    <meta name="referrer" content="no-referrer" />
+    <!-- CSP -->
+    <title>Moonwood Quests</title>
+  </head>
+  <body>
+    <header class="topbar">
+      <h1 id="app-title">Moonwood Quests</h1>
+      <nav id="toolbar" class="toolbar" aria-label="Game controls"></nav>
+    </header>
+
+    <main class="layout">
+      <!-- Decorative mirror of the panel below; all information and controls
+           are also available as DOM in #panel. -->
+      <div id="game-root" class="game-root" role="img" aria-label="Map of the Moonwood"></div>
+      <div id="panel" class="panel" data-screen="loading"><p class="loading">Waking the forest…</p></div>
+    </main>
+
+    <noscript>This game needs JavaScript turned on.</noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "id": "starfall-crown",
+  "status": "playable",
+  "regionId": "starfall-tower",
+  "guideId": "astra",
+  "prerequisiteQuestId": "star-observatory",
+  "titleKey": "quest.starfallCrown.title",
+  "introKey": "quest.starfallCrown.intro",
+  "sceneKey": "ForestQuest",
+  "objectiveIds": ["star-patterns", "add-within-20", "tens-and-ones", "phonics-words", "compose-shapes"],
+  "recommendedMinutes": 6,
+  "phases": [
+    { "kind": "guided", "count": 1, "difficultyCap": 1 },
+    { "kind": "independent", "count": 3 },
+    { "kind": "mini-boss", "count": 1, "difficultyFloor": 2 }
+  ],
+  "rewards": [{ "id": "story.kingdom-restored", "kind": "story", "nameKey": "reward.kingdomRestored.name" }],
+  "unlocks": [],
+  "map": { "x": 875, "y": 85 }
+}

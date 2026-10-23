@@ -1,0 +1,18 @@
+{
+  "id": "ravine-bridge",
+  "status": "playable",
+  "regionId": "enchanted-library",
+  "guideId": "luma",
+  "titleKey": "quest.ravineBridge.title",
+  "introKey": "quest.ravineBridge.intro",
+  "sceneKey": "ForestQuest",
+  "objectiveIds": ["compare-lengths"],
+  "recommendedMinutes": 5,
+  "phases": [
+    { "kind": "guided", "count": 2, "difficultyCap": 1 },
+    { "kind": "independent", "count": 3 }
+  ],
+  "rewards": [{ "id": "story.ravine-crossed", "kind": "story", "nameKey": "reward.ravineCrossed.name" }],
+  "unlocks": ["sigil-temple"],
+  "map": { "x": 575, "y": 355 }
+}

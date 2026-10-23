@@ -1,0 +1,20 @@
+{
+  "id": "star-observatory",
+  "status": "playable",
+  "regionId": "starfall-tower",
+  "guideId": "astra",
+  "prerequisiteQuestId": "sigil-temple",
+  "titleKey": "quest.starObservatory.title",
+  "introKey": "quest.starObservatory.intro",
+  "sceneKey": "ForestQuest",
+  "objectiveIds": ["star-patterns"],
+  "recommendedMinutes": 5,
+  "phases": [
+    { "kind": "guided", "count": 1, "difficultyCap": 1 },
+    { "kind": "independent", "count": 3 },
+    { "kind": "mini-boss", "count": 1, "difficultyFloor": 2 }
+  ],
+  "rewards": [{ "id": "companion.astra", "kind": "companion", "nameKey": "reward.astra.name" }],
+  "unlocks": ["starfall-crown"],
+  "map": { "x": 795, "y": 135 }
+}

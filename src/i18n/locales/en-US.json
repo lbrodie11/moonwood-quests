@@ -1,0 +1,349 @@
+{
+  "app": {
+    "title": "Moonwood Quests",
+    "loading": "Waking the forest…"
+  },
+  "ui": {
+    "hearAgain": "Hear it again",
+    "settings": "Settings",
+    "grownUps": "Grown-ups",
+    "close": "Close",
+    "tryAgain": "Try again",
+    "backToMap": "Back to the map",
+    "nextQuest": "Next quest: {{title}}",
+    "celebrateKingdom": "Celebrate in Starfall Tower!",
+    "play": "Play",
+    "comingSoon": "Coming soon",
+    "locked": "Locked",
+    "completed": "Done!",
+    "progress": "Rune {{current}} of {{total}}",
+    "askHint": "Ask friend for a hint",
+    "startAdventure": "Begin Adventure: {{title}}",
+    "continueAdventure": "Continue Adventure: {{title}}",
+    "replayAdventure": "Replay Any Quest",
+    "exploreHeading": "Explore Moonwood & Meet Friends",
+    "talkTo": "Talk to {{name}}",
+    "findTreasure": "Search for {{name}}",
+    "treasureFound": "Found: {{name}} ✨",
+    "collectiblesCount": "{{found}} of {{total}} Star-Treasures found · {{quests}} of {{totalQuests}} Quests complete"
+  },
+  "story": {
+    "introTitle": "The Starlight of Moonwood",
+    "introBody": "The Great Starlight Beacon has fallen asleep! Walk the paths with Pip the Owl, help the magical friends of each region, and cast learning spells to restore the kingdom's light.",
+    "restoredTitle": "Moonwood Shines Again!",
+    "restoredBody": "You awakened the Whispering Woods, lit the Crystal Caves, restored the Enchanted Library, and crowned Starfall Tower with light!",
+    "endingHeading": "The Grand Starlight Celebration",
+    "endingSubtitle": "Every lantern, crystal, storybook, and star in Moonwood is glowing thanks to you!",
+    "endingFriends": "Your companions Pip, Moss, Bramble, Luma, and Astra dance beneath the restored constellations.",
+    "endingReplay": "Explore the Kingdom Again"
+  },
+  "map": {
+    "heading": "Choose a quest",
+    "canvasLabel": "Map of the Moonwood",
+    "heroStatus": "Apprentice Aria & Pip · Use Arrow keys or tap the map to explore!"
+  },
+  "region": {
+    "whisperingWoods": {
+      "title": "Whispering Woods",
+      "subtitle": "Addition & Number Sense"
+    },
+    "crystalCaves": {
+      "title": "Crystal Caves",
+      "subtitle": "Tens, Ones & Subtraction"
+    },
+    "enchantedLibrary": {
+      "title": "The Enchanted Library",
+      "subtitle": "Bridge Measuring & Story Words"
+    },
+    "starfallTower": {
+      "title": "Starfall Tower",
+      "subtitle": "Shapes, Patterns & Kingdom Finale"
+    }
+  },
+  "guide": {
+    "pip": {
+      "name": "Pip the Owl",
+      "greeting": "Hoo-hoo! Tap any glowing path or ask me whenever you want a helpful clue!"
+    },
+    "moss": {
+      "name": "Moss the Forest Sprite",
+      "greeting": "The forest flowers hum when we combine blue and gold mana crystals together!"
+    },
+    "bramble": {
+      "name": "Bramble the Crystal Mole",
+      "greeting": "Down in the Crystal Caves, we pack gems into neat bags of ten so we never lose count!"
+    },
+    "luma": {
+      "name": "Luma the Librarian Fox",
+      "greeting": "Every plank on the bridge and every word in our storybooks holds a wonderful secret!"
+    },
+    "astra": {
+      "name": "Astra the Starlight Sprite",
+      "greeting": "Look up at the stars! Shapes and number patterns show how the constellations dance!"
+    }
+  },
+  "quest": {
+    "forestGate": {
+      "title": "The Whispering Gate",
+      "intro": "The gate is asleep. Wake each rune with the right amount of mana!"
+    },
+    "lanternBridge": {
+      "title": "The Lantern Brook",
+      "intro": "Help Moss light the stepping lanterns across the brook by combining glowing mana!"
+    },
+    "mossGrove": {
+      "title": "The Heartwood Tree",
+      "intro": "Share sun-drops and star-berries with the sleepy creatures to wake the Heartwood Tree!"
+    },
+    "crystalCaves": {
+      "title": "Crystal Caves",
+      "intro": "Pack crystals into rune bags of ten."
+    },
+    "echoForge": {
+      "title": "The Echo Minecart",
+      "intro": "Help Bramble cool the crystal forge by removing the crystals used in each spell!"
+    },
+    "prismSanctum": {
+      "title": "The Prism Vault",
+      "intro": "Count the ten-packs and remaining crystals to open Bramble's glowing Prism Vault!"
+    },
+    "ravineBridge": {
+      "title": "The Ravine Bridge",
+      "intro": "Find planks long enough to cross."
+    },
+    "enchantedLibrary": {
+      "title": "The Enchanted Library",
+      "intro": "Help Luma match sounds and words to return the floating story pages to their books!"
+    },
+    "livingStorybook": {
+      "title": "The Living Storybook",
+      "intro": "Read the magical clues and measure the golden ribbons to wake the Living Storybook!"
+    },
+    "sigilTemple": {
+      "title": "Sigil Temple",
+      "intro": "Build the ancient shapes to open the doors."
+    },
+    "starObservatory": {
+      "title": "The Starlight Astrolabe",
+      "intro": "Help Astra follow the glowing star patterns to align the great telescope!"
+    },
+    "starfallCrown": {
+      "title": "The Crown of Moonwood",
+      "intro": "Use all your magic—numbers, tens, words, shapes, and patterns—to relight the Great Starlight Beacon!"
+    },
+    "complete": "The gate is open!"
+  },
+  "challenge": {
+    "addition": {
+      "combineMana": "Blue crystals: {{a}}. Gold crystals: {{b}}. How much mana in all?"
+    },
+    "subtraction": {
+      "spendMana": "Crystals you had: {{a}}. Crystals the spell used: {{b}}. How many are left?"
+    },
+    "placeValue": {
+      "countRunes": "Bags of ten: {{a}}. Loose crystals: {{b}}. How many crystals in all?",
+      "equation": "{{a}} tens + {{b}} ones = ?"
+    },
+    "length": {
+      "joinPlanks": "First plank: {{a}} moon-tiles. Second plank: {{b}} moon-tiles. How many moon-tiles long is the bridge?",
+      "missingPlank": "The ravine is {{a}} moon-tiles wide. One plank covers {{b}} moon-tiles. How many more moon-tiles are needed?",
+      "joinEquation": "{{a}} tiles + {{b}} tiles = ?",
+      "missingEquation": "{{a}} tiles - {{b}} tiles = ?"
+    },
+    "shapes": {
+      "composeSigil": "Sky triangles: {{a}}. Sun diamonds: {{b}}. How many sigil pieces build the shape?",
+      "countSides": "First sigil has {{a}} sides. Second sigil has {{b}} sides. How many sides in all?",
+      "equation": "{{a}} shards + {{b}} shards = ?"
+    },
+    "pattern": {
+      "nextStar": "Follow the starlight pattern: {{a}}, {{b}}, {{c}}, … What star number comes next?",
+      "equation": "{{a}} → {{b}} → {{c}} → ?"
+    },
+    "phonics": {
+      "soundMatch": "Sound out the glowing rune: {{sounds}} ({{clue}}). Which story word matches?",
+      "buildWord": "Blend the sounds {{sounds}} to find the word for: {{clue}}.",
+      "storyClue": "Complete the story page: \"{{sentence}}\" ({{sounds}})",
+      "equation": "{{icon}} {{sounds}} = ?",
+      "word": {
+        "1": {
+          "label": "🌙 MOON",
+          "word": "MOON",
+          "icon": "🌙",
+          "sounds": "M - OO - N",
+          "clue": "shines silver in the night sky",
+          "sentence": "The silver ___ glows above the forest."
+        },
+        "2": {
+          "label": "⭐ STAR",
+          "word": "STAR",
+          "icon": "⭐",
+          "sounds": "S - T - A - R",
+          "clue": "twinkles high above the tower",
+          "sentence": "Make a wish upon a bright ___."
+        },
+        "3": {
+          "label": "🦉 OWL",
+          "word": "OWL",
+          "icon": "🦉",
+          "sounds": "OW - L",
+          "clue": "a wise bird who says hoo-hoo",
+          "sentence": "Pip the wise ___ hoots in the tree."
+        },
+        "4": {
+          "label": "🐸 FROG",
+          "word": "FROG",
+          "icon": "🐸",
+          "sounds": "F - R - O - G",
+          "clue": "hops on green lily pads",
+          "sentence": "The happy green ___ jumps in the brook."
+        },
+        "5": {
+          "label": "🌲 TREE",
+          "word": "TREE",
+          "icon": "🌲",
+          "sounds": "T - R - EE",
+          "clue": "tall woodland home with leaves",
+          "sentence": "Moss naps under the tall green ___."
+        },
+        "6": {
+          "label": "📖 BOOK",
+          "word": "BOOK",
+          "icon": "📖",
+          "sounds": "B - OO - K",
+          "clue": "open its pages to read a tale",
+          "sentence": "Luma opens a magical story ___."
+        },
+        "7": {
+          "label": "👑 CROWN",
+          "word": "CROWN",
+          "icon": "👑",
+          "sounds": "C - R - OW - N",
+          "clue": "a golden hat for a royal friend",
+          "sentence": "The starlight ___ shines on the tower."
+        },
+        "8": {
+          "label": "💎 GEM",
+          "word": "GEM",
+          "icon": "💎",
+          "sounds": "G - E - M",
+          "clue": "a sparkling crystal in the cave",
+          "sentence": "Bramble found a glowing purple ___."
+        },
+        "9": {
+          "label": "🦊 FOX",
+          "word": "FOX",
+          "icon": "🦊",
+          "sounds": "F - O - X",
+          "clue": "a clever friend with a fluffy tail",
+          "sentence": "Luma the clever ___ loves to read."
+        },
+        "10": {
+          "label": "🐱 CAT",
+          "word": "CAT",
+          "icon": "🐱",
+          "sounds": "C - A - T",
+          "clue": "purrs softly by the warm hearth",
+          "sentence": "The cozy little ___ purrs by the lantern."
+        },
+        "11": {
+          "label": "☀️ SUN",
+          "word": "SUN",
+          "icon": "☀️",
+          "sounds": "S - U - N",
+          "clue": "warm golden light of morning",
+          "sentence": "The morning ___ warms the meadow."
+        },
+        "12": {
+          "label": "🔔 BELL",
+          "word": "BELL",
+          "icon": "🔔",
+          "sounds": "B - E - L - L",
+          "clue": "rings with a clear silver chime",
+          "sentence": "The silver tower ___ rings out."
+        }
+      }
+    }
+  },
+  "feedback": {
+    "correct": "The rune glows!",
+    "hint1": "Let's count the crystals together.",
+    "hint2": "Look — all the crystals in one row. Count them all.",
+    "hint3": "Guided magic: the answer is {{answer}}! Tap {{answer}} to cast the spell.",
+    "notThat": "Not {{value}}. Try another one.",
+    "treasureDiscovered": "You discovered a hidden Star-Treasure: {{name}}!"
+  },
+  "reward": {
+    "earned": "New friend: {{name}}!",
+    "moss": {
+      "name": "Moss the forest sprite"
+    },
+    "dawnLantern": {
+      "name": "Lantern of Dawn"
+    },
+    "heartwoodBloom": {
+      "name": "Heartwood Bloom"
+    },
+    "crystalWand": {
+      "name": "Crystal wand"
+    },
+    "bramble": {
+      "name": "Bramble the crystal mole"
+    },
+    "prismLit": {
+      "name": "Heart of the Cavern"
+    },
+    "ravineCrossed": {
+      "name": "The far side of the ravine"
+    },
+    "luma": {
+      "name": "Luma the librarian fox"
+    },
+    "storyQuill": {
+      "name": "Golden Story Quill"
+    },
+    "starRobe": {
+      "name": "Star robe"
+    },
+    "astra": {
+      "name": "Astra the starlight sprite"
+    },
+    "kingdomRestored": {
+      "name": "The Crown of Moonwood"
+    },
+    "whisperingSeed": {
+      "name": "Whispering Star-Seed"
+    },
+    "crystalGeode": {
+      "name": "Singing Amethyst Geode"
+    },
+    "ancientBookmark": {
+      "name": "Moonbeam Bookmark"
+    },
+    "fallenStar": {
+      "name": "Feather of Starfall"
+    }
+  },
+  "settings": {
+    "heading": "Settings",
+    "sound": "Sound",
+    "reducedMotion": "Calm motion",
+    "language": "Language",
+    "narration": "Read questions aloud"
+  },
+  "parent": {
+    "gateHeading": "For grown-ups",
+    "gateQuestion": "What is {{a}} × {{b}}?",
+    "gateAnswer": "Answer",
+    "gateSubmit": "Continue",
+    "gateWrong": "That isn't right. Please ask a grown-up.",
+    "heading": "Grown-ups",
+    "privacyHeading": "Privacy",
+    "privacy": "This game keeps progress only in this browser on this device. It has no accounts, ads, chat or tracking, and it sends nothing over the internet.",
+    "progressHeading": "Learning progress",
+    "noProgress": "No quests played yet.",
+    "objectiveRow": "{{standard}}: {{independent}} solved alone, {{supported}} with help",
+    "erase": "Erase all progress on this device",
+    "eraseConfirm": "Erase all progress? This cannot be undone.",
+    "erased": "Progress erased."
+  }
+}

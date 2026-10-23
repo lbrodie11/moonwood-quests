@@ -1,0 +1,11 @@
+// Cloudflare Workers Static Assets: serves dist/ with no Worker code.
+// Add a Worker script only when parent-controlled cloud sync is justified
+// (and after the privacy review in .agents/skills/coppa-data-minimization).
+{
+  "name": "moonwood-quests",
+  "compatibility_date": "2026-10-23",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  }
+}

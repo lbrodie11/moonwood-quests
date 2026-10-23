@@ -1,0 +1,539 @@
+/*
+ * Child-focused UI baseline:
+ *  - primary controls ≥ 64px, all controls ≥ 48px (WCAG 2.2 AA is 24px; we exceed it)
+ *  - visible focus ring on every interactive element
+ *  - icon + text, never icon alone
+ *  - no essential information by colour alone
+ *  - honours prefers-reduced-motion and the in-game "Calm motion" setting
+ *
+ * Fonts: self-host a literacy-friendly face such as Andika (SIL OFL) under
+ * public/assets/fonts and add an @font-face here. Never load fonts from a
+ * third-party CDN (privacy + CSP).
+ */
+:root {
+  --night-900: #0b1226;
+  --night-800: #101a33;
+  --night-700: #1a2848;
+  --night-600: #243660;
+  --moon: #f4ecd0;
+  --text: #fff7e6;
+  --text-muted: #c9d3ea;
+  --mana-blue: #5cc8ff;
+  --mana-gold: #ffc94a;
+  --leaf: #7ed98b;
+  --danger: #ff8a7a;
+  --focus: #ffe066;
+
+  --radius: 18px;
+  --tap-min: 48px;
+  --tap-primary: 64px;
+  --font: "Andika", "Atkinson Hyperlegible Next", ui-rounded, "Segoe UI", system-ui, sans-serif;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--night-900);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 20px;
+  line-height: 1.4;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 0.4em;
+  line-height: 1.2;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 4px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* ---------------------------------------------------------------- layout */
+
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 16px;
+  background: var(--night-800);
+}
+
+.topbar h1 {
+  font-size: 1.2rem;
+  margin: 0;
+  color: var(--moon);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px 24px;
+}
+
+.game-root {
+  width: 100%;
+  max-width: 960px;
+  height: min(56.25vw, 540px, 58dvh);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--night-800);
+}
+
+.panel {
+  width: 100%;
+  max-width: 960px;
+  min-height: 160px;
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  background: var(--night-700);
+}
+
+.loading {
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------- buttons */
+
+button {
+  min-block-size: var(--tap-min);
+  min-inline-size: var(--tap-min);
+  border: 3px solid transparent;
+  border-radius: 14px;
+  padding: 8px 16px;
+  background: var(--night-600);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 120ms ease, background-color 120ms ease;
+}
+
+button:hover:not(:disabled) {
+  background: #2e4475;
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+button.primary {
+  min-block-size: var(--tap-primary);
+  padding: 12px 24px;
+  background: var(--leaf);
+  color: var(--night-900);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+button.primary.celebrate-btn {
+  background: var(--mana-gold);
+  color: var(--night-900);
+}
+
+button.secondary {
+  background: transparent;
+  border-color: var(--night-600);
+}
+
+button.danger {
+  background: transparent;
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.tool.subtle {
+  background: transparent;
+  border-color: var(--night-600);
+}
+
+.tool.treasure-found {
+  border-color: var(--mana-gold);
+  color: var(--moon);
+}
+
+.tool[hidden] {
+  display: none;
+}
+
+/* ---------------------------------------------------- story & exploration */
+
+.story-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 2px solid var(--night-600);
+  background: var(--night-800);
+}
+
+.story-copy {
+  flex: 1 1 320px;
+}
+
+.story-title {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--mana-gold);
+}
+
+.story-body {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.story-stats {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.story-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.explorer-bar {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: var(--night-800);
+  border: 2px solid var(--night-600);
+}
+
+.hero-status {
+  margin: 0 0 6px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.map-dialogue {
+  margin: 0 0 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--night-700);
+  color: var(--moon);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.explorer-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ------------------------------------------------------------ quest list */
+
+.quest-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.quest-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+  min-block-size: 96px;
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.quest-card .quest-region-tag {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.quest-card .quest-name {
+  font-weight: 700;
+}
+
+.quest-card .quest-status {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Status is conveyed by text as well as by the border colour. */
+.quest-card.available {
+  border-color: var(--mana-blue);
+}
+
+.quest-card.completed {
+  border-color: var(--mana-gold);
+}
+
+/* ------------------------------------------------------------- challenge */
+
+.challenge-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.challenge-header h2 {
+  font-size: 1.1rem;
+  margin: 0;
+  color: var(--moon);
+}
+
+.quest-intro {
+  margin: 6px 0 4px;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+.quest-progress {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.hint-button {
+  margin-left: auto;
+}
+
+.rune-pips {
+  display: flex;
+  gap: 6px;
+}
+
+.pip {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--text-muted);
+}
+
+.pip.lit {
+  background: #9ff3ff;
+  border-color: #9ff3ff;
+}
+
+.pip.current {
+  border-width: 4px;
+  border-color: var(--moon);
+}
+
+.challenge-prompt {
+  margin: 8px 0 4px;
+  font-size: 1.1rem;
+}
+
+.challenge-equation {
+  margin: 0 0 12px;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.choice {
+  min-inline-size: 96px;
+  min-block-size: 80px;
+  font-size: 2rem;
+  font-weight: 700;
+  background: var(--night-600);
+  border-color: var(--moon);
+}
+
+.choice.word-choice {
+  min-inline-size: 160px;
+  font-size: 1.35rem;
+}
+
+.choice.guided-choice {
+  border-color: var(--leaf);
+  background: #1f4d3a;
+}
+
+/* Ruled-out answers show a strike-through, not just a colour change. */
+.choice.ruled-out {
+  text-decoration: line-through;
+  border-style: dashed;
+}
+
+.feedback {
+  min-height: 1.6em;
+  margin: 12px 0 0;
+  font-size: 1.05rem;
+}
+
+.feedback[data-kind="correct"] {
+  color: var(--leaf);
+}
+
+/* --------------------------------------------------------------- complete */
+
+.complete-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.complete-panel h2 {
+  font-size: 1.6rem;
+  color: var(--mana-gold);
+}
+
+.reward {
+  font-size: 1.15rem;
+  margin: 0 0 8px;
+}
+
+/* ---------------------------------------------------------------- dialogs */
+
+.panel-dialog {
+  width: min(92vw, 480px);
+  border: none;
+  border-radius: var(--radius);
+  padding: 24px;
+  background: var(--night-700);
+  color: var(--text);
+}
+
+.panel-dialog.wide {
+  width: min(92vw, 640px);
+}
+
+.panel-dialog::backdrop {
+  background: rgb(5 8 20 / 0.75);
+}
+
+.panel-dialog h3 {
+  margin-top: 1em;
+  font-size: 1rem;
+  color: var(--moon);
+}
+
+.panel-dialog p,
+.panel-dialog li {
+  font-size: 0.95rem;
+}
+
+.panel-dialog input[type="text"] {
+  display: block;
+  width: 8em;
+  min-block-size: var(--tap-min);
+  margin: 8px 0;
+  padding: 8px 12px;
+  border: 2px solid var(--text-muted);
+  border-radius: 10px;
+  background: var(--night-800);
+}
+
+.dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-block-size: var(--tap-min);
+  cursor: pointer;
+}
+
+.toggle input {
+  width: 28px;
+  height: 28px;
+  accent-color: var(--leaf);
+}
+
+.language-choice {
+  margin: 12px 0;
+  border: 2px solid var(--night-600);
+  border-radius: 12px;
+}
+
+@media (max-width: 600px) {
+  html,
+  body {
+    font-size: 18px;
+  }
+
+  .tool span:not(.tool-icon) {
+    font-size: 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

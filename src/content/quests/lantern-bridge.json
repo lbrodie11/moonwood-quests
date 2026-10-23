@@ -1,0 +1,20 @@
+{
+  "id": "lantern-bridge",
+  "status": "playable",
+  "regionId": "whispering-woods",
+  "guideId": "moss",
+  "prerequisiteQuestId": "forest-gate",
+  "titleKey": "quest.lanternBridge.title",
+  "introKey": "quest.lanternBridge.intro",
+  "sceneKey": "ForestQuest",
+  "objectiveIds": ["add-within-20"],
+  "recommendedMinutes": 5,
+  "phases": [
+    { "kind": "guided", "count": 1, "difficultyCap": 1 },
+    { "kind": "independent", "count": 3 },
+    { "kind": "mini-boss", "count": 1, "difficultyFloor": 2 }
+  ],
+  "rewards": [{ "id": "cosmetic.dawn-lantern", "kind": "cosmetic", "nameKey": "reward.dawnLantern.name" }],
+  "unlocks": ["moss-grove"],
+  "map": { "x": 215, "y": 325 }
+}

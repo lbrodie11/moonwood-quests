@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Whispering Woods Emblem">
+  <defs>
+    <radialGradient id="woodsGlow" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#8cf0b2" stop-opacity="0.95"/>
+      <stop offset="55%" stop-color="#2c6f61" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#0e1b26" stop-opacity="1"/>
+    </radialGradient>
+  </defs>
+  <circle cx="64" cy="64" r="58" fill="url(#woodsGlow)" stroke="#f6c760" stroke-width="4"/>
+  <!-- Ancient stone arch -->
+  <path d="M36 96 V58 A28 28 0 0 1 92 58 V96 H80 V58 A16 16 0 0 0 48 58 V96 Z" fill="#6b7885" stroke="#d0d8e0" stroke-width="2"/>
+  <!-- Glowing Dewdrop Leaf -->
+  <path d="M64 38 C76 50 78 68 64 82 C50 68 52 50 64 38 Z" fill="#8cf0b2" stroke="#f7f4ea" stroke-width="2"/>
+  <circle cx="64" cy="60" r="6" fill="#ffd97a"/>
+</svg>

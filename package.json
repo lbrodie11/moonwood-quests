@@ -1,0 +1,38 @@
+{
+  "name": "fantasy-learning-game",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A browser-first 2D fantasy learning game for ages six to seven (Grade 1 mathematics).",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173 --strictPort",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.node.json --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "check": "npm run typecheck && npm run lint && npm run test && npm run build",
+    "skills:install": "npx skills add https://github.com/gamedev-skills/awesome-gamedev-agent-skills/tree/7eb1b53305fab881f4758e2eff2e371cd7869221 --skill phaser-core --skill game-ui-ux --skill game-feel --skill level-design --skill create-game-assets --skill performance-optimization --skill save-systems"
+  },
+  "dependencies": {
+    "i18next": "^26.5.7",
+    "phaser": "^4.2.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.0",
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^24.0.0",
+    "eslint": "^10.13.0",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.0",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  }
+}

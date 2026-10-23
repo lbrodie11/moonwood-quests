@@ -1,0 +1,20 @@
+{
+  "id": "moss-grove",
+  "status": "playable",
+  "regionId": "whispering-woods",
+  "guideId": "moss",
+  "prerequisiteQuestId": "lantern-bridge",
+  "titleKey": "quest.mossGrove.title",
+  "introKey": "quest.mossGrove.intro",
+  "sceneKey": "ForestQuest",
+  "objectiveIds": ["add-within-20", "subtract-within-20"],
+  "recommendedMinutes": 5,
+  "phases": [
+    { "kind": "guided", "count": 1, "difficultyCap": 1 },
+    { "kind": "independent", "count": 3 },
+    { "kind": "mini-boss", "count": 1, "difficultyFloor": 2 }
+  ],
+  "rewards": [{ "id": "story.heartwood-bloom", "kind": "story", "nameKey": "reward.heartwoodBloom.name" }],
+  "unlocks": ["crystal-caves"],
+  "map": { "x": 295, "y": 395 }
+}

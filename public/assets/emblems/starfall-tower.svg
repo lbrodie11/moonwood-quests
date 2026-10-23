@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Starfall Tower Emblem">
+  <defs>
+    <radialGradient id="towerGlow" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#ffd97a" stop-opacity="0.95"/>
+      <stop offset="55%" stop-color="#2c3b68" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#0e1b26" stop-opacity="1"/>
+    </radialGradient>
+  </defs>
+  <circle cx="64" cy="64" r="58" fill="url(#towerGlow)" stroke="#f6c760" stroke-width="4"/>
+  <!-- Tower Spire -->
+  <polygon points="64,26 84,54 44,54" fill="#3a4466" stroke="#f6c760" stroke-width="2"/>
+  <rect x="48" y="54" width="32" height="44" rx="4" fill="#4f5d75" stroke="#d0d8e0" stroke-width="2"/>
+  <!-- Crown Star -->
+  <circle cx="64" cy="22" r="6" fill="#ffd97a" stroke="#ffffff" stroke-width="2"/>
+  <circle cx="64" cy="72" r="8" fill="#7be3ff"/>
+</svg>

@@ -1,0 +1,20 @@
+{
+  "id": "living-storybook",
+  "status": "playable",
+  "regionId": "enchanted-library",
+  "guideId": "luma",
+  "prerequisiteQuestId": "enchanted-library",
+  "titleKey": "quest.livingStorybook.title",
+  "introKey": "quest.livingStorybook.intro",
+  "sceneKey": "ForestQuest",
+  "objectiveIds": ["phonics-words", "compare-lengths"],
+  "recommendedMinutes": 5,
+  "phases": [
+    { "kind": "guided", "count": 1, "difficultyCap": 1 },
+    { "kind": "independent", "count": 3 },
+    { "kind": "mini-boss", "count": 1, "difficultyFloor": 2 }
+  ],
+  "rewards": [{ "id": "cosmetic.story-quill", "kind": "cosmetic", "nameKey": "reward.storyQuill.name" }],
+  "unlocks": ["sigil-temple"],
+  "map": { "x": 735, "y": 355 }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "prism-sanctum",
+  "status": "playable",
+  "regionId": "crystal-caves",
+  "guideId": "bramble",
+  "prerequisiteQuestId": "echo-forge",
+  "titleKey": "quest.prismSanctum.title",
+  "introKey": "quest.prismSanctum.intro",
+  "sceneKey": "ForestQuest",
+  "objectiveIds": ["tens-and-ones", "subtract-within-20"],
+  "recommendedMinutes": 5,
+  "phases": [
+    { "kind": "guided", "count": 1, "difficultyCap": 1 },
+    { "kind": "independent", "count": 3 },
+    { "kind": "mini-boss", "count": 1, "difficultyFloor": 2 }
+  ],
+  "rewards": [{ "id": "story.prism-lit", "kind": "story", "nameKey": "reward.prismLit.name" }],
+  "unlocks": ["ravine-bridge"],
+  "map": { "x": 515, "y": 210 }
+}

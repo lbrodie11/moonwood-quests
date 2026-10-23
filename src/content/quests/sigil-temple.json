@@ -1,0 +1,18 @@
+{
+  "id": "sigil-temple",
+  "status": "playable",
+  "regionId": "starfall-tower",
+  "guideId": "astra",
+  "titleKey": "quest.sigilTemple.title",
+  "introKey": "quest.sigilTemple.intro",
+  "sceneKey": "ForestQuest",
+  "objectiveIds": ["compose-shapes"],
+  "recommendedMinutes": 5,
+  "phases": [
+    { "kind": "guided", "count": 2, "difficultyCap": 1 },
+    { "kind": "independent", "count": 3 }
+  ],
+  "rewards": [{ "id": "cosmetic.star-robe", "kind": "cosmetic", "nameKey": "reward.starRobe.name" }],
+  "unlocks": [],
+  "map": { "x": 715, "y": 200 }
+}

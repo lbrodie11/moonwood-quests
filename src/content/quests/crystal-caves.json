@@ -1,0 +1,18 @@
+{
+  "id": "crystal-caves",
+  "status": "playable",
+  "regionId": "crystal-caves",
+  "guideId": "bramble",
+  "titleKey": "quest.crystalCaves.title",
+  "introKey": "quest.crystalCaves.intro",
+  "sceneKey": "ForestQuest",
+  "objectiveIds": ["tens-and-ones"],
+  "recommendedMinutes": 6,
+  "phases": [
+    { "kind": "guided", "count": 2, "difficultyCap": 1 },
+    { "kind": "independent", "count": 4 }
+  ],
+  "rewards": [{ "id": "cosmetic.crystal-wand", "kind": "cosmetic", "nameKey": "reward.crystalWand.name" }],
+  "unlocks": ["ravine-bridge"],
+  "map": { "x": 355, "y": 210 }
+}

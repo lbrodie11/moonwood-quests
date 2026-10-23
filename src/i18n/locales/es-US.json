@@ -1,0 +1,349 @@
+{
+  "app": {
+    "title": "Misiones del Bosque Lunar",
+    "loading": "Despertando el bosque…"
+  },
+  "ui": {
+    "hearAgain": "Escuchar otra vez",
+    "settings": "Ajustes",
+    "grownUps": "Adultos",
+    "close": "Cerrar",
+    "tryAgain": "Inténtalo otra vez",
+    "backToMap": "Volver al mapa",
+    "nextQuest": "Siguiente misión: {{title}}",
+    "celebrateKingdom": "¡Celebrar en la Torre Estelar!",
+    "play": "Jugar",
+    "comingSoon": "Muy pronto",
+    "locked": "Cerrado",
+    "completed": "¡Listo!",
+    "progress": "Runa {{current}} de {{total}}",
+    "askHint": "Pedir una pista a un amigo",
+    "startAdventure": "Comenzar aventura: {{title}}",
+    "continueAdventure": "Continuar aventura: {{title}}",
+    "replayAdventure": "Repetir cualquier misión",
+    "exploreHeading": "Explora el Bosque Lunar y conoce amigos",
+    "talkTo": "Hablar con {{name}}",
+    "findTreasure": "Buscar {{name}}",
+    "treasureFound": "Encontrado: {{name}} ✨",
+    "collectiblesCount": "{{found}} de {{total}} Tesoros Estelares · {{quests}} de {{totalQuests}} Misiones listas"
+  },
+  "story": {
+    "introTitle": "La Luz Estelar del Bosque Lunar",
+    "introBody": "¡El Gran Faro Estelar se ha quedado dormido! Recorre los senderos con el búho Pip, ayuda a los amigos mágicos de cada región y lanza hechizos de aprendizaje para devolver la luz al reino.",
+    "restoredTitle": "¡El Bosque Lunar vuelve a brillar!",
+    "restoredBody": "¡Despertaste el Bosque Susurrante, iluminaste las Cuevas de Cristal, restauraste la Biblioteca Encantada y coronaste de luz la Torre Estelar!",
+    "endingHeading": "La Gran Celebración Estelar",
+    "endingSubtitle": "¡Cada farol, cristal, libro de cuentos y estrella del Bosque Lunar brilla gracias a ti!",
+    "endingFriends": "Tus amigos Pip, Musgo, Zarza, Luma y Astra bailan bajo las constelaciones restauradas.",
+    "endingReplay": "Explorar el reino otra vez"
+  },
+  "map": {
+    "heading": "Elige una misión",
+    "canvasLabel": "Mapa del Bosque Lunar",
+    "heroStatus": "Aprendiz Aria y Pip · ¡Usa las flechas o toca el mapa para explorar!"
+  },
+  "region": {
+    "whisperingWoods": {
+      "title": "Bosque Susurrante",
+      "subtitle": "Sumas y sentido numérico"
+    },
+    "crystalCaves": {
+      "title": "Cuevas de Cristal",
+      "subtitle": "Decenas, unidades y restas"
+    },
+    "enchantedLibrary": {
+      "title": "La Biblioteca Encantada",
+      "subtitle": "Medidas del puente y palabras"
+    },
+    "starfallTower": {
+      "title": "Torre Estelar",
+      "subtitle": "Figuras, patrones y gran final"
+    }
+  },
+  "guide": {
+    "pip": {
+      "name": "Pip el Búho",
+      "greeting": "¡Juu-juu! ¡Toca cualquier sendero brillante o pregúntame cuando quieras una pista!"
+    },
+    "moss": {
+      "name": "Musgo el Duende",
+      "greeting": "¡Las flores del bosque cantan cuando juntamos cristales azules y dorados!"
+    },
+    "bramble": {
+      "name": "Zarza el Topo de Cristal",
+      "greeting": "¡En las Cuevas de Cristal guardamos las gemas en bolsas de diez para contar mejor!"
+    },
+    "luma": {
+      "name": "Luma la Zorra Bibliotecaria",
+      "greeting": "¡Cada tabla del puente y cada palabra de nuestros libros guarda un gran secreto!"
+    },
+    "astra": {
+      "name": "Astra el Hada Estelar",
+      "greeting": "¡Mira las estrellas! ¡Las figuras y los patrones muestran cómo bailan las constelaciones!"
+    }
+  },
+  "quest": {
+    "forestGate": {
+      "title": "La Puerta Susurrante",
+      "intro": "La puerta está dormida. ¡Despierta cada runa con la cantidad correcta de magia!"
+    },
+    "lanternBridge": {
+      "title": "El Arroyo de los Faroles",
+      "intro": "¡Ayuda a Musgo a encender los faroles del arroyo juntando magia brillante!"
+    },
+    "mossGrove": {
+      "title": "El Árbol Corazón",
+      "intro": "¡Comparte gotas de sol y bayas estelares para despertar al gran Árbol Corazón!"
+    },
+    "crystalCaves": {
+      "title": "Cuevas de Cristal",
+      "intro": "Guarda los cristales en bolsas de diez."
+    },
+    "echoForge": {
+      "title": "El Vagón del Eco",
+      "intro": "¡Ayuda a Zarza a enfriar la forja quitando los cristales que usó cada hechizo!"
+    },
+    "prismSanctum": {
+      "title": "La Bóveda del Prisma",
+      "intro": "¡Cuenta las bolsas de diez y los cristales sueltos para abrir la Bóveda del Prisma!"
+    },
+    "ravineBridge": {
+      "title": "El Puente del Barranco",
+      "intro": "Busca tablas lo bastante largas para cruzar."
+    },
+    "enchantedLibrary": {
+      "title": "La Biblioteca Encantada",
+      "intro": "¡Ayuda a Luma a unir sonidos y palabras para devolver las páginas a sus libros!"
+    },
+    "livingStorybook": {
+      "title": "El Libro Viviente",
+      "intro": "¡Lee las pistas mágicas y mide las cintas doradas para despertar el Libro Viviente!"
+    },
+    "sigilTemple": {
+      "title": "Templo de los Símbolos",
+      "intro": "Construye las figuras antiguas para abrir las puertas."
+    },
+    "starObservatory": {
+      "title": "El Astrolabio Estelar",
+      "intro": "¡Ayuda a Astra a seguir los patrones de estrellas para alinear el gran telescopio!"
+    },
+    "starfallCrown": {
+      "title": "La Corona del Bosque Lunar",
+      "intro": "¡Usa toda tu magia —números, decenas, palabras, figuras y patrones— para encender el Gran Faro Estelar!"
+    },
+    "complete": "¡La puerta está abierta!"
+  },
+  "challenge": {
+    "addition": {
+      "combineMana": "Cristales azules: {{a}}. Cristales dorados: {{b}}. ¿Cuánta magia hay en total?"
+    },
+    "subtraction": {
+      "spendMana": "Cristales que tenías: {{a}}. Cristales que usó el hechizo: {{b}}. ¿Cuántos quedan?"
+    },
+    "placeValue": {
+      "countRunes": "Bolsas de diez: {{a}}. Cristales sueltos: {{b}}. ¿Cuántos cristales hay en total?",
+      "equation": "{{a}} decenas + {{b}} unidades = ?"
+    },
+    "length": {
+      "joinPlanks": "Primera tabla: {{a}} losas lunares. Segunda tabla: {{b}} losas lunares. ¿Cuántas losas mide el puente?",
+      "missingPlank": "El barranco mide {{a}} losas lunares. Una tabla cubre {{b}} losas. ¿Cuántas losas más faltan?",
+      "joinEquation": "{{a}} losas + {{b}} losas = ?",
+      "missingEquation": "{{a}} losas - {{b}} losas = ?"
+    },
+    "shapes": {
+      "composeSigil": "Triángulos celestes: {{a}}. Diamantes solares: {{b}}. ¿Cuántas piezas forman el símbolo?",
+      "countSides": "El primer símbolo tiene {{a}} lados. El segundo tiene {{b}} lados. ¿Cuántos lados hay en total?",
+      "equation": "{{a}} piezas + {{b}} piezas = ?"
+    },
+    "pattern": {
+      "nextStar": "Sigue el patrón de estrellas: {{a}}, {{b}}, {{c}}, … ¿Qué número de estrella sigue?",
+      "equation": "{{a}} → {{b}} → {{c}} → ?"
+    },
+    "phonics": {
+      "soundMatch": "Escucha los sonidos de la runa: {{sounds}} ({{clue}}). ¿Qué palabra del cuento coincide?",
+      "buildWord": "Une los sonidos {{sounds}} para encontrar la palabra de: {{clue}}.",
+      "storyClue": "Completa la página del cuento: \"{{sentence}}\" ({{sounds}})",
+      "equation": "{{icon}} {{sounds}} = ?",
+      "word": {
+        "1": {
+          "label": "🌙 LUNA",
+          "word": "LUNA",
+          "icon": "🌙",
+          "sounds": "L - U - N - A",
+          "clue": "brilla plateada en el cielo nocturno",
+          "sentence": "La ___ plateada brilla sobre el bosque."
+        },
+        "2": {
+          "label": "⭐ SOL",
+          "word": "SOL",
+          "icon": "⭐",
+          "sounds": "S - O - L",
+          "clue": "estrella brillante que nos da luz",
+          "sentence": "Pide un deseo a la estrella y al ___."
+        },
+        "3": {
+          "label": "🦉 BÚHO",
+          "word": "BÚHO",
+          "icon": "🦉",
+          "sounds": "B - Ú - H - O",
+          "clue": "ave sabia que dice juu-juu",
+          "sentence": "Pip el ___ sabio canta en el árbol."
+        },
+        "4": {
+          "label": "🐸 RANA",
+          "word": "RANA",
+          "icon": "🐸",
+          "sounds": "R - A - N - A",
+          "clue": "salta sobre hojas verdes en el agua",
+          "sentence": "La ___ verde salta en el arroyo."
+        },
+        "5": {
+          "label": "🌲 ÁRBOL",
+          "word": "ÁRBOL",
+          "icon": "🌲",
+          "sounds": "Á - R - B - O - L",
+          "clue": "hogar alto del bosque con ramas y hojas",
+          "sentence": "Musgo descansa bajo el gran ___."
+        },
+        "6": {
+          "label": "📖 LIBRO",
+          "word": "LIBRO",
+          "icon": "📖",
+          "sounds": "L - I - B - R - O",
+          "clue": "abre sus páginas para leer un cuento",
+          "sentence": "Luma abre un ___ mágico de cuentos."
+        },
+        "7": {
+          "label": "👑 CORONA",
+          "word": "CORONA",
+          "icon": "👑",
+          "sounds": "C - O - R - O - N - A",
+          "clue": "sombrero dorado de la realeza",
+          "sentence": "La ___ estelar brilla en la torre."
+        },
+        "8": {
+          "label": "💎 GEMA",
+          "word": "GEMA",
+          "icon": "💎",
+          "sounds": "G - E - M - A",
+          "clue": "cristal brillante de la cueva",
+          "sentence": "Zarza encontró una ___ morada."
+        },
+        "9": {
+          "label": "🦊 ZORRO",
+          "word": "ZORRO",
+          "icon": "🦊",
+          "sounds": "Z - O - R - R - O",
+          "clue": "amigo astuto de cola esponjosa",
+          "sentence": "A Luma el ___ le encanta leer."
+        },
+        "10": {
+          "label": "🐱 GATO",
+          "word": "GATO",
+          "icon": "🐱",
+          "sounds": "G - A - T - O",
+          "clue": "ronronea junto a la chimenea tibia",
+          "sentence": "El pequeño ___ ronronea junto al farol."
+        },
+        "11": {
+          "label": "☀️ FLOR",
+          "word": "FLOR",
+          "icon": "☀️",
+          "sounds": "F - L - O - R",
+          "clue": "brote colorido que se abre al sol",
+          "sentence": "Una bella ___ se abre en la pradera."
+        },
+        "12": {
+          "label": "🔔 CAMPANA",
+          "word": "CAMPANA",
+          "icon": "🔔",
+          "sounds": "C - A - M - P - A - N - A",
+          "clue": "suena con un claro tin-tan plateado",
+          "sentence": "La ___ de plata suena en la torre."
+        }
+      }
+    }
+  },
+  "feedback": {
+    "correct": "¡La runa brilla!",
+    "hint1": "Contemos los cristales juntos.",
+    "hint2": "Mira: todos los cristales en una fila. Cuéntalos todos.",
+    "hint3": "Magia guiada: ¡la respuesta es {{answer}}! Toca {{answer}} para lanzar el hechizo.",
+    "notThat": "No es {{value}}. Prueba otro.",
+    "treasureDiscovered": "¡Descubriste un Tesoro Estelar oculto: {{name}}!"
+  },
+  "reward": {
+    "earned": "¡Nuevo amigo: {{name}}!",
+    "moss": {
+      "name": "Musgo, el duende del bosque"
+    },
+    "dawnLantern": {
+      "name": "Farol del Alba"
+    },
+    "heartwoodBloom": {
+      "name": "Flor del Árbol Corazón"
+    },
+    "crystalWand": {
+      "name": "Varita de cristal"
+    },
+    "bramble": {
+      "name": "Zarza, el topo de cristal"
+    },
+    "prismLit": {
+      "name": "Corazón de la Caverna"
+    },
+    "ravineCrossed": {
+      "name": "El otro lado del barranco"
+    },
+    "luma": {
+      "name": "Luma, la zorra bibliotecaria"
+    },
+    "storyQuill": {
+      "name": "Pluma Dorada de Cuentos"
+    },
+    "starRobe": {
+      "name": "Túnica de estrellas"
+    },
+    "astra": {
+      "name": "Astra, el hada estelar"
+    },
+    "kingdomRestored": {
+      "name": "La Corona del Bosque Lunar"
+    },
+    "whisperingSeed": {
+      "name": "Semilla Estelar Susurrante"
+    },
+    "crystalGeode": {
+      "name": "Geoda Cantora de Amatista"
+    },
+    "ancientBookmark": {
+      "name": "Separador de Rayo Lunar"
+    },
+    "fallenStar": {
+      "name": "Pluma de Estrella Fugaz"
+    }
+  },
+  "settings": {
+    "heading": "Ajustes",
+    "sound": "Sonido",
+    "reducedMotion": "Movimiento tranquilo",
+    "language": "Idioma",
+    "narration": "Leer las preguntas en voz alta"
+  },
+  "parent": {
+    "gateHeading": "Para adultos",
+    "gateQuestion": "¿Cuánto es {{a}} × {{b}}?",
+    "gateAnswer": "Respuesta",
+    "gateSubmit": "Continuar",
+    "gateWrong": "No es correcto. Pide ayuda a un adulto.",
+    "heading": "Adultos",
+    "privacyHeading": "Privacidad",
+    "privacy": "Este juego guarda el progreso solo en este navegador y en este dispositivo. No tiene cuentas, anuncios, chat ni rastreo, y no envía nada por internet.",
+    "progressHeading": "Progreso de aprendizaje",
+    "noProgress": "Todavía no se ha jugado ninguna misión.",
+    "objectiveRow": "{{standard}}: {{independent}} resueltos sin ayuda, {{supported}} con ayuda",
+    "erase": "Borrar todo el progreso de este dispositivo",
+    "eraseConfirm": "¿Borrar todo el progreso? No se puede deshacer.",
+    "erased": "Progreso borrado."
+  }
+}

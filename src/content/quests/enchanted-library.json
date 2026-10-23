@@ -1,0 +1,19 @@
+{
+  "id": "enchanted-library",
+  "status": "playable",
+  "regionId": "enchanted-library",
+  "guideId": "luma",
+  "prerequisiteQuestId": "ravine-bridge",
+  "titleKey": "quest.enchantedLibrary.title",
+  "introKey": "quest.enchantedLibrary.intro",
+  "sceneKey": "ForestQuest",
+  "objectiveIds": ["phonics-words"],
+  "recommendedMinutes": 5,
+  "phases": [
+    { "kind": "guided", "count": 2, "difficultyCap": 1 },
+    { "kind": "independent", "count": 3 }
+  ],
+  "rewards": [{ "id": "companion.luma", "kind": "companion", "nameKey": "reward.luma.name" }],
+  "unlocks": ["living-storybook"],
+  "map": { "x": 655, "y": 415 }
+}

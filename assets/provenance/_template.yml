@@ -1,0 +1,13 @@
+# Copy to <source>.yml and add one entry per asset.
+- id: forest-tree-01
+  file: public/assets/backgrounds/forest-tree-01.webp
+  source: kenney
+  source_url: https://kenney.nl/assets/...
+  author: Kenney
+  license: CC0-1.0 # SPDX identifier
+  attribution_required: false
+  modified: true
+  modifications:
+    - palette adjusted to PALETTE.treeNear
+    - resized to 2x display density
+  added: 2026-10-23

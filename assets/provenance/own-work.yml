@@ -1,0 +1,77 @@
+assets:
+  - path: public/assets/emblems/whispering-woods.svg
+    title: "Whispering Woods Region Emblem"
+    author: "Moonwood Quests Contributors (own work)"
+    source_url: "internal:public/assets/emblems/whispering-woods.svg"
+    license: "CC0-1.0"
+    license_url: "https://creativecommons.org/publicdomain/zero/1.0/"
+    attribution_required: false
+    modifications: "Original hand-authored SVG emblem (no embedded text)."
+    ai_generated: false
+    reviewed_date: "2026-10-23"
+
+  - path: public/assets/emblems/crystal-caves.svg
+    title: "Crystal Caves Region Emblem"
+    author: "Moonwood Quests Contributors (own work)"
+    source_url: "internal:public/assets/emblems/crystal-caves.svg"
+    license: "CC0-1.0"
+    license_url: "https://creativecommons.org/publicdomain/zero/1.0/"
+    attribution_required: false
+    modifications: "Original hand-authored SVG emblem (no embedded text)."
+    ai_generated: false
+    reviewed_date: "2026-10-23"
+
+  - path: public/assets/emblems/enchanted-library.svg
+    title: "The Enchanted Library Region Emblem"
+    author: "Moonwood Quests Contributors (own work)"
+    source_url: "internal:public/assets/emblems/enchanted-library.svg"
+    license: "CC0-1.0"
+    license_url: "https://creativecommons.org/publicdomain/zero/1.0/"
+    attribution_required: false
+    modifications: "Original hand-authored SVG emblem (no embedded text)."
+    ai_generated: false
+    reviewed_date: "2026-10-23"
+
+  - path: public/assets/emblems/starfall-tower.svg
+    title: "Starfall Tower Region Emblem"
+    author: "Moonwood Quests Contributors (own work)"
+    source_url: "internal:public/assets/emblems/starfall-tower.svg"
+    license: "CC0-1.0"
+    license_url: "https://creativecommons.org/publicdomain/zero/1.0/"
+    attribution_required: false
+    modifications: "Original hand-authored SVG emblem (no embedded text)."
+    ai_generated: false
+    reviewed_date: "2026-10-23"
+
+  - path: src/game/scenes/BootScene.ts
+    title: "Procedural Sprite & Particle Textures (Hero, Guides, Gems, Ten-Rods, Treasure, Spark, Star)"
+    author: "Moonwood Quests Contributors (own work)"
+    source_url: "internal:src/game/scenes/BootScene.ts"
+    license: "CC0-1.0"
+    license_url: "https://creativecommons.org/publicdomain/zero/1.0/"
+    attribution_required: false
+    modifications: "Generated at runtime via Phaser Graphics."
+    ai_generated: false
+    reviewed_date: "2026-10-23"
+
+  - path: src/game/scenes/drawing.ts
+    title: "Procedural Region Backdrops, Companions, and Interactive Props"
+    author: "Moonwood Quests Contributors (own work)"
+    source_url: "internal:src/game/scenes/drawing.ts"
+    license: "CC0-1.0"
+    license_url: "https://creativecommons.org/publicdomain/zero/1.0/"
+    attribution_required: false
+    modifications: "Generated at runtime via Phaser Graphics."
+    ai_generated: false
+    reviewed_date: "2026-10-23"
+
+  - path: src/game/systems/AudioSystem.ts
+    title: "Procedural Web Audio Sound Effects & Region Ambient Chimes"
+    author: "Moonwood Quests Contributors (own work)"
+    source_url: "internal:src/game/systems/AudioSystem.ts"
+    license: "CC0-1.0"
+    license_url: "https://creativecommons.org/publicdomain/zero/1.0/"
+    attribution_required: false
+    modifications: "Synthesised at runtime via Web Audio API."
+    ai_generated: false
+    reviewed_date: "2026-10-23"

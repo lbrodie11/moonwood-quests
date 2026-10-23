@@ -1,0 +1,19 @@
+{
+  "id": "forest-gate",
+  "status": "playable",
+  "regionId": "whispering-woods",
+  "guideId": "moss",
+  "titleKey": "quest.forestGate.title",
+  "introKey": "quest.forestGate.intro",
+  "sceneKey": "ForestQuest",
+  "objectiveIds": ["add-within-20"],
+  "recommendedMinutes": 6,
+  "phases": [
+    { "kind": "guided", "count": 2, "difficultyCap": 1 },
+    { "kind": "independent", "count": 3 },
+    { "kind": "mini-boss", "count": 1, "difficultyFloor": 2 }
+  ],
+  "rewards": [{ "id": "companion.moss", "kind": "companion", "nameKey": "reward.moss.name" }],
+  "unlocks": ["crystal-caves"],
+  "map": { "x": 135, "y": 395 }
+}

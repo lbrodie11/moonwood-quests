@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Crystal Caves Emblem">
+  <defs>
+    <radialGradient id="caveGlow" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#6ae4ff" stop-opacity="0.95"/>
+      <stop offset="55%" stop-color="#3c4c7a" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#0e1b26" stop-opacity="1"/>
+    </radialGradient>
+  </defs>
+  <circle cx="64" cy="64" r="58" fill="url(#caveGlow)" stroke="#f6c760" stroke-width="4"/>
+  <!-- Prism Crystal Cluster -->
+  <polygon points="64,26 84,56 76,96 52,96 44,56" fill="#7be3ff" stroke="#ffffff" stroke-width="2.5"/>
+  <polygon points="42,48 56,64 50,96 34,90" fill="#ff8ad8" opacity="0.88" stroke="#ffffff" stroke-width="1.5"/>
+  <polygon points="86,48 94,90 78,96 72,64" fill="#a88cff" opacity="0.88" stroke="#ffffff" stroke-width="1.5"/>
+</svg>
