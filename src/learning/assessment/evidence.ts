@@ -1,5 +1,8 @@
+import { MIN_RETENTION_DELAY_HOURS } from "../adaptation/spacedReview";
 import type { LearningStage, Representation } from "../challenge";
 import type { Difficulty, ObjectiveId } from "../objectives";
+
+export { MIN_RETENTION_DELAY_HOURS };
 
 export type ResponseModality =
   | "visual-dom"
@@ -67,6 +70,11 @@ export interface MasteryEvaluationConfig {
   minDistinctFamilies: number;
   minDistinctRepresentations: number;
   misconceptionAlertThreshold: number;
+  /**
+   * Minimum hours since the most recent prior independent success before a
+   * review item counts as delayed retention evidence (default 20).
+   */
+  minRetentionDelayHours?: number | undefined;
 }
 
 export const DEFAULT_MASTERY_CONFIG: MasteryEvaluationConfig = {
@@ -75,6 +83,7 @@ export const DEFAULT_MASTERY_CONFIG: MasteryEvaluationConfig = {
   minDistinctFamilies: 3,
   minDistinctRepresentations: 2,
   misconceptionAlertThreshold: 2,
+  minRetentionDelayHours: MIN_RETENTION_DELAY_HOURS,
 };
 
 export interface SkillEvidenceSummary {
@@ -124,6 +133,9 @@ export function evaluateSkillEvidence(
   const representations = new Set<Representation>();
   const misconceptions: Record<string, number> = {};
 
+  const minRetentionDelayMs =
+    (config.minRetentionDelayHours ?? MIN_RETENTION_DELAY_HOURS) * 60 * 60 * 1000;
+
   let independentUnseenAttempts = 0;
   let independentUnseenCorrect = 0;
   let assistedCompletions = 0;
@@ -131,10 +143,12 @@ export function evaluateSkillEvidence(
   let hasDelayedRetentionEvidence = false;
   let listeningOnlyCount = 0;
   let independentReadingCount = 0;
+  let lastIndependentSuccessMs: number | null = null;
 
   for (const r of relevant) {
     if (!r.correct) {
       for (const err of r.errorClassifications) {
+        if (err === "general-calculation-or-decoding-error") continue;
         misconceptions[err] = (misconceptions[err] ?? 0) + 1;
       }
     }
@@ -163,13 +177,29 @@ export function evaluateSkillEvidence(
         independentUnseenAttempts += 1;
         independentUnseenCorrect += 1;
         if (r.isTransfer) hasTransferEvidence = true;
-        if (r.isRetention) hasDelayedRetentionEvidence = true;
+        const rMs = Date.parse(r.timestamp);
+        if (
+          r.isRetention &&
+          lastIndependentSuccessMs !== null &&
+          !Number.isNaN(rMs) &&
+          rMs - lastIndependentSuccessMs >= minRetentionDelayMs
+        ) {
+          hasDelayedRetentionEvidence = true;
+        }
+        if (r.stage !== "modeling" && r.stage !== "guided" && !Number.isNaN(rMs)) {
+          lastIndependentSuccessMs = rMs;
+        }
       } else {
         independentUnseenAttempts += 1;
         if (r.correct) assistedCompletions += 1;
       }
     } else if (r.correct && !trulyIndependent) {
       assistedCompletions += 1;
+    } else if (trulyIndependent && r.correct) {
+      const rMs = Date.parse(r.timestamp);
+      if (r.stage !== "modeling" && r.stage !== "guided" && !Number.isNaN(rMs)) {
+        lastIndependentSuccessMs = rMs;
+      }
     }
   }
 

@@ -41,11 +41,11 @@ This document details the Grade 1 mathematical progressions, representations, st
 ## 3. Place Value: Tens and Ones (`tens-and-ones`)
 
 ### Standards
-- `1.NBT.B.2`, `1.NBT.B.3` (`NC.1.NBT.2`, `NC.1.NBT.3`) for two-digit numbers (`10–99`).
+- `1.NBT.B.2` (`NC.1.NBT.2`) for two-digit numbers (`10–99`); `1.NBT.B.3` (`>, =, <` symbol comparison) is tracked as `planned`.
 - `1.NBT.A.1` (`NC.1.NBT.1`) for extended bundle counts `100–120` at Difficulty 4 (`extended-bundle-count-above-99`).
 
 ### Misconception Detection
-- **Digit-reversal distractor** (`swappedDigits`: e.g., choosing `43` for `3 tens + 4 ones = 34` -> `"reversed-tens-and-ones-digits"`).
+- **Digit-reversal distractor** (`swapped`: e.g., choosing `43` for `3 tens + 4 ones = 34` -> `"swapped-tens-and-ones-digits"`).
 - **Additive digit sum distractor** (`tens + ones`: e.g., choosing `7` for `3 tens + 4 ones` -> `"added-digits-without-place-value"`).
 
 ---
@@ -53,16 +53,16 @@ This document details the Grade 1 mathematical progressions, representations, st
 ## 4. Length Measurement & Comparison (`compare-lengths`)
 
 ### Standards
-- `1.MD.A.1`, `1.MD.A.2` (`NC.1.MD.1`, `NC.1.MD.2`)
+- `1.MD.A.2` (`NC.1.MD.2`) for end-to-end non-standard unit planks; `1.MD.A.1` (3-object ordering and indirect comparison) is tracked as `planned`.
 
 ### Task Families
-- End-to-end non-standard unit iteration (`measure-end-to-end-unit-tiles`) with equal-size moon-tiles and zero gaps/overlaps.
-- Indirect comparison and missing-span comparison (`indirect-length-comparison-via-reference`) against a reference ravine span.
+- End-to-end non-standard unit iteration (`join-unit-planks-within-8`, `join-unit-planks-within-12`) with equal-size moon-tiles and zero gaps/overlaps.
+- Missing-plank span comparison (`missing-plank-span-within-16`, `missing-plank-span-within-20`) aligned from the left edge with an un-subdivided gap box.
 
 ---
 
-## 5. Geometry & Fractions of Shapes (`compose-shapes`)
+## 5. Geometry & Composite Shapes (`compose-shapes`)
 
 ### Standards
-- `1.G.A.1` (defining vs. non-defining attributes), `1.G.A.2` (composing 2D composite shapes), `1.G.A.3` (partitioning into 2 and 4 equal shares).
-- Paired with **Moonwood Builder's Workshop** (`creative-construction`) for multi-piece composite shape construction.
+- `1.G.A.2` (`NC.1.G.2`) for composing 2D composite sigil piece totals (`partial`); `1.G.A.1` (attribute sorting/drawing) is tracked as `planned`.
+- Paired with **Moonwood Builder's Workshop** (`creative-construction`) for composite shape design choices.

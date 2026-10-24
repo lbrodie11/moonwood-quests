@@ -1,20 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
 
-const WORD_BY_ICON: Record<string, string> = {
-  "🌙": "MOON",
-  "⭐": "STAR",
-  "🦉": "OWL",
-  "🐸": "FROG",
-  "🌲": "TREE",
-  "📖": "BOOK",
-  "👑": "CROWN",
-  "💎": "GEM",
-  "🦊": "FOX",
-  "🐱": "CAT",
-  "☀️": "SUN",
-  "🔔": "BELL",
-};
-
 /** Reads the equation display from the accessible panel and returns the correct numeric answer. */
 async function correctAnswer(page: Page): Promise<number> {
   const text = ((await page.getByTestId("equation").textContent()) ?? "").trim();
@@ -56,18 +41,14 @@ async function correctAnswer(page: Page): Promise<number> {
     return Number(reversedMinuend[1]) + Number(reversedMinuend[2]);
   }
 
-  // Phonics-words: "🌙 = ?" -> match the word-only choice button ("MOON")
-  for (const [icon, word] of Object.entries(WORD_BY_ICON)) {
-    if (text.startsWith(icon)) {
-      const choices = await page.locator(".choice").evaluateAll((els) =>
-        els.map((el) => ({
-          value: Number(el.getAttribute("data-value")),
-          label: (el.textContent ?? "").trim().toUpperCase(),
-        })),
-      );
-      const matched = choices.find((c) => c.label === word);
-      if (matched) return matched.value;
-    }
+  // Phonics-words: "▢ ▢ ▢ = ?" -> choice 1 is the target decoded word
+  if (text.includes("▢")) {
+    return 1;
+  }
+
+  // Story/Vocabulary/Spelling/Reasoning/Science/Workshop: "#1" -> choice 1
+  if (/^.+ #\d+$/.test(text)) {
+    return 1;
   }
 
   // Addition, subtraction, length tiles, shape shards: "7 + 5 = ?" or "8 tiles - 3 tiles = ?"
@@ -379,11 +360,17 @@ test("regional sanctuaries, Storykeeper reading vs. listening modality, assessme
   await page.getByTestId("read-myself-btn").click();
   await expect(page.getByTestId("read-myself-btn")).toHaveClass(/modality-active/);
 
-  // Strategy reflection tray appears only after an attempt/hint submission
+  // Strategy reflection tray remains hidden on hint requests and wrong answers, appears after a correct answer on Q1, and resets hidden on Q2 before answering (A5.1)
   await page.getByTestId("ask-hint").click();
+  await expect(page.getByTestId("strategy-reflection")).toBeHidden();
+  await answer(page, 2);
+  await expect(page.getByTestId("strategy-reflection")).toBeHidden();
+  await answer(page, 1);
   await expect(page.getByTestId("strategy-reflection")).toBeVisible();
   await page.locator(".reflection-card").first().click();
   await expect(page.getByTestId("reflection-thanks")).toContainText("Thank you for sharing your strategy");
+  await expect(page.getByTestId("equation")).not.toHaveText("Story #1");
+  await expect(page.getByTestId("strategy-reflection")).toBeHidden();
   await page.getByTestId("leave-quest").click();
 
   // 4. Enter Starlight Independent Check and verify hints are disabled in assessment mode

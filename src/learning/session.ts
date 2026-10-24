@@ -77,6 +77,7 @@ export class QuestRunner {
   private readonly mastery: MasteryMap;
   private readonly evidenceLog: EvidenceRecord[] = [];
   private readonly seenSignatures: Set<string>;
+  private readonly servedReviewSkills = new Set<ObjectiveId>();
   private readonly assessmentMode: AssessmentMode;
   private readonly locale: "en-US" | "es-US";
 
@@ -87,6 +88,7 @@ export class QuestRunner {
   private hintCategories: HintCategory[] = [];
   private currentErrorTags: string[] = [];
   private currentUnseen = true;
+  private currentIsReviewSlot = false;
   private currentModality: ResponseModality = "visual-dom";
   private startedAt = 0;
   private lastSignature = "";
@@ -260,7 +262,7 @@ export class QuestRunner {
       !listeningOnly;
 
     return {
-      attemptId: `${challenge.id}:try${this.tries}:${nowMs}`,
+      attemptId: `${challenge.id}:${challenge.operands.join("-")}:try${this.tries}:${nowMs}`,
       skillId: challenge.objectiveId,
       contentVersion: "2.0.0",
       locale: this.locale,
@@ -280,7 +282,11 @@ export class QuestRunner {
       isTransfer:
         challenge.stage === "transfer" || this.assessmentMode === "transfer-check",
       isRetention:
-        challenge.stage === "retention" || this.assessmentMode === "delayed-retention",
+        challenge.stage === "retention" ||
+        this.currentIsReviewSlot ||
+        (this.assessmentMode === "delayed-retention" &&
+          challenge.stage !== "modeling" &&
+          challenge.stage !== "guided"),
       correct,
       completed,
       assessmentMode: this.assessmentMode,
@@ -295,14 +301,24 @@ export class QuestRunner {
     const phase = this.steps[this.index];
     if (!phase) throw new Error("No phase for challenge index");
 
-    const dueInQuest = (this.plan.dueReviewSkills ?? []).filter((id) =>
-      this.plan.objectiveIds.includes(id),
+    const unservedDueInQuest = (this.plan.dueReviewSkills ?? []).filter(
+      (id) => this.plan.objectiveIds.includes(id) && !this.servedReviewSkills.has(id),
     );
+    const isDedicatedReviewSlot =
+      phase.stage === "retention" ||
+      (phase.kind === "independent" &&
+        (unservedDueInQuest.length > 0 || this.assessmentMode === "delayed-retention"));
+
     const requestedObjective = (
-      dueInQuest.length > 0 && this.index < dueInQuest.length
-        ? dueInQuest[this.index]
+      isDedicatedReviewSlot && unservedDueInQuest.length > 0
+        ? unservedDueInQuest[0]
         : this.plan.objectiveIds[this.index % this.plan.objectiveIds.length]
     ) as ObjectiveId;
+
+    if (isDedicatedReviewSlot && unservedDueInQuest.includes(requestedObjective)) {
+      this.servedReviewSkills.add(requestedObjective);
+    }
+    this.currentIsReviewSlot = isDedicatedReviewSlot;
 
     // Prerequisite scaffolding: if a child enters a quest whose target skill has
     // an unmet prerequisite during the guided phase:
@@ -346,17 +362,16 @@ export class QuestRunner {
       objectiveId === "reading-comprehension" ? "independent-reading" : "visual-dom";
     this.startedAt = this.now();
 
-    const isDueForReview = Boolean(this.plan.dueReviewSkills?.includes(objectiveId));
     const stage: LearningStage =
       phase.stage ??
-      (isDueForReview || this.assessmentMode === "delayed-retention"
-        ? "retention"
-        : phase.kind === "guided"
-          ? this.index === 0
-            ? "modeling"
-            : "guided"
-          : phase.kind === "mini-boss"
-            ? "transfer"
+      (phase.kind === "guided"
+        ? this.index === 0
+          ? "modeling"
+          : "guided"
+        : phase.kind === "mini-boss"
+          ? "transfer"
+          : isDedicatedReviewSlot
+            ? "retention"
             : "independent");
 
     return {

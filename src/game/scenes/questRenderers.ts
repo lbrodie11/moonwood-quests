@@ -354,8 +354,8 @@ export function spawnChallengeStage(
     const isStoryPhonics = isPhonics && challenge.promptKey.includes("story");
     const targetIcon = isPhonics
       ? isStoryPhonics
-        ? "📖"
-        : t(`challenge.phonics.word.${targetId}.icon`)
+        ? "📜"
+        : "🔤"
       : "✨";
     const rawSounds = isPhonics ? t(`challenge.phonics.word.${targetId}.sounds`) : "";
     const elkoninBoxes = isPhonics
@@ -378,7 +378,7 @@ export function spawnChallengeStage(
         color: "#ffe680",
       })
       .setOrigin(0.5)
-      .setVisible(false);
+      .setVisible(isPhonics);
     stageProps.push(clueBadge, hintTextProp);
 
     const positions = [210, 480, 750];
@@ -387,7 +387,9 @@ export function spawnChallengeStage(
       const y = 345;
       const image = scene.add.image(x, y, "story-scroll").setScale(reduced ? 1.15 : 0);
       const rawText = isPhonics
-        ? t(`challenge.phonics.word.${choiceId}.word`)
+        ? challenge.choiceKeyPrefix
+          ? t(`${challenge.choiceKeyPrefix}.${choiceId}.label`)
+          : t(`challenge.phonics.word.${choiceId}.word`)
         : String(idx + 1);
       const label = scene.add
         .text(x, y + 40, rawText, LABEL_STYLE)

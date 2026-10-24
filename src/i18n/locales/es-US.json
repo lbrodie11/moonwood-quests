@@ -207,12 +207,12 @@
       "equation": "{{a}} → {{b}} → {{c}} → ?"
     },
     "phonics": {
-      "soundRecognition": "Escucha los sonidos inicial y final de {{icon}} ({{clue}}). ¿Qué palabra tiene esos sonidos?",
-      "soundMatch": "Mira la pista {{icon}} ({{clue}}). ¡Une los sonidos y elige la palabra correcta!",
-      "segmentWord": "Cuenta cada sonido o sílaba de {{icon}} ({{clue}}). ¿Qué palabra tiene esas letras en orden?",
-      "buildWord": "¡Forma la palabra que significa {{icon}} ({{clue}}) uniendo cada sonido en orden!",
-      "storyClue": "Lee la oración del cuento y elige la palabra que completa el espacio: \"{{sentence}}\"",
-      "storySentence": "Lectura conectada: \"{{sentence}}\" ({{clue}}). ¿Qué palabra completa la oración?",
+      "soundRecognition": "Revisa cada sonido ({{elkonin}}, {{soundCount}} sonidos) de la palabra que significa: {{clue}}. ¿Qué palabra tiene todos esos sonidos?",
+      "soundMatch": "Une los {{soundCount}} sonidos en orden ({{elkonin}}) para: {{clue}}. ¿Qué palabra forman?",
+      "segmentWord": "Cuenta cada casilla de sonido ({{elkonin}}, {{soundCount}} sonidos) para: {{clue}}. ¿Qué palabra tiene esos sonidos en orden?",
+      "buildWord": "Forma la palabra de {{soundCount}} sonidos ({{elkonin}}) que significa: {{clue}}. ¿Qué opción tiene cada letra en el orden correcto?",
+      "storyClue": "Decodifica las tres palabras y elige la que completa la oración: \"{{sentence}}\"",
+      "storySentence": "Lectura conectada: Lee \"{{sentence}}\" y elige la palabra decodificada que completa el cuento.",
       "parentPronunciationGuide": "Consejo para adultos: Modele los sonidos de cada letra y sílaba con claridad.",
       "equation": "{{icon}} = ?",
       "word": {
@@ -222,7 +222,12 @@
           "icon": "🌙",
           "sounds": "L - U - N - A",
           "clue": "brilla plateada en el cielo nocturno",
-          "sentence": "La ___ plateada brilla sobre el bosque."
+          "sentence": "La ___ plateada brilla sobre el bosque.",
+          "choice": {
+            "1": { "label": "LUNA" },
+            "2": { "label": "CUNA" },
+            "3": { "label": "LUPA" }
+          }
         },
         "2": {
           "label": "ESTRELLA",
@@ -230,7 +235,12 @@
           "icon": "⭐",
           "sounds": "E - S - T - R - E - LL - A",
           "clue": "titila en lo alto sobre la torre",
-          "sentence": "Pide un deseo a una ___ brillante."
+          "sentence": "Pide un deseo a una ___ brillante.",
+          "choice": {
+            "1": { "label": "ESTRELLA" },
+            "2": { "label": "ESTELA" },
+            "3": { "label": "ESPUELA" }
+          }
         },
         "3": {
           "label": "BÚHO",
@@ -238,7 +248,12 @@
           "icon": "🦉",
           "sounds": "B - Ú - H - O",
           "clue": "ave sabia que dice juu-juu",
-          "sentence": "Pip el ___ sabio canta en el árbol."
+          "sentence": "Pip el ___ sabio canta en el árbol.",
+          "choice": {
+            "1": { "label": "BÚHO" },
+            "2": { "label": "BUZO" },
+            "3": { "label": "CUBO" }
+          }
         },
         "4": {
           "label": "RANA",
@@ -246,7 +261,12 @@
           "icon": "🐸",
           "sounds": "R - A - N - A",
           "clue": "salta sobre hojas verdes en el agua",
-          "sentence": "La ___ verde salta en el arroyo."
+          "sentence": "La ___ verde salta en el arroyo.",
+          "choice": {
+            "1": { "label": "RANA" },
+            "2": { "label": "RAMA" },
+            "3": { "label": "LANA" }
+          }
         },
         "5": {
           "label": "ÁRBOL",
@@ -254,7 +274,12 @@
           "icon": "🌲",
           "sounds": "Á - R - B - O - L",
           "clue": "hogar alto del bosque con ramas y hojas",
-          "sentence": "Musgo descansa bajo el gran ___."
+          "sentence": "Musgo descansa bajo el gran ___.",
+          "choice": {
+            "1": { "label": "ÁRBOL" },
+            "2": { "label": "ARCO" },
+            "3": { "label": "FAROL" }
+          }
         },
         "6": {
           "label": "LIBRO",
@@ -262,7 +287,12 @@
           "icon": "📖",
           "sounds": "L - I - B - R - O",
           "clue": "abre sus páginas para leer un cuento",
-          "sentence": "Luma abre un ___ mágico de cuentos."
+          "sentence": "Luma abre un ___ mágico de cuentos.",
+          "choice": {
+            "1": { "label": "LIBRO" },
+            "2": { "label": "LIBRE" },
+            "3": { "label": "LITRO" }
+          }
         },
         "7": {
           "label": "CORONA",
@@ -270,7 +300,12 @@
           "icon": "👑",
           "sounds": "C - O - R - O - N - A",
           "clue": "sombrero dorado de la realeza",
-          "sentence": "La ___ estelar brilla en la torre."
+          "sentence": "La ___ estelar brilla en la torre.",
+          "choice": {
+            "1": { "label": "CORONA" },
+            "2": { "label": "COLINA" },
+            "3": { "label": "CORO" }
+          }
         },
         "8": {
           "label": "GEMA",
@@ -278,15 +313,25 @@
           "icon": "💎",
           "sounds": "G - E - M - A",
           "clue": "cristal brillante de la cueva",
-          "sentence": "Zarza encontró una ___ morada."
+          "sentence": "Zarza encontró una ___ morada.",
+          "choice": {
+            "1": { "label": "GEMA" },
+            "2": { "label": "YEMA" },
+            "3": { "label": "REMA" }
+          }
         },
         "9": {
           "label": "ZORRO",
           "word": "ZORRO",
           "icon": "🦊",
-          "sounds": "Z - O - R - R - O",
+          "sounds": "Z - O - RR - O",
           "clue": "amigo astuto de cola esponjosa",
-          "sentence": "A Luma el ___ le encanta leer."
+          "sentence": "A Luma el ___ le encanta leer.",
+          "choice": {
+            "1": { "label": "ZORRO" },
+            "2": { "label": "CORRO" },
+            "3": { "label": "GORRO" }
+          }
         },
         "10": {
           "label": "GATO",
@@ -294,7 +339,12 @@
           "icon": "🐱",
           "sounds": "G - A - T - O",
           "clue": "ronronea junto a la chimenea tibia",
-          "sentence": "El pequeño ___ ronronea junto al farol."
+          "sentence": "El pequeño ___ ronronea junto al farol.",
+          "choice": {
+            "1": { "label": "GATO" },
+            "2": { "label": "PATO" },
+            "3": { "label": "GALO" }
+          }
         },
         "11": {
           "label": "SOL",
@@ -302,7 +352,12 @@
           "icon": "☀️",
           "sounds": "S - O - L",
           "clue": "luz dorada y tibia de la mañana",
-          "sentence": "El ___ de la mañana calienta la pradera."
+          "sentence": "El ___ de la mañana calienta la pradera.",
+          "choice": {
+            "1": { "label": "SOL" },
+            "2": { "label": "SAL" },
+            "3": { "label": "SUR" }
+          }
         },
         "12": {
           "label": "CAMPANA",
@@ -310,7 +365,12 @@
           "icon": "🔔",
           "sounds": "C - A - M - P - A - N - A",
           "clue": "suena con un claro tin-tan plateado",
-          "sentence": "La ___ de plata suena en la torre."
+          "sentence": "La ___ de plata suena en la torre.",
+          "choice": {
+            "1": { "label": "CAMPANA" },
+            "2": { "label": "VENTANA" },
+            "3": { "label": "CAMINO" }
+          }
         }
       }
     },
@@ -482,7 +542,7 @@
       "paperCompanionPrompt": "Compañero de Papel y Lápiz: ¡Toma un lápiz y papel real para escribir esta palabra u oración!",
       "item": {
         "1": {
-          "prompt": "Escucha las dos sílabas de la mascota que ronronea (🐱). ¿Cuál palabra tiene las letras en el orden correcto?",
+          "prompt": "Divide las dos sílabas de la mascota que ronronea (🐱). ¿Cuál palabra tiene las letras en el orden correcto?",
           "label": "GATO",
           "choice": {
             "1": { "label": "GATO" },
@@ -491,7 +551,7 @@
           }
         },
         "2": {
-          "prompt": "Escucha los tres sonidos del astro que ilumina el día (☀️). ¿Cuál escritura es la correcta?",
+          "prompt": "Divide los tres sonidos del astro que ilumina el día (☀️). ¿Cuál escritura es la correcta?",
           "label": "SOL",
           "choice": {
             "1": { "label": "SOL" },
@@ -522,7 +582,7 @@
           "label": "Pip ve la luna.",
           "choice": {
             "1": { "label": "Pip ve la luna." },
-            "2": { "label": "La luna ve Pip." },
+            "2": { "label": "La Pip luna ve." },
             "3": { "label": "Ve Pip luna la." }
           }
         },
@@ -532,7 +592,7 @@
           "choice": {
             "1": { "label": "Musgo enciende un farol." },
             "2": { "label": "Enciende Musgo farol un." },
-            "3": { "label": "Un farol enciende Musgo." }
+            "3": { "label": "Farol un enciende Musgo." }
           }
         },
         "7": {
@@ -572,7 +632,7 @@
           "label": "La gema triangular dorada",
           "choice": {
             "1": { "label": "La gema triangular dorada" },
-            "2": { "label": "La gema cuadrada dorada (4 lados)" },
+            "2": { "label": "La gema cuadrada dorada" },
             "3": { "label": "La gema triangular morada" }
           }
         },
@@ -605,11 +665,11 @@
         },
         "6": {
           "prompt": "Regla oculta: Las gemas azules dan 2 de magia y las doradas dan 5. ¿Cómo logras 7 de magia con dos gemas?",
-          "label": "Usar 1 gema azul (2) y 1 gema dorada (5)",
+          "label": "Usar 1 gema azul y 1 gema dorada",
           "choice": {
-            "1": { "label": "Usar 1 gema azul (2) y 1 gema dorada (5)" },
-            "2": { "label": "Usar 2 gemas azules (2 + 2 = 4)" },
-            "3": { "label": "Usar 2 gemas doradas (5 + 5 = 10)" }
+            "1": { "label": "Usar 1 gema azul y 1 gema dorada" },
+            "2": { "label": "Usar 2 gemas azules" },
+            "3": { "label": "Usar 2 gemas doradas" }
           }
         },
         "7": {
@@ -659,8 +719,8 @@
           "label": "Agua, luz del sol, aire y tierra",
           "choice": {
             "1": { "label": "Agua, luz del sol, aire y tierra" },
-            "2": { "label": "Solo oscuridad y canicas de vidrio" },
-            "3": { "label": "Capas de lana tibia y llaves de bronce" }
+            "2": { "label": "Solo tierra y sombra sin agua" },
+            "3": { "label": "Solo agua dentro de una caja oscura cerrada" }
           }
         },
         "4": {
@@ -687,7 +747,7 @@
           "choice": {
             "1": { "label": "El verano" },
             "2": { "label": "El invierno" },
-            "3": { "label": "La medianoche" }
+            "3": { "label": "El otoño" }
           }
         },
         "7": {
@@ -715,20 +775,20 @@
       "item": {
         "1": {
           "prompt": "Taller de Puentes: El arroyo mide 8 losas lunares. ¿Qué par de tablas cubre las 8 losas sin espacios?",
-          "label": "Una tabla de 5 losas + una de 3 losas (o dos de 4 losas)",
+          "label": "Una tabla de 5 losas + una de 3 losas",
           "choice": {
-            "1": { "label": "Una tabla de 5 losas + una de 3 losas (8 losas)" },
-            "2": { "label": "Una tabla de 4 losas + una de 2 losas (6 losas)" },
-            "3": { "label": "Una tabla de 3 losas + una de 2 losas (5 losas)" }
+            "1": { "label": "Una tabla de 5 losas + una de 3 losas" },
+            "2": { "label": "Una tabla de 4 losas + una de 2 losas" },
+            "3": { "label": "Una tabla de 3 losas + una de 2 losas" }
           }
         },
         "2": {
           "prompt": "Taller de Puentes: El cañón mide 10 losas lunares. ¿Qué diseño cubre las 10 losas completas?",
-          "label": "Una tabla de 6 losas + una de 4 losas (o dos de 5 losas)",
+          "label": "Una tabla de 6 losas + una de 4 losas",
           "choice": {
-            "1": { "label": "Una tabla de 6 losas + una de 4 losas (10 losas)" },
-            "2": { "label": "Una tabla de 5 losas + una de 3 losas (8 losas)" },
-            "3": { "label": "Dos tablas de 3 losas (6 losas)" }
+            "1": { "label": "Una tabla de 6 losas + una de 4 losas" },
+            "2": { "label": "Una tabla de 5 losas + una de 3 losas" },
+            "3": { "label": "Dos tablas de 3 losas" }
           }
         },
         "3": {
@@ -837,8 +897,8 @@
         "hint3": "Magia guiada: ¡{{a}} piezas y {{b}} piezas forman {{answer}} piezas! Toca {{answer}}."
       },
       "phonics-words": {
-        "hint1": "Señala cada ficha de letra y pronuncia los sonidos despacio: {{sounds}}.",
-        "hint2": "Une los sonidos de izquierda a derecha en voz alta: {{sounds}}.",
+        "hint1": "Revisa cada casilla de sonido ({{elkonin}}, {{soundCount}} sonidos) y compara las letras del principio, el medio y el final.",
+        "hint2": "Une los {{soundCount}} sonidos de izquierda a derecha ({{elkonin}}) y revisa las vocales.",
         "hint3": "Magia guiada: ¡los sonidos {{sounds}} forman {{answer}}! Toca {{answer}}."
       },
       "star-patterns": {
@@ -852,7 +912,7 @@
         "hint3": "Magia guiada: ¡el cuento muestra \"{{answer}}\"! Toca {{answer}}."
       },
       "vocabulary-oral": {
-        "hint1": "Escucha cómo usa la palabra el personaje del Bosque Lunar dentro de la oración.",
+        "hint1": "Observa cómo usa la palabra el personaje del Bosque Lunar dentro de la oración.",
         "hint2": "Piensa si las palabras pertenecen a la misma categoría o tienen significados parecidos.",
         "hint3": "Magia guiada: ¡el significado correcto es \"{{answer}}\"! Toca {{answer}}."
       },
