@@ -21,7 +21,7 @@
     "skills:install": "npx skills add https://github.com/gamedev-skills/awesome-gamedev-agent-skills/tree/7eb1b53305fab881f4758e2eff2e371cd7869221 --skill phaser-core --skill game-ui-ux --skill game-feel --skill level-design --skill create-game-assets --skill performance-optimization --skill save-systems"
   },
   "dependencies": {
-    "i18next": "^26.5.7",
+    "i18next": "^26.5.11",
     "phaser": "^4.2.1",
     "zod": "^4.6.7"
   },
